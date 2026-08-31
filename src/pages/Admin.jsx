@@ -6,7 +6,7 @@ import { useData } from '../context/DataContext.jsx'
 import { useFavorites } from '../context/FavoritesContext.jsx'
 
 function blank() {
-  return { id: '', number: '', title: '', category: 'Himno', lyrics: '', audioUrl: '', imageUrl: '' }
+  return { id: '', number: '', title: '', category: 'Himnos Clásicos', lyrics: '', audioUrl: '', imageUrl: '' }
 }
 
 export default function Admin() {
