@@ -117,20 +117,20 @@ export function DataProvider({ children }) {
   }
 
   function addHymn(h) {
-    const exists = (ov.hymns || []).some((x) => x.number === h.number)
-    if (exists) return false
+    const allNumbers = hymns.map((x) => x.number)
+    if (allNumbers.includes(h.number)) return false
     persist({ hymns: [...(ov.hymns || []), h] })
     return true
   }
 
   function updateHymn(h) {
-    const baseIds = (base.hymns || []).map((x) => x.id)
-    const inBase = baseIds.includes(h.id)
-    const existing = (ov.hymns || []).find((x) => x.id === h.id)
-    const conflict = (ov.hymns || []).find(
+    const conflict = hymns.find(
       (x) => x.number === h.number && x.id !== h.id
     )
     if (conflict) return false
+    const existing = (ov.hymns || []).find((x) => x.id === h.id)
+    const baseIds = (base.hymns || []).map((x) => x.id)
+    const inBase = baseIds.includes(h.id)
     let list
     if (existing) list = ov.hymns.map((x) => (x.id === h.id ? h : x))
     else list = [...(ov.hymns || []), h]
