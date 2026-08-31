@@ -1,9 +1,9 @@
 const OFFICIAL_URL = 'https://www.tabernaculoebenezer.com/'
-const YOUTUBE_URL = 'https://www.youtube.com/@tabernaculoebenezer'
+const YOUTUBE_URL = 'https://www.youtube.com/@tabernaculoebenezer34'
 
 const PHOTOS = [
   { src: '/images/oficial_home_1_00.png', alt: 'Tabernáculo Ebenezer' },
-  { src: '/images/oficial_home_1_01.png', alt: 'YouTube Tabernáculo Ebenezer' }
+  { src: '/images/youtube-banner.jpg', alt: 'YouTube Tabernáculo Ebenezer' }
 ]
 
 export default function Social() {
