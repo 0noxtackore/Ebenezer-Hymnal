@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { useSettings } from '../context/SettingsContext.jsx'
 import { Church, Music, Music2 } from 'lucide-react'
 
 const CATEGORIES = [
@@ -9,12 +10,13 @@ const CATEGORIES = [
 
 export default function Home() {
   const nav = useNavigate()
+  const { night } = useSettings()
 
   return (
     <div className="home-screen">
       <section className="hero">
         <div className="hero-book">
-          <img src="/images/logo.png" alt="Logo Himnario Ebenezer" draggable="false" />
+          <img src={night ? '/images/logo_dark.png' : '/images/logo.png'} alt="Logo Himnario Ebenezer" draggable="false" />
         </div>
         <h1 className="hero-title">Himnario Ebenezer</h1>
         <div className="hero-tag">

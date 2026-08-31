@@ -1,4 +1,7 @@
+import { useSettings } from '../context/SettingsContext.jsx'
+
 export default function About() {
+  const { night } = useSettings()
   const dev = {
     name: '0noxtackore',
     avatar: 'https://github.com/0noxtackore.png',
@@ -8,7 +11,7 @@ export default function About() {
   return (
     <div className="card center">
       <img
-        src="/images/logo_app.png"
+        src={night ? '/images/logo_dark.png' : '/images/logo_app.png'}
         alt="logo"
         draggable="false"
         style={{ width: 84, height: 84, borderRadius: '50%', marginBottom: 10 }}
