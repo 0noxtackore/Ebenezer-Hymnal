@@ -362,6 +362,17 @@ export default function Admin() {
                 />
               </div>
               <div className="field">
+                <label>Categoría</label>
+                <select
+                  value={form.category}
+                  onChange={(e) => setForm({ ...form, category: e.target.value })}
+                >
+                  {categories.map((c) => (
+                    <option key={c.name} value={c.name}>{c.icon} {c.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="field">
                 <label>Estrofas</label>
                 {verses.map((v, i) => (
                   <div key={i} className="verse-field">
