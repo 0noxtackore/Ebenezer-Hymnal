@@ -10,12 +10,26 @@ export default function About() {
 
   return (
     <div className="card center">
-      <img
-        src={night ? '/images/logo_dark.png' : '/images/logo.png'}
-        alt="logo"
-        draggable="false"
-        style={{ width: 84, height: 84, borderRadius: '50%', marginBottom: 10 }}
-      />
+      <div style={{
+        width: 104,
+        height: 104,
+        borderRadius: '50%',
+        border: '3px solid var(--gold)',
+        padding: 12,
+        background: 'var(--surface)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        boxShadow: '0 0 0 6px var(--gold-soft), 0 10px 26px rgba(201, 162, 39, 0.25)',
+        margin: '0 auto 14px'
+      }}>
+        <img
+          src={night ? '/images/logo_dark.png' : '/images/logo.png'}
+          alt="logo"
+          draggable="false"
+          style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '50%' }}
+        />
+      </div>
       <h2>Conócenos</h2>
       <p className="muted">
         Himnario Ebenezer — <i>Instrumento de Adoración</i>. Una app construida para llevar alabanzas al
