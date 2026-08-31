@@ -288,10 +288,6 @@ export default function Admin() {
           <span>Himnos</span>
         </div>
         <div className="stat">
-          <b>{categories.length}</b>
-          <span>Categorías</span>
-        </div>
-        <div className="stat">
           <b>{ids.length}</b>
           <span>Favoritos</span>
         </div>
