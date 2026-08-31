@@ -263,11 +263,13 @@ export default function Admin() {
     )
   }
 
-  const lastNum = hymns.reduce((max, h) => Math.max(max, h.number || 0), 0)
+  const isEspecial = form.category === 'Especiales'
+  const catHymns = hymns.filter((h) => h.category === form.category)
+  const lastNum = catHymns.reduce((max, h) => Math.max(max, h.number || 0), 0)
   const nextNum = lastNum + 1
   const numTaken =
     Number(form.number) > 0 &&
-    hymns.some((h) => h.number === Number(form.number) && h.id !== form.id)
+    catHymns.some((h) => h.number === Number(form.number) && h.id !== form.id)
 
   const filtered = hymns.filter((h) => {
     const q = searchQuery.trim().toLowerCase()
@@ -410,37 +412,51 @@ export default function Admin() {
                   </div>
                 </div>
               )}
-              <div className="field">
-                <label>Estrofas</label>
-                {verses.map((v, i) => (
-                  <div key={i} className="verse-field">
-                    <div className="verse-field-header">
-                      <span>Estrofa {i + 1}</span>
-                      {verses.length > 1 && (
-                        <button type="button" className="btn ghost" onClick={() => removeVerse(i)}>
-                          Quitar
-                        </button>
-                      )}
-                    </div>
+              {!isEspecial ? (
+                <>
+                  <div className="field">
+                    <label>Estrofas</label>
+                    {verses.map((v, i) => (
+                      <div key={i} className="verse-field">
+                        <div className="verse-field-header">
+                          <span>Estrofa {i + 1}</span>
+                          {verses.length > 1 && (
+                            <button type="button" className="btn ghost" onClick={() => removeVerse(i)}>
+                              Quitar
+                            </button>
+                          )}
+                        </div>
+                        <textarea
+                          placeholder={i === 0 ? 'Primera estrofa...' : `Estrofa ${i + 1}...`}
+                          value={v}
+                          onChange={(e) => updateVerse(i, e.target.value)}
+                        />
+                      </div>
+                    ))}
+                    <button type="button" className="btn ghost" onClick={addVerse}>
+                      + Agregar estrofa
+                    </button>
+                  </div>
+                  <div className="field">
+                    <label>CORO</label>
                     <textarea
-                      placeholder={i === 0 ? 'Primera estrofa...' : `Estrofa ${i + 1}...`}
-                      value={v}
-                      onChange={(e) => updateVerse(i, e.target.value)}
+                      placeholder="Texto del coro..."
+                      value={coro}
+                      onChange={(e) => updateCoro(e.target.value)}
                     />
                   </div>
-                ))}
-                <button type="button" className="btn ghost" onClick={addVerse}>
-                  + Agregar estrofa
-                </button>
-              </div>
-              <div className="field">
-                <label>CORO</label>
-                <textarea
-                  placeholder="Texto del coro..."
-                  value={coro}
-                  onChange={(e) => updateCoro(e.target.value)}
-                />
-              </div>
+                </>
+              ) : (
+                <div className="field">
+                  <label>Texto</label>
+                  <textarea
+                    placeholder="Texto del especial..."
+                    value={verses[0] || ''}
+                    onChange={(e) => setVerses([e.target.value])}
+                    style={{ minHeight: 160 }}
+                  />
+                </div>
+              )}
             </div>
             <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
               <button className="btn" onClick={submit}>
