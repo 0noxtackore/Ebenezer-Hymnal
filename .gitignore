@@ -1,0 +1,16 @@
+# Credenciales de usuarios Firebase - NO subirlas a git
+credenciales-firebase.txt
+
+# Dependencias
+node_modules/
+
+# Build
+dist/
+
+# Firebase test local
+fb-test.mjs
+
+# Logs y sistema
+*.log
+.DS_Store
+Thumbs.db
