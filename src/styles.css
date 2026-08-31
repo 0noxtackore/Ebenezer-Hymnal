@@ -103,6 +103,26 @@ a { color: inherit; }
 .content {
   flex: 1;
   padding: 18px 16px 110px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.content::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 4px;
+}
+
+.content::-webkit-scrollbar-thumb:hover {
+  background: var(--gold);
 }
 
 /* ---------- Drawer ---------- */
@@ -183,6 +203,26 @@ a { color: inherit; }
 .drawer-items {
   padding: 8px 0;
   overflow-y: auto;
+  flex: 1;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.drawer-items::-webkit-scrollbar {
+  width: 4px;
+}
+
+.drawer-items::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.drawer-items::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 4px;
+}
+
+.drawer-items::-webkit-scrollbar-thumb:hover {
+  background: var(--gold);
 }
 
 .drawer-label {

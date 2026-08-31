@@ -62,7 +62,7 @@ export default function Layout() {
     <div className="app-shell">
       <aside className={'drawer' + (open ? ' open' : '')}>
         <div className="drawer-header">
-          <LazyImage className="drawer-logo" src="/images/logo.png" alt="logo" style={{ width: 46, height: 46, borderRadius: '50%', objectFit: 'contain' }} />
+          <LazyImage className="drawer-logo" src={night ? '/images/logo_dark.png' : '/images/logo.png'} alt="logo" style={{ width: 46, height: 46, borderRadius: '50%', objectFit: 'contain' }} />
           <div className="dh-text">
             <div className="drawer-title">Himnario Ebenezer</div>
             <div className="drawer-sub">Instrumento de Adoración</div>
