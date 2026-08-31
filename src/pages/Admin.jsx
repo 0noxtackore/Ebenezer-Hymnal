@@ -46,7 +46,7 @@ export default function Admin() {
 
   function parseLyricsToBlocks(lyrics) {
     if (!lyrics || !lyrics.trim()) return { verses: [''], coro: '' }
-    const parts = lyrics.split('\n\nCORO\n\n')
+    const parts = lyrics.split(/\n\nCORO\n/)
     if (parts.length < 2) return { verses: lyrics.split('\n\n').filter((v) => v.trim()), coro: '' }
     const firstVerse = parts[0].trim()
     const afterParts = parts[1].split('\n\n').filter((p) => p.trim())
@@ -58,7 +58,7 @@ export default function Admin() {
   function buildLyrics(versesList, coroText) {
     let lyrics = (versesList[0] || '').trim()
     if (coroText.trim()) {
-      lyrics += '\n\nCORO\n\n' + coroText.trim()
+      lyrics += '\n\nCORO\n' + coroText.trim()
     }
     if (versesList.length > 1) {
       lyrics += '\n\n' + versesList.slice(1).map((v) => v.trim()).filter((v) => v).join('\n\n')
