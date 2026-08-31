@@ -11,7 +11,7 @@ export default function About() {
   return (
     <div className="card center">
       <img
-        src={night ? '/images/logo_dark.png' : '/images/logo_app.png'}
+        src={night ? '/images/logo_dark.png' : '/images/logo.png'}
         alt="logo"
         draggable="false"
         style={{ width: 84, height: 84, borderRadius: '50%', marginBottom: 10 }}
