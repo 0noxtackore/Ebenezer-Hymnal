@@ -1,55 +1,74 @@
-<img src="assets/images/logo_solid.png" alt="Himnario Ebenezer" style="width:100%" />
+<p align="center">
+  <img src="assets/images/logo_solid.png" alt="Himnario Ebenezer" width="100%" />
+</p>
 
-# Himnario Ebenezer
+<h1 align="center">Ebenezer Hymnal</h1>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/React-18-61DAFB" />
-  <img src="https://img.shields.io/badge/Vite-5-646cff" />
-  <img src="https://img.shields.io/badge/Firebase-FFCA28" />
-  <img src="https://img.shields.io/badge/JavaScript-F7DF1E" />
+  A worship hymnal app built to bring 221 classic hymns to the people of God.
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/React-18-61DAFB?logo=react" />
+  <img src="https://img.shields.io/badge/Vite-5-646cff?logo=vite" />
+  <img src="https://img.shields.io/badge/Firebase-FFCA28?logo=firebase" />
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript" />
   <img src="https://img.shields.io/badge/License-MIT-green" />
 </p>
 
-Himnario Ebenezer is a mobile-first hymnal app built to bring worship songs to the people of God. It features 221 classic hymns extracted from the original PDF, a clean and elegant interface with day/night mode, and a Firebase-backed admin panel for managing the hymn catalog.
+---
 
-## Overview
+## About
 
-Himnario Ebenezer is designed for church congregations and worship teams. Users can browse hymns by number or name, mark favorites, share hymn cards as images, and read lyrics in a beautifully formatted reader with adjustable font size. An admin panel allows authorized users to create, edit and delete hymns directly from the app.
+Ebenezer Hymnal is a mobile-first React application designed for church congregations and worship teams. It provides a clean, elegant interface for browsing, searching and sharing 221 classic hymns extracted from the official *Himnario Ebenezer* PDF. The app features a Firebase-backed admin panel, night mode, adjustable font sizes, and a branded share card system for social media.
 
 ## Features
 
-- **221 classic hymns** — extracted from the official Himnario Ebenezer PDF with formatted lyrics, stanzas and chorus labels.
-- **Search by number** — numeric keypad to quickly jump to any hymn by its number.
-- **Search by name** — real-time search with accent-insensitive matching across titles.
-- **Favorites** — bookmark hymns for quick access during worship.
-- **Night mode** — dark theme with logo_dark variants for comfortable reading in low light.
-- **Adjustable font size** — readers can increase or decrease text size from the settings panel.
-- **Share as image** — generate a branded card with the hymn lyrics using html2canvas.
-- **Firebase backend** — hymns stored in Firebase Realtime Database with localStorage fallback.
-- **Admin panel** — authenticated users can create, edit and delete hymns with a modal form.
-- **LazyImage** — skeleton placeholder and fade-in effect for smooth image loading.
-- **Fully responsive** — mobile-first layout that adapts from desktop down to small screens.
+| Feature | Description |
+|---|---|
+| **221 Classic Hymns** | Full lyrics extracted from the source PDF with stanza and chorus formatting. |
+| **Search by Number** | Numeric keypad for quick access to any hymn by its number. |
+| **Search by Name** | Real-time, accent-insensitive search across all hymn titles. |
+| **Favorites** | Bookmark hymns for instant access during worship sessions. |
+| **Night Mode** | Dark theme with dedicated `logo_dark` variants for comfortable low-light reading. |
+| **Font Size Control** | Adjustable text size via the settings panel. |
+| **Share as Image** | Generate branded hymn cards using html2canvas for social sharing. |
+| **Admin Panel** | Authenticated CRUD operations for managing the hymn catalog. |
+| **Lazy Loading** | Skeleton placeholders and fade-in transitions for smooth image loading. |
+| **Responsive Design** | Mobile-first layout that adapts across all screen sizes. |
 
 ## Tech Stack
 
-- **React 18** (JSX, hooks)
-- **Vite 5** as the build tool and dev server
-- **React Router 6** for client-side routing
-- **Firebase** (Realtime Database + Authentication + Analytics)
-- **Framer Motion** for page transitions and animations
-- **html2canvas** for generating shareable hymn cards
-- **Lucide React** for consistent iconography
+<p align="center">
+  <img src="https://img.shields.io/badge/React_18-61DAFB?logo=react&logoColor=white" />
+  <img src="https://img.shields.io/badge/Vite_5-646cff?logo=vite&logoColor=white" />
+  <img src="https://img.shields.io/badge/React_Router_6-CA4245?logo=reactrouter&logoColor=white" />
+  <img src="https://img.shields.io/badge/Firebase-FFCA28?logo=firebase&logoColor=white" />
+  <img src="https://img.shields.io/badge/Framer_Motion-0055FF?logo=framer&logoColor=white" />
+  <img src="https://img.shields.io/badge/html2canvas-DD0000" />
+  <img src="https://img.shields.io/badge/Lucide_React-000000?logo=lucide" />
+</p>
+
+- **React 18** — Component-based UI with hooks
+- **Vite 5** — Fast build tooling and HMR dev server
+- **React Router 6** — Client-side routing
+- **Firebase** — Realtime Database, Authentication and Analytics
+- **Framer Motion** — Page transitions and animations
+- **html2canvas** — Client-side hymn card generation
+- **Lucide React** — Consistent iconography
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18 or higher
-- A package manager (npm)
+- **Node.js** 18 or higher
+- **npm** package manager
 
 ### Installation
 
 ```bash
+git clone https://github.com/0noxtackore/Ebenezer-Hymnal.git
+cd Ebenezer-Hymnal
 npm install
 ```
 
@@ -59,15 +78,15 @@ npm install
 npm run dev
 ```
 
-The application will be available at `http://localhost:5173`.
+Application available at `http://localhost:5173`.
 
-### Build
+### Production Build
 
 ```bash
 npm run build
 ```
 
-### Preview production build
+### Preview Build
 
 ```bash
 npm run preview
@@ -76,33 +95,48 @@ npm run preview
 ## Project Structure
 
 ```
-src/
-  components/       # Reusable UI components (Layout, BottomNav, Splash, LazyImage)
-  context/          # React contexts (Data, Settings, Favorites)
-  pages/            # Route-level views (Home, SearchByNumber, SearchByName, HymnDetail, Admin, etc.)
-  styles.css        # Global styles and design tokens
-  firebase.js       # Firebase initialization (app, db, auth, analytics)
-  App.jsx           # Route definitions
-  main.jsx          # Entry point
-assets/
-  hymns.json        # 221 hymns extracted from the PDF
-  verses.json       # Curated Bible verses for the admin login screen
-  images/           # Logos, banners and gallery images
-scripts/
-  create-users.ps1  # PowerShell script to create Firebase auth users
-  upload-hymns.ps1  # PowerShell script to upload hymns to Firebase
-pdf-files/
-  HIMNARIO EBENEZER PDF.pdf   # Original source PDF
+Ebenezer-Hymnal/
+├── assets/
+│   ├── images/               # Logos, banners, gallery images
+│   ├── hymns.json            # 221 hymns (source data)
+│   ├── verses.json           # Curated Bible verses
+│   └── logo.png
+├── pdf-files/
+│   └── HIMNARIO EBENEZER PDF.pdf
+├── scripts/
+│   ├── create-users.ps1      # Firebase auth user creation
+│   └── upload-hymns.ps1      # Firebase hymn upload
+├── src/
+│   ├── components/           # Layout, BottomNav, Splash, LazyImage
+│   ├── context/              # DataContext, SettingsContext, FavoritesContext
+│   ├── pages/                # Home, SearchByNumber, SearchByName,
+│   │                         # HymnDetail, Admin, Favorites, Settings,
+│   │                         # About, Social, Report
+│   ├── App.jsx               # Route definitions
+│   ├── firebase.js           # Firebase initialization
+│   ├── main.jsx              # Entry point
+│   └── styles.css            # Global styles and design tokens
+├── index.html
+├── package.json
+├── vite.config.js
+├── LICENSE
+└── README.md
 ```
 
 ## Scripts
 
-| Script            | Description                              |
-| ----------------- | ---------------------------------------- |
-| `npm run dev`     | Start the Vite development server        |
-| `npm run build`   | Build the project for production         |
-| `npm run preview` | Preview the production build locally     |
+| Command | Description |
+|---|---|
+| `npm run dev` | Start development server |
+| `npm run build` | Build for production |
+| `npm run preview` | Preview production build |
 
 ## License
 
-Released under the MIT License.
+Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for details.
+
+---
+
+<p align="center">
+  Built with faith by <a href="https://github.com/0noxtackore">0noxtackore</a>
+</p>
