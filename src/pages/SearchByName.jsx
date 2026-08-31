@@ -14,9 +14,10 @@ export default function SearchByName() {
   const results = useMemo(() => {
     const strip = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
     const t = strip(q.trim())
+    const catNorm = strip(cat)
     return hymns.filter((h) => {
       const matchesText = !t || strip(h.title + ' ' + h.number + ' ' + (h.category || '')).includes(t)
-      const matchesCat = !cat || h.category === cat
+      const matchesCat = !catNorm || strip(h.category || '') === catNorm
       return matchesText && matchesCat
     })
   }, [q, cat, hymns])
