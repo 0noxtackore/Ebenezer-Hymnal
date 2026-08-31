@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useData } from '../context/DataContext.jsx'
+import { getIcon } from '../utils/icons.js'
 
 export default function SearchByName() {
   const location = useLocation()
@@ -37,15 +38,18 @@ export default function SearchByName() {
           <button className={'chip' + (!cat ? ' active' : '')} onClick={() => setCat('')}>
             Todos
           </button>
-          {categories.map((c) => (
-            <button
-              key={c.id}
-              className={'chip' + (cat === c.name ? ' active' : '')}
-              onClick={() => setCat(c.name)}
-            >
-              {c.name}
-            </button>
-          ))}
+          {categories.map((c) => {
+            const Icon = getIcon(c.icon)
+            return (
+              <button
+                key={c.id}
+                className={'chip' + (cat === c.name ? ' active' : '')}
+                onClick={() => setCat(c.name)}
+              >
+                <Icon size={14} /> {c.name}
+              </button>
+            )
+          })}
         </div>
       )}
 

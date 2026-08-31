@@ -4,6 +4,7 @@ import { Eye, EyeOff, Plus, Pencil, Trash2, Text, Search } from 'lucide-react'
 import { auth } from '../firebase.js'
 import { useData } from '../context/DataContext.jsx'
 import { useFavorites } from '../context/FavoritesContext.jsx'
+import { getIcon } from '../utils/icons.js'
 import LazyImage from '../components/LazyImage.jsx'
 
 function blank() {
@@ -368,7 +369,7 @@ export default function Admin() {
                   onChange={(e) => setForm({ ...form, category: e.target.value })}
                 >
                   {categories.map((c) => (
-                    <option key={c.name} value={c.name}>{c.icon} {c.name}</option>
+                    <option key={c.name} value={c.name}>{c.name}</option>
                   ))}
                 </select>
               </div>

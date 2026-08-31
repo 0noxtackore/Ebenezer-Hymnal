@@ -1,28 +1,28 @@
 {
   "categories": [
     {
-      "name": "Himnos Clásicos",
-      "icon": "📖",
+      "name": "Himnos Clasicos",
+      "icon": "BookOpen",
       "color": "#C9A227"
     },
     {
       "name": "Coros Lentos",
-      "icon": "🕊️",
+      "icon": "Feather",
       "color": "#2E7D32"
     },
     {
-      "name": "Coros Rápidos",
-      "icon": "🔥",
+      "name": "Coros Rapidos",
+      "icon": "Flame",
       "color": "#C62828"
     },
     {
       "name": "Gospel",
-      "icon": "🎵",
+      "icon": "Music",
       "color": "#6A1B9A"
     },
     {
       "name": "Especiales",
-      "icon": "✨",
+      "icon": "Star",
       "color": "#E65100"
     }
   ],
