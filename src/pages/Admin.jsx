@@ -87,10 +87,10 @@ export default function Admin() {
 
   useEffect(() => {
     let alive = true
-    fetch('/versiculos.json')
+    fetch('/verses.json')
       .then((res) => res.json())
       .then((data) => {
-        const list = data.versiculos || []
+        const list = data.verses || []
         if (alive && list.length) setVerse(list[Math.floor(Math.random() * list.length)])
       })
       .catch(() => {})

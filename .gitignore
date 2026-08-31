@@ -1,5 +1,5 @@
 # Credenciales de usuarios Firebase - NO subirlas a git
-credenciales-firebase.txt
+firebase-credentials.txt
 
 # Dependencias
 node_modules/
