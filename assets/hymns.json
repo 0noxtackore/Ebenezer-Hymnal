@@ -14,6 +14,16 @@
       "id": "cat_coros_rapidos",
       "name": "Coros Rápidos",
       "colorHex": "#C62828"
+    },
+    {
+      "id": "cat_gospel",
+      "name": "Gospel",
+      "colorHex": "#6A1B9A"
+    },
+    {
+      "id": "cat_especiales",
+      "name": "Especiales",
+      "colorHex": "#E65100"
     }
   ],
   "hymns": [
