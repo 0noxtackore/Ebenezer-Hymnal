@@ -8,7 +8,7 @@ import { getIcon } from '../utils/icons.js'
 import LazyImage from '../components/LazyImage.jsx'
 
 function blank() {
-  return { id: '', number: '', title: '', category: 'Himnos Clásicos', lyrics: '', audioUrl: '', imageUrl: '' }
+  return { id: '', number: '', title: '', category: 'Himnos Clásicos', musicKey: '', scale: '', lyrics: '', audioUrl: '', imageUrl: '' }
 }
 
 export default function Admin() {
@@ -380,6 +380,36 @@ export default function Admin() {
                   })}
                 </div>
               </div>
+              {(form.category === 'Coros Lentos' || form.category === 'Coros Rápidos') && (
+                <div className="field-row">
+                  <div className="field">
+                    <label>Tonalidad</label>
+                    <div className="cat-select">
+                      {['Do','Re','Mi','Fa','Sol','La','Si'].map((k) => (
+                        <button
+                          key={k}
+                          type="button"
+                          className={'cat-option' + (form.musicKey === k ? ' active' : '')}
+                          onClick={() => setForm({ ...form, musicKey: k })}
+                        >{k}</button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="field">
+                    <label>Escala</label>
+                    <div className="cat-select">
+                      {['Mayor','Menor'].map((s) => (
+                        <button
+                          key={s}
+                          type="button"
+                          className={'cat-option' + (form.scale === s ? ' active' : '')}
+                          onClick={() => setForm({ ...form, scale: s })}
+                        >{s}</button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
               <div className="field">
                 <label>Estrofas</label>
                 {verses.map((v, i) => (
