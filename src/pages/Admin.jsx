@@ -4,6 +4,7 @@ import { Eye, EyeOff, Plus, Pencil, Trash2, Text, Search } from 'lucide-react'
 import { auth } from '../firebase.js'
 import { useData } from '../context/DataContext.jsx'
 import { useFavorites } from '../context/FavoritesContext.jsx'
+import LazyImage from '../components/LazyImage.jsx'
 
 function blank() {
   return { id: '', number: '', title: '', category: 'Himnos Clásicos', lyrics: '', audioUrl: '', imageUrl: '' }
@@ -207,11 +208,10 @@ export default function Admin() {
   if (!user) {
     return (
       <div className="card center" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <img
+        <LazyImage
           src="/images/logo.png"
           alt="logo"
-          draggable="false"
-          style={{ width: 84, height: 84, borderRadius: '50%', margin: '0 auto 10px', display: 'block' }}
+          style={{ width: 84, height: 84, borderRadius: '50%', margin: '0 auto 10px' }}
         />
         <h2>Acceso Administrador</h2>
         <p className="muted">Inicia sesión con tu cuenta de correo.</p>
@@ -278,7 +278,7 @@ export default function Admin() {
     <div>
       {msg && toastVisible && (
         <div className="toast">
-          <img src="/images/logo.png" alt="logo" className="toast-logo" draggable="false" />
+          <LazyImage src="/images/logo.png" alt="logo" style={{ width: 28, height: 28, borderRadius: '50%', flexShrink: 0 }} />
           <span>{msg}</span>
         </div>
       )}

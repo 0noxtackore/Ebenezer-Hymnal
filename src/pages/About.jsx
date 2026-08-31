@@ -1,4 +1,5 @@
 import { useSettings } from '../context/SettingsContext.jsx'
+import LazyImage from '../components/LazyImage.jsx'
 
 export default function About() {
   const { night } = useSettings()
@@ -23,10 +24,9 @@ export default function About() {
         boxShadow: '0 0 0 6px var(--gold-soft), 0 10px 26px rgba(201, 162, 39, 0.25)',
         margin: '0 auto 14px'
       }}>
-        <img
+        <LazyImage
           src={night ? '/images/logo_dark.png' : '/images/logo.png'}
           alt="logo"
-          draggable="false"
           style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '50%' }}
         />
       </div>
@@ -37,7 +37,7 @@ export default function About() {
       </p>
       <h3 style={{ marginTop: 18 }}>Desarrollador</h3>
       <a className="dev-card" href={dev.url} target="_blank" rel="noreferrer">
-        <img className="dev-avatar" src={dev.avatar} alt={dev.name} draggable="false" />
+        <LazyImage className="dev-avatar" src={dev.avatar} alt={dev.name} />
         <span className="dev-info">
           <strong>{dev.name}</strong>
           <span className="muted">Ver perfil en GitHub</span>

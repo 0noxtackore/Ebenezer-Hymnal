@@ -1,3 +1,5 @@
+import LazyImage from '../components/LazyImage.jsx'
+
 const OFFICIAL_URL = 'https://www.tabernaculoebenezer.com/'
 const YOUTUBE_URL = 'https://www.youtube.com/@tabernaculoebenezer34'
 
@@ -22,7 +24,7 @@ export default function Social() {
           const url = p.alt.includes('YouTube') ? YOUTUBE_URL : OFFICIAL_URL
           return (
             <a className="gallery-item" href={url} target="_blank" rel="noreferrer" key={p.src}>
-              <img src={p.src} alt={p.alt} loading="lazy" draggable="false" />
+              <LazyImage src={p.src} alt={p.alt} style={{ width: '100%', height: 180, objectFit: 'cover', background: 'var(--surface-2)' }} />
               <span>{p.alt}</span>
             </a>
           )

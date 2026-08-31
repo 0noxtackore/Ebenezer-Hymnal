@@ -5,6 +5,7 @@ import html2canvas from 'html2canvas'
 import { Star, Share2, Play, Pause, ArrowLeft } from 'lucide-react'
 import { useData } from '../context/DataContext.jsx'
 import { useFavorites } from '../context/FavoritesContext.jsx'
+import LazyImage from '../components/LazyImage.jsx'
 
 const ROMANS = [
   'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
@@ -166,7 +167,7 @@ export default function HymnDetail() {
         </div>
       )}
 
-      {h.imageUrl && <img src={h.imageUrl} alt="" style={{ width: '100%', borderRadius: 14, margin: '16px 0' }} draggable="false" />}
+      {h.imageUrl && <LazyImage src={h.imageUrl} alt="" style={{ width: '100%', borderRadius: 14, margin: '16px 0' }} />}
 
       <div className="lyrics">
         {parseLyrics(h.lyrics).map((v, i) => (
@@ -182,7 +183,7 @@ export default function HymnDetail() {
 
       <div ref={shareCardRef} className="share-card" aria-hidden="true">
         <div className="share-card-logo">
-          <img src="/images/logo.png" alt="logo" draggable="false" />
+          <LazyImage src="/images/logo.png" alt="logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
         </div>
         <div className="share-card-app">Himno {h.number} · Himnario Ebenezer</div>
         <h3 className="share-card-title">{h.title}</h3>

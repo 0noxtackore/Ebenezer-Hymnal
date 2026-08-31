@@ -13,6 +13,7 @@ import {
   LogOut
 } from 'lucide-react'
 import { useSettings } from '../context/SettingsContext.jsx'
+import LazyImage from './LazyImage.jsx'
 import { auth } from '../firebase.js'
 import { signOut, onAuthStateChanged } from 'firebase/auth'
 import BottomNav from './BottomNav.jsx'
@@ -61,7 +62,7 @@ export default function Layout() {
     <div className="app-shell">
       <aside className={'drawer' + (open ? ' open' : '')}>
         <div className="drawer-header">
-          <img className="drawer-logo" src="/images/logo.png" alt="logo" draggable="false" />
+          <LazyImage className="drawer-logo" src="/images/logo.png" alt="logo" style={{ width: 46, height: 46, borderRadius: '50%', objectFit: 'contain' }} />
           <div className="dh-text">
             <div className="drawer-title">Himnario Ebenezer</div>
             <div className="drawer-sub">Instrumento de Adoración</div>

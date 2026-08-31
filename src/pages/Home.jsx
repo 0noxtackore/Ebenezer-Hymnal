@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useSettings } from '../context/SettingsContext.jsx'
+import LazyImage from '../components/LazyImage.jsx'
 import { Church, Music, Music2 } from 'lucide-react'
 
 const CATEGORIES = [
@@ -16,7 +17,7 @@ export default function Home() {
     <div className="home-screen">
       <section className="hero">
         <div className="hero-book">
-          <img src={night ? '/images/logo_dark.png' : '/images/logo.png'} alt="Logo Himnario Ebenezer" draggable="false" />
+          <LazyImage src={night ? '/images/logo_dark.png' : '/images/logo.png'} alt="Logo Himnario Ebenezer" style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '50%' }} />
         </div>
         <h1 className="hero-title">Himnario Ebenezer</h1>
         <div className="hero-tag">
