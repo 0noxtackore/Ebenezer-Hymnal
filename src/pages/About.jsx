@@ -10,6 +10,7 @@ export default function About() {
       <img
         src="/images/logo_app.png"
         alt="logo"
+        draggable="false"
         style={{ width: 84, height: 84, borderRadius: '50%', marginBottom: 10 }}
       />
       <h2>Conócenos</h2>
@@ -19,7 +20,7 @@ export default function About() {
       </p>
       <h3 style={{ marginTop: 18 }}>Desarrollador</h3>
       <a className="dev-card" href={dev.url} target="_blank" rel="noreferrer">
-        <img className="dev-avatar" src={dev.avatar} alt={dev.name} />
+        <img className="dev-avatar" src={dev.avatar} alt={dev.name} draggable="false" />
         <span className="dev-info">
           <strong>{dev.name}</strong>
           <span className="muted">Ver perfil en GitHub</span>

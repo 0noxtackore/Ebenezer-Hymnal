@@ -14,7 +14,7 @@ export default function Home() {
     <div className="home-screen">
       <section className="hero">
         <div className="hero-book">
-          <img src="/images/logo.png" alt="Logo Himnario Ebenezer" />
+          <img src="/images/logo.png" alt="Logo Himnario Ebenezer" draggable="false" />
         </div>
         <h1 className="hero-title">Himnario Ebenezer</h1>
         <div className="hero-tag">

@@ -166,7 +166,7 @@ export default function HymnDetail() {
         </div>
       )}
 
-      {h.imageUrl && <img src={h.imageUrl} alt="" style={{ width: '100%', borderRadius: 14, margin: '16px 0' }} />}
+      {h.imageUrl && <img src={h.imageUrl} alt="" style={{ width: '100%', borderRadius: 14, margin: '16px 0' }} draggable="false" />}
 
       <div className="lyrics">
         {parseLyrics(h.lyrics).map((v, i) => (
@@ -182,7 +182,7 @@ export default function HymnDetail() {
 
       <div ref={shareCardRef} className="share-card" aria-hidden="true">
         <div className="share-card-logo">
-          <img src="/images/logo.png" alt="logo" />
+          <img src="/images/logo.png" alt="logo" draggable="false" />
         </div>
         <div className="share-card-app">Himno {h.number} · Himnario Ebenezer</div>
         <h3 className="share-card-title">{h.title}</h3>

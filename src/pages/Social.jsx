@@ -22,7 +22,7 @@ export default function Social() {
           const url = p.alt.includes('YouTube') ? YOUTUBE_URL : OFFICIAL_URL
           return (
             <a className="gallery-item" href={url} target="_blank" rel="noreferrer" key={p.src}>
-              <img src={p.src} alt={p.alt} loading="lazy" />
+              <img src={p.src} alt={p.alt} loading="lazy" draggable="false" />
               <span>{p.alt}</span>
             </a>
           )

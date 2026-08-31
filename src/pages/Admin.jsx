@@ -210,6 +210,7 @@ export default function Admin() {
         <img
           src="/images/logo.png"
           alt="logo"
+          draggable="false"
           style={{ width: 84, height: 84, borderRadius: '50%', margin: '0 auto 10px', display: 'block' }}
         />
         <h2>Acceso Administrador</h2>
@@ -277,7 +278,7 @@ export default function Admin() {
     <div>
       {msg && toastVisible && (
         <div className="toast">
-          <img src="/images/logo.png" alt="logo" className="toast-logo" />
+          <img src="/images/logo.png" alt="logo" className="toast-logo" draggable="false" />
           <span>{msg}</span>
         </div>
       )}
