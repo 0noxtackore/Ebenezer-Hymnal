@@ -364,14 +364,21 @@ export default function Admin() {
               </div>
               <div className="field">
                 <label>Categoría</label>
-                <select
-                  value={form.category}
-                  onChange={(e) => setForm({ ...form, category: e.target.value })}
-                >
-                  {categories.map((c) => (
-                    <option key={c.name} value={c.name}>{c.name}</option>
-                  ))}
-                </select>
+                <div className="cat-select">
+                  {categories.map((c) => {
+                    const Icon = getIcon(c.icon)
+                    return (
+                      <button
+                        key={c.name}
+                        type="button"
+                        className={'cat-option' + (form.category === c.name ? ' active' : '')}
+                        onClick={() => setForm({ ...form, category: c.name })}
+                      >
+                        <Icon size={16} /> {c.name}
+                      </button>
+                    )
+                  })}
+                </div>
               </div>
               <div className="field">
                 <label>Estrofas</label>
