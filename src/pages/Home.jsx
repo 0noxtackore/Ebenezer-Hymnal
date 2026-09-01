@@ -1,17 +1,13 @@
 import { useNavigate } from 'react-router-dom'
 import { useSettings } from '../context/SettingsContext.jsx'
+import { useData } from '../context/DataContext.jsx'
 import LazyImage from '../components/LazyImage.jsx'
-import { Church, Music, Music2 } from 'lucide-react'
-
-const CATEGORIES = [
-  { label: 'Iglesia', icon: Church },
-  { label: 'Alabanza', icon: Music },
-  { label: 'Música', icon: Music2 }
-]
+import { getIcon } from '../utils/icons.js'
 
 export default function Home() {
   const nav = useNavigate()
   const { night } = useSettings()
+  const { categories } = useData()
 
   return (
     <div className="home-screen">
@@ -26,19 +22,26 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="cat-row">
-        {CATEGORIES.map((c) => {
-          const Icon = c.icon
-          return (
-            <div key={c.label} className="cat-circle">
-              <span className="cat-icon">
-                <Icon size={30} />
-              </span>
-              <span className="cat-label">{c.label}</span>
-            </div>
-          )
-        })}
-      </div>
+      {categories.length > 0 && (
+        <div className="cat-row">
+          {categories.map((c) => {
+            const Icon = getIcon(c.icon)
+            return (
+              <div
+                key={c.id}
+                className="cat-circle"
+                style={{ cursor: 'pointer' }}
+                onClick={() => nav('/buscar-nombre', { state: { category: c.name } })}
+              >
+                <span className="cat-icon">
+                  <Icon size={30} />
+                </span>
+                <span className="cat-label">{c.name}</span>
+              </div>
+            )
+          })}
+        </div>
+      )}
 
       <div className="home-actions" style={{ marginTop: 14 }}>
         <button className="btn" onClick={() => nav('/buscar-numero')}>
