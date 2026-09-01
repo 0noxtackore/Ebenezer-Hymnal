@@ -30,6 +30,7 @@ export default function Admin() {
   const [toastVisible, setToastVisible] = useState(false)
   const [verses, setVerses] = useState([''])
   const [coro, setCoro] = useState('')
+  const [puente, setPuente] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
   const [catFilter, setCatFilter] = useState('')
 
@@ -47,20 +48,24 @@ export default function Admin() {
   }, [msg])
 
   function parseLyricsToBlocks(lyrics) {
-    if (!lyrics || !lyrics.trim()) return { verses: [''], coro: '' }
-    const parts = lyrics.split(/\n\nCORO\n/)
-    if (parts.length < 2) return { verses: lyrics.split('\n\n').filter((v) => v.trim()), coro: '' }
-    const firstVerse = parts[0].trim()
-    const afterParts = parts[1].split('\n\n').filter((p) => p.trim())
-    const coroText = afterParts[0] || ''
-    const remaining = afterParts.slice(1)
-    return { verses: [firstVerse, ...remaining], coro: coroText }
+    if (!lyrics || !lyrics.trim()) return { verses: [''], coro: '', puente: '' }
+    const coroParts = lyrics.split(/\n\nCORO\n/)
+    if (coroParts.length < 2) return { verses: lyrics.split('\n\n').filter((v) => v.trim()), coro: '', puente: '' }
+    const firstVerse = coroParts[0].trim()
+    const afterCoro = coroParts[1]
+    const puenteParts = afterCoro.split(/\n\nPUENTE\n/)
+    const coroText = puenteParts[0].trim()
+    const puenteText = (puenteParts[1] || '').trim()
+    return { verses: [firstVerse], coro: coroText, puente: puenteText }
   }
 
-  function buildLyrics(versesList, coroText) {
+  function buildLyrics(versesList, coroText, puenteText) {
     let lyrics = (versesList[0] || '').trim()
     if (coroText.trim()) {
       lyrics += '\n\nCORO\n' + coroText.trim()
+    }
+    if (puenteText.trim()) {
+      lyrics += '\n\nPUENTE\n' + puenteText.trim()
     }
     if (versesList.length > 1) {
       lyrics += '\n\n' + versesList.slice(1).map((v) => v.trim()).filter((v) => v).join('\n\n')
@@ -142,14 +147,16 @@ export default function Admin() {
     setForm(blank())
     setVerses([''])
     setCoro('')
+    setPuente('')
     setShowModal(true)
   }
 
   function startEdit(h) {
     setForm({ ...h })
-    const { verses: v, coro: c } = parseLyricsToBlocks(h.lyrics || '')
+    const { verses: v, coro: c, puente: p } = parseLyricsToBlocks(h.lyrics || '')
     setVerses(v.length ? v : [''])
     setCoro(c)
+    setPuente(p)
     setShowModal(true)
   }
 
@@ -171,7 +178,7 @@ export default function Admin() {
       setMsg(`Ya existe un himno con el título "${dupTitle.title}"`)
       return
     }
-    const lyrics = buildLyrics(verses, coro)
+    const lyrics = buildLyrics(verses, coro, puente)
     const payload = { ...form, id: form.id || 'h' + Date.now(), number: num, lyrics }
     if (form.id) {
       if (!updateHymn(payload)) {
@@ -462,6 +469,14 @@ export default function Admin() {
                   placeholder="Texto del coro..."
                   value={coro}
                   onChange={(e) => updateCoro(e.target.value)}
+                />
+              </div>
+              <div className="field">
+                <label>Puente</label>
+                <textarea
+                  placeholder="Texto del puente (opcional)..."
+                  value={puente}
+                  onChange={(e) => setPuente(e.target.value)}
                 />
               </div>
             </div>

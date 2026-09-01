@@ -30,6 +30,9 @@ function parseLyrics(lyrics) {
     if (firstNorm === 'CORO') {
       label = 'CORO'
       lines = lines.slice(1)
+    } else if (firstNorm === 'PUENTE') {
+      label = 'PUENTE'
+      lines = lines.slice(1)
     } else {
       const m = lines[0].match(/^(\d{1,3})[.\-–]\s*(.*)$/)
       if (m) lines = [m[2] || lines[0], ...lines.slice(1)]
