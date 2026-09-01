@@ -375,9 +375,11 @@ a { color: inherit; }
 
 .hero-title {
   font-size: 32px;
+  font-weight: 600;
   line-height: 1.1;
   letter-spacing: 0.3px;
   color: var(--text);
+  text-align: center;
 }
 
 .hero-tag {
