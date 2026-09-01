@@ -412,7 +412,7 @@ export default function Admin() {
                   })}
                 </div>
               </div>
-              {(form.category === 'Coros Lentos' || form.category === 'Coros Rápidos') && (
+              {(strip(form.category) === 'coros lentos' || strip(form.category) === 'coros rapidos') && (
                 <div className="field-row">
                   <div className="field">
                     <label>Tonalidad</label>
