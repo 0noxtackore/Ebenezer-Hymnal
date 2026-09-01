@@ -17,7 +17,7 @@ export default function Home() {
     <div className="home-screen">
       <section className="hero">
         <div className="hero-book">
-          <LazyImage src={night ? '/images/logo_dark.png' : '/images/logo.png'} alt="Logo Himnario Ebenezer" style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '50%' }} />
+          <LazyImage src={night ? '/images/logo_dark.webp' : '/images/logo.webp'} alt="Logo Himnario Ebenezer" style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '50%' }} />
         </div>
         <h1 className="hero-title">Himnario Ebenezer</h1>
         <div className="hero-tag">

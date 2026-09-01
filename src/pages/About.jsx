@@ -25,7 +25,7 @@ export default function About() {
         margin: '0 auto 14px'
       }}>
         <LazyImage
-          src={night ? '/images/logo_dark.png' : '/images/logo.png'}
+          src={night ? '/images/logo_dark.webp' : '/images/logo.webp'}
           alt="logo"
           style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '50%' }}
         />

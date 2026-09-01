@@ -5,9 +5,9 @@ const DYNAMIC_CACHE = 'himnario-dynamic-' + CACHE_VERSION
 const PRECACHE_URLS = [
   '/',
   '/index.html',
-  '/images/logo.png',
-  '/images/logo_dark.png',
-  '/images/logo_app.png',
+  '/images/logo.webp',
+  '/images/logo_dark.webp',
+  '/images/logo_app.webp',
   '/manifest.json'
 ]
 

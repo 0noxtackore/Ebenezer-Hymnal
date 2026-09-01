@@ -237,7 +237,7 @@ export default function Admin() {
     return (
       <div className="card center" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <LazyImage
-          src="/images/logo.png"
+          src="/images/logo.webp"
           alt="logo"
           style={{ width: 84, height: 84, borderRadius: '50%', margin: '0 auto 10px' }}
         />
@@ -340,7 +340,7 @@ export default function Admin() {
     <div>
       {msg && toastVisible && (
         <div className="toast">
-          <LazyImage src="/images/logo.png" alt="logo" style={{ width: 28, height: 28, borderRadius: '50%', flexShrink: 0 }} />
+          <LazyImage src="/images/logo.webp" alt="logo" style={{ width: 28, height: 28, borderRadius: '50%', flexShrink: 0 }} />
           <span>{msg}</span>
         </div>
       )}
