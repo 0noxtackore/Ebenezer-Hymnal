@@ -17,6 +17,14 @@ export default function SearchByName() {
 
   const isChorusMode = KEY_CATEGORIES.includes(strip(cat))
 
+  const itemLabel = (() => {
+    const n = strip(cat)
+    if (n === 'himnos clasicos') return 'himno'
+    if (n === 'coros lentos' || n === 'coros rapidos' || n === 'gospel') return 'coro'
+    if (n === 'especiales') return 'alabanza'
+    return 'alabanza'
+  })()
+
   const chorusGroups = useMemo(() => {
     if (!isChorusMode) return null
     const catNorm = strip(cat)
@@ -91,7 +99,7 @@ export default function SearchByName() {
 
       {isChorusMode ? (
         <>
-          <div className="count-pill">{filteredGroups ? filteredGroups.reduce((s, g) => s + g.items.length, 0) : 0} alabanza(s) en {filteredGroups ? filteredGroups.length : 0} tono(s)</div>
+          <div className="count-pill">{filteredGroups ? filteredGroups.reduce((s, g) => s + g.items.length, 0) : 0} {itemLabel}(s) en {filteredGroups ? filteredGroups.length : 0} tono(s)</div>
           <ul className="hymn-list">
             {filteredGroups && filteredGroups.map((g) => (
               <li
@@ -113,7 +121,7 @@ export default function SearchByName() {
         </>
       ) : (
         <>
-          <div className="count-pill">{results.length} alabanza(s) encontrada(s)</div>
+          <div className="count-pill">{results.length} {itemLabel}(s) encontrado(s)</div>
           <ul className="hymn-list">
             {results.map((h) => (
               <li key={h.id} className="hymn-row" onClick={() => nav('/himno/' + h.id)}>
