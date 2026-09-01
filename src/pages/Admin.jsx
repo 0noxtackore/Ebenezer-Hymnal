@@ -33,6 +33,7 @@ export default function Admin() {
   const [catFilter, setCatFilter] = useState('')
   const [page, setPage] = useState(1)
   const [collapsed, setCollapsed] = useState({})
+  const [deleteTarget, setDeleteTarget] = useState(null)
   const PER_PAGE = 10
 
   useEffect(() => {
@@ -215,7 +216,15 @@ export default function Admin() {
   }
 
   function remove(h) {
-    if (confirm('¿Eliminar la alabanza ' + h.number + '?')) deleteHymn(h.id)
+    setDeleteTarget(h)
+  }
+
+  function confirmDelete() {
+    if (deleteTarget) {
+      deleteHymn(deleteTarget.id)
+      setDeleteTarget(null)
+      setMsg('Eliminado correctamente')
+    }
   }
 
   function addCat() {
@@ -602,6 +611,25 @@ export default function Admin() {
               <button className="btn ghost" onClick={() => setShowModal(false)}>
                 Cancelar
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {deleteTarget && (
+        <div className="modal-overlay" onClick={() => setDeleteTarget(null)}>
+          <div className="modal delete-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="delete-modal-logo">
+              <img src="/images/logo.webp" alt="logo" />
+            </div>
+            <h3>Eliminar alabanza</h3>
+            <p className="delete-modal-text">
+              ¿Estás seguro de eliminar <strong>#{deleteTarget.number} — {deleteTarget.title}</strong>?
+            </p>
+            <p className="delete-modal-warn">Esta acción no se puede deshacer.</p>
+            <div className="delete-modal-actions">
+              <button className="btn ghost" onClick={() => setDeleteTarget(null)}>Cancelar</button>
+              <button className="btn delete-btn" onClick={confirmDelete}>Eliminar</button>
             </div>
           </div>
         </div>

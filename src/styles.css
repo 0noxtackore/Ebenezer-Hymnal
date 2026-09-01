@@ -1827,3 +1827,69 @@ a { color: inherit; }
 }
 
 [data-nf-variant="public"] { display: none !important; }
+
+.delete-modal {
+  text-align: center;
+  padding: 28px 24px 20px;
+  max-width: 340px;
+}
+
+.delete-modal-logo {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: 0 0 0 3px var(--gold-soft), 0 4px 16px rgba(201, 162, 39, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.delete-modal-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.delete-modal h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.delete-modal-text {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+
+.delete-modal-text strong {
+  color: var(--text);
+}
+
+.delete-modal-warn {
+  font-size: 12px;
+  color: #b44;
+  margin-bottom: 18px;
+}
+
+.delete-modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.delete-btn {
+  background: #b44 !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+.delete-btn:hover {
+  background: #933 !important;
+}
