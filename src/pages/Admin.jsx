@@ -447,15 +447,25 @@ export default function Admin() {
                   </div>
                 </>
               ) : (
-                <div className="field">
-                  <label>Texto</label>
-                  <textarea
-                    placeholder="Texto del especial..."
-                    value={verses[0] || ''}
-                    onChange={(e) => setVerses([e.target.value])}
-                    style={{ minHeight: 160 }}
-                  />
-                </div>
+                <>
+                  <div className="field">
+                    <label>Texto</label>
+                    <textarea
+                      placeholder="Texto del especial..."
+                      value={verses[0] || ''}
+                      onChange={(e) => setVerses([e.target.value])}
+                      style={{ minHeight: 160 }}
+                    />
+                  </div>
+                  <div className="field">
+                    <label>CORO</label>
+                    <textarea
+                      placeholder="Texto del coro..."
+                      value={coro}
+                      onChange={(e) => updateCoro(e.target.value)}
+                    />
+                  </div>
+                </>
               )}
             </div>
             <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
