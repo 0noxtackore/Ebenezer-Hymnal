@@ -186,7 +186,7 @@ export default function HymnDetail() {
 
       <div ref={shareCardRef} className="share-card" aria-hidden="true">
         <div className="share-card-logo">
-          <LazyImage src="/images/logo.png" alt="logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+          <img src="/images/logo.png" alt="logo" crossOrigin="anonymous" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
         </div>
         <div className="share-card-app">Himno {h.number} · Himnario Ebenezer</div>
         <h3 className="share-card-title">{h.title}</h3>
