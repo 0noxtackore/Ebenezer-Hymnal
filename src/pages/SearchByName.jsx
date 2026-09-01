@@ -19,10 +19,10 @@ export default function SearchByName() {
 
   const itemLabel = (() => {
     const n = strip(cat)
-    if (n === 'himnos clasicos') return 'himno'
-    if (n === 'coros lentos' || n === 'coros rapidos' || n === 'gospel') return 'coro'
-    if (n === 'especiales') return 'alabanza'
-    return 'alabanza'
+    if (n === 'himnos clasicos') return { noun: 'himno', adj: 'encontrado' }
+    if (n === 'coros lentos' || n === 'coros rapidos' || n === 'gospel') return { noun: 'coro', adj: 'encontrado' }
+    if (n === 'especiales') return { noun: 'alabanza', adj: 'encontrada' }
+    return { noun: 'alabanza', adj: 'encontrada' }
   })()
 
   const chorusGroups = useMemo(() => {
@@ -71,7 +71,7 @@ export default function SearchByName() {
         <i className="bi bi-search"></i>
         <input
           autoFocus
-          placeholder="Buscar alabanza por nombre o número..."
+          placeholder="Buscar por nombre o número..."
           value={q}
           onChange={(e) => setQ(e.target.value)}
         />
@@ -99,7 +99,7 @@ export default function SearchByName() {
 
       {isChorusMode ? (
         <>
-          <div className="count-pill">{filteredGroups ? filteredGroups.reduce((s, g) => s + g.items.length, 0) : 0} {itemLabel}(s) en {filteredGroups ? filteredGroups.length : 0} tono(s)</div>
+          <div className="count-pill">{filteredGroups ? filteredGroups.reduce((s, g) => s + g.items.length, 0) : 0} {itemLabel.noun}(s) en {filteredGroups ? filteredGroups.length : 0} tono(s)</div>
           <ul className="hymn-list">
             {filteredGroups && filteredGroups.map((g) => (
               <li
@@ -121,7 +121,7 @@ export default function SearchByName() {
         </>
       ) : (
         <>
-          <div className="count-pill">{results.length} {itemLabel}(s) encontrado(s)</div>
+          <div className="count-pill">{results.length} {itemLabel.noun}(s) {itemLabel.adj}(s)</div>
           <ul className="hymn-list">
             {results.map((h) => (
               <li key={h.id} className="hymn-row" onClick={() => nav('/himno/' + h.id)}>
