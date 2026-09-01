@@ -85,7 +85,8 @@ export default function HymnDetail() {
       const canvas = await html2canvas(card, { scale: 2, backgroundColor: '#faf8f3', useCORS: true })
       const blob = await new Promise((res) => canvas.toBlob(res, 'image/png'))
       if (!blob) throw new Error('no-blob')
-      const file = new File([blob], `himno-${h.number}-${h.title.replace(/\s+/g, '-')}.png`, {
+      const catSlug = (h.category || 'himno').toLowerCase().replace(/\s+/g, '-')
+      const file = new File([blob], `${catSlug}-${h.number}-${h.title.replace(/\s+/g, '-')}.png`, {
         type: 'image/png'
       })
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -187,7 +188,7 @@ export default function HymnDetail() {
         <div className="share-card-logo">
           <img src="/images/logo.png" alt="logo" crossOrigin="anonymous" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
         </div>
-        <div className="share-card-app">Himno {h.number} · Himnario Ebenezer</div>
+        <div className="share-card-app">{h.category || 'Himno'} {h.number} · Himnario Ebenezer</div>
         <h3 className="share-card-title">{h.title}</h3>
         <div className="share-card-lyrics">
           {parseLyrics(h.lyrics).map((v, i) => (
