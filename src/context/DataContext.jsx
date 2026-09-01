@@ -73,11 +73,12 @@ export function DataProvider({ children }) {
   const categories = [...(base.categories || []), ...(ov.categories || [])]
   let hymns = (base.hymns || []).filter((h) => !(ov.removed || []).includes(h.id))
   if (ov.hymns) hymns = [...hymns, ...ov.hymns]
-  // Deduplicar por número: conservar primera aparición
-  const seenNumbers = new Set()
+  // Deduplicar por categoría + número: conservar primera aparición
+  const seenKeys = new Set()
   hymns = hymns.filter((h) => {
-    if (seenNumbers.has(h.number)) return false
-    seenNumbers.add(h.number)
+    const key = (h.category || '') + '#' + h.number
+    if (seenKeys.has(key)) return false
+    seenKeys.add(key)
     return true
   })
 
