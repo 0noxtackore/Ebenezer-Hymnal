@@ -307,7 +307,7 @@ export default function Admin() {
     return matchesText && matchesCat
   })
 
-  const canGroup = strip(catFilter) === 'coros lentos' || strip(catFilter) === 'coros rapidos'
+  const canGroup = strip(catFilter) === 'coros lentos' || strip(catFilter) === 'coros rapidos' || strip(catFilter) === 'gospel'
   const showGrouped = groupedView && canGroup
 
   const totalPages = Math.ceil(filtered.length / PER_PAGE)
@@ -534,7 +534,7 @@ export default function Admin() {
                   })}
                 </div>
               </div>
-              {(strip(form.category) === 'coros lentos' || strip(form.category) === 'coros rapidos') && (
+              {(strip(form.category) === 'coros lentos' || strip(form.category) === 'coros rapidos' || strip(form.category) === 'gospel') && (
                 <div className="field-row">
                   <div className="field">
                     <label>Tonalidad</label>
