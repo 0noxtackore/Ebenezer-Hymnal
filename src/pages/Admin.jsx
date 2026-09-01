@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth'
-import { Eye, EyeOff, Plus, Pencil, Trash2, Text, Search, FolderOpen, List } from 'lucide-react'
+import { Eye, EyeOff, Plus, Pencil, Trash2, Text, Search } from 'lucide-react'
 import { auth } from '../firebase.js'
 import { useData } from '../context/DataContext.jsx'
 import { getIcon } from '../utils/icons.js'
@@ -32,7 +32,6 @@ export default function Admin() {
   const [searchQuery, setSearchQuery] = useState('')
   const [catFilter, setCatFilter] = useState('')
   const [page, setPage] = useState(1)
-  const [groupedView, setGroupedView] = useState(true)
   const [collapsed, setCollapsed] = useState({})
   const PER_PAGE = 10
 
@@ -308,7 +307,7 @@ export default function Admin() {
   })
 
   const canGroup = strip(catFilter) === 'coros lentos' || strip(catFilter) === 'coros rapidos' || strip(catFilter) === 'gospel'
-  const showGrouped = groupedView && canGroup
+  const showGrouped = canGroup
 
   const totalPages = Math.ceil(filtered.length / PER_PAGE)
   const paginated = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE)
@@ -390,18 +389,6 @@ export default function Admin() {
               </button>
             )
           })}
-        </div>
-      )}
-
-      {canGroup && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-          <button className={'btn sm' + (groupedView ? ' gold' : ' ghost')} onClick={() => setGroupedView(true)}>
-            <FolderOpen size={14} /> Carpetas
-          </button>
-          <button className={'btn sm' + (!groupedView ? ' gold' : ' ghost')} onClick={() => setGroupedView(false)}>
-            <List size={14} /> Lista
-          </button>
-          <span style={{ flex: 1 }} />
         </div>
       )}
 
