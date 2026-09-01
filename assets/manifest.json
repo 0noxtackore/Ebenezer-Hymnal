@@ -1,0 +1,25 @@
+{
+  "name": "Himnario Ebenezer",
+  "short_name": "Himnario",
+  "description": "Instrumento de Adoración",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF8F3",
+  "theme_color": "#C9A227",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/images/logo_app.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/logo_app.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["music", "lifestyle"]
+}

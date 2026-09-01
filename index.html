@@ -3,9 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/images/logo.png" />
+    <link rel="apple-touch-icon" href="/images/logo_app.png" />
+    <link rel="manifest" href="/manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#C9A227" />
-    <title>Ebenezer Hymnal</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Himnario Ebenezer" />
+    <meta name="description" content="Himnario Ebenezer - Instrumento de Adoración" />
+    <title>Himnario Ebenezer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -22,6 +28,11 @@
       new MutationObserver(() => {
         document.querySelectorAll('[data-nf-variant], [data-netlify-site-id]').forEach(el => el.remove());
       }).observe(document.body, { childList: true, subtree: true });
+    </script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(() => {})
+      }
     </script>
   </body>
 </html>
