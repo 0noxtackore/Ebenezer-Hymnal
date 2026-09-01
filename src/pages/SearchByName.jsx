@@ -7,6 +7,18 @@ const KEY_CATEGORIES = ['coros lentos', 'coros rapidos', 'gospel']
 
 const strip = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
+const CATEGORY_COLORS = {
+  'himnos clasicos': { bg: '#C9A227', color: '#fff' },
+  'coros rapidos': { bg: '#8B5E3C', color: '#fff' },
+  'coros lentos': { bg: '#A8A8A8', color: '#fff' },
+  'gospel': { bg: '#B8860B', color: '#fff' },
+  'especiales': { bg: '#CD853F', color: '#fff' },
+}
+
+function getCatColor(category) {
+  return CATEGORY_COLORS[strip(category)] || { bg: 'var(--gold)', color: '#fff' }
+}
+
 export default function SearchByName() {
   const location = useLocation()
   const initialCat = location.state?.category || ''
@@ -127,7 +139,7 @@ export default function SearchByName() {
           <ul className="hymn-list">
             {results.map((h) => (
               <li key={h.id} className="hymn-row" onClick={() => nav('/himno/' + h.id)}>
-                <div className="hymn-num">{h.number}</div>
+                <div className="hymn-num" style={{ background: getCatColor(h.category).bg, color: getCatColor(h.category).color }}>{h.number}</div>
                 <div className="hymn-meta">
                   <div className="hymn-name">{h.title}</div>
                   <div className="hymn-cat">{h.musicKey || ''}{h.musicKey && h.category ? ' · ' : ''}{h.category || ''}</div>
