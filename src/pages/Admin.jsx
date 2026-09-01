@@ -6,6 +6,17 @@ import { useData } from '../context/DataContext.jsx'
 import { getIcon } from '../utils/icons.js'
 import LazyImage from '../components/LazyImage.jsx'
 
+const strip = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+
+function getDeleteLabel(category) {
+  const c = strip(category)
+  if (c === 'himnos clasicos') return 'himno'
+  if (c === 'coros lentos' || c === 'coros rapidos') return 'coro'
+  if (c === 'gospel') return 'alabanza gospel'
+  if (c === 'especiales') return 'especial'
+  return 'alabanza'
+}
+
 function blank() {
   return { id: '', number: '', title: '', category: 'Himnos Clásicos', musicKey: '', scale: '', lyrics: '', audioUrl: '', imageUrl: '' }
 }
@@ -306,7 +317,6 @@ export default function Admin() {
     Number(form.number) > 0 &&
     catHymns.some((h) => h.number === Number(form.number) && h.id !== form.id)
 
-  const strip = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
   const catFilterNorm = strip(catFilter)
   const filtered = hymns
     .filter((h) => {
@@ -622,7 +632,7 @@ export default function Admin() {
             <div className="delete-modal-logo">
               <img src="/images/logo.webp" alt="logo" />
             </div>
-            <h3>Eliminar alabanza</h3>
+            <h3>Eliminar {getDeleteLabel(deleteTarget.category)}</h3>
             <p className="delete-modal-text">
               ¿Estás seguro de eliminar <strong>#{deleteTarget.number} — {deleteTarget.title}</strong>?
             </p>
