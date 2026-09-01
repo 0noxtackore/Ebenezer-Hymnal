@@ -638,6 +638,21 @@ a { color: inherit; }
   padding: 0;
 }
 
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.pagination .btn {
+  min-width: 36px;
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
 .hymn-row {
   display: flex;
   align-items: center;

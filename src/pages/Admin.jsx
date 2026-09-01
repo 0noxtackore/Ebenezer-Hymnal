@@ -31,6 +31,8 @@ export default function Admin() {
   const [puente, setPuente] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
   const [catFilter, setCatFilter] = useState('')
+  const [page, setPage] = useState(1)
+  const PER_PAGE = 10
 
   useEffect(() => {
     if (msg) {
@@ -280,6 +282,9 @@ export default function Admin() {
     return matchesText && matchesCat
   })
 
+  const totalPages = Math.ceil(filtered.length / PER_PAGE)
+  const paginated = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE)
+
   return (
     <div>
       {msg && toastVisible && (
@@ -310,7 +315,7 @@ export default function Admin() {
           <input
             placeholder="Buscar alabanza..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => { setSearchQuery(e.target.value); setPage(1) }}
           />
         </div>
         <button className="btn" style={{ padding: 12, width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={startNew}>
@@ -320,7 +325,7 @@ export default function Admin() {
 
       {categories.length > 0 && (
         <div className="chips" style={{ marginBottom: 12 }}>
-          <button className={'chip' + (!catFilter ? ' active' : '')} onClick={() => setCatFilter('')}>
+          <button className={'chip' + (!catFilter ? ' active' : '')} onClick={() => { setCatFilter(''); setPage(1) }}>
             Todos
           </button>
           {categories.map((c) => {
@@ -329,7 +334,7 @@ export default function Admin() {
               <button
                 key={c.name}
                 className={'chip' + (catFilter === c.name ? ' active' : '')}
-                onClick={() => setCatFilter(c.name)}
+                onClick={() => { setCatFilter(c.name); setPage(1) }}
               >
                 <Icon size={14} /> {c.name}
               </button>
@@ -339,7 +344,7 @@ export default function Admin() {
       )}
 
       <ul className="hymn-list" style={{ marginTop: 0 }}>
-        {filtered.map((h) => (
+        {paginated.map((h) => (
           <li key={h.id} className="hymn-row">
             <div className="hymn-num">{h.number}</div>
             <div className="hymn-meta">
@@ -354,6 +359,20 @@ export default function Admin() {
           </li>
         ))}
       </ul>
+
+      {totalPages > 1 && (
+        <div className="pagination">
+          <button className="btn ghost" disabled={page === 1} onClick={() => setPage(page - 1)}>Anterior</button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+            <button
+              key={p}
+              className={'btn' + (p === page ? ' gold' : ' ghost')}
+              onClick={() => setPage(p)}
+            >{p}</button>
+          ))}
+          <button className="btn ghost" disabled={page === totalPages} onClick={() => setPage(page + 1)}>Siguiente</button>
+        </div>
+      )}
 
       {showModal && (
         <div className="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) setShowModal(false) }}>
