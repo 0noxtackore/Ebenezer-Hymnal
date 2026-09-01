@@ -41,11 +41,13 @@ export default function SearchByName() {
   const results = useMemo(() => {
     const t = strip(q.trim())
     const catNorm = strip(cat)
-    return hymns.filter((h) => {
-      const matchesText = !t || strip(h.title + ' ' + h.number + ' ' + (h.category || '') + ' ' + (h.musicKey || '') + ' ' + (h.scale || '')).includes(t)
-      const matchesCat = !catNorm || strip(h.category || '') === catNorm
-      return matchesText && matchesCat
-    })
+    return hymns
+      .filter((h) => {
+        const matchesText = !t || strip(h.title + ' ' + h.number + ' ' + (h.category || '') + ' ' + (h.musicKey || '') + ' ' + (h.scale || '')).includes(t)
+        const matchesCat = !catNorm || strip(h.category || '') === catNorm
+        return matchesText && matchesCat
+      })
+      .sort((a, b) => (a.number || 0) - (b.number || 0))
   }, [q, cat, hymns])
 
   const filteredGroups = useMemo(() => {
