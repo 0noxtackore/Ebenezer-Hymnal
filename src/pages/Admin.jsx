@@ -31,6 +31,7 @@ export default function Admin() {
   const [verses, setVerses] = useState([''])
   const [coro, setCoro] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
+  const [catFilter, setCatFilter] = useState('')
 
   useEffect(() => {
     if (msg) {
@@ -272,8 +273,9 @@ export default function Admin() {
 
   const filtered = hymns.filter((h) => {
     const q = searchQuery.trim().toLowerCase()
-    if (!q) return true
-    return h.title.toLowerCase().includes(q) || String(h.number).includes(q)
+    const matchesText = !q || h.title.toLowerCase().includes(q) || String(h.number).includes(q)
+    const matchesCat = !catFilter || h.category === catFilter
+    return matchesText && matchesCat
   })
 
   return (
@@ -311,6 +313,26 @@ export default function Admin() {
           <Plus size={18} />
         </button>
       </div>
+
+      {categories.length > 0 && (
+        <div className="chips" style={{ marginBottom: 12 }}>
+          <button className={'chip' + (!catFilter ? ' active' : '')} onClick={() => setCatFilter('')}>
+            Todos
+          </button>
+          {categories.map((c) => {
+            const Icon = getIcon(c.icon)
+            return (
+              <button
+                key={c.name}
+                className={'chip' + (catFilter === c.name ? ' active' : '')}
+                onClick={() => setCatFilter(c.name)}
+              >
+                <Icon size={14} /> {c.name}
+              </button>
+            )
+          })}
+        </div>
+      )}
 
       <ul className="hymn-list" style={{ marginTop: 0 }}>
         {filtered.map((h) => (
