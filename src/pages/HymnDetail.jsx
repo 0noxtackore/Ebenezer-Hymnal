@@ -64,7 +64,7 @@ export default function HymnDetail() {
     setProgress(0)
   }, [id])
 
-  if (!h) return <div className="empty">Himno no encontrado.</div>
+  if (!h) return <div className="empty">Alabanza no encontrada.</div>
 
   const downloadBlob = (blob, name) => {
     const url = URL.createObjectURL(blob)
@@ -158,7 +158,7 @@ export default function HymnDetail() {
         <div className="audio-bar">
           <button onClick={toggleAudio}>{playing ? <Pause size={18} /> : <Play size={18} />}</button>
           <div className="track">
-            <div className="name">Audio del himno</div>
+            <div className="name">Audio de la alabanza</div>
             <input type="range" min="0" max="100" value={progress} readOnly />
           </div>
           <audio

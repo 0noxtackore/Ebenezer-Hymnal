@@ -16,14 +16,14 @@ export default function SearchByNumber() {
     if (!n) return
     const h = hymns.find((x) => Number(x.number) === n)
     if (h) nav('/himno/' + h.id)
-    else alert('No se encontró el himno número ' + num)
+    else alert('No se encontró la alabanza número ' + num)
   }
 
   const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
 
   return (
     <div>
-      <div className="num-label">Número del Himno</div>
+      <div className="num-label">Número de la Alabanza</div>
       <div className="num-display">{num || '0'}</div>
 
       <div className="keypad">

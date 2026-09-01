@@ -168,26 +168,26 @@ export default function Admin() {
     const num = Number(form.number)
     const dupNum = catHymns.find((h) => h.number === num && h.id !== form.id)
     if (dupNum) {
-      setMsg(`Ya existe el himno número ${num} en esta categoría ("${dupNum.title}")`)
+      setMsg(`Ya existe la alabanza número ${num} en esta categoría ("${dupNum.title}")`)
       return
     }
     const dupTitle = hymns.find(
       (h) => h.title.toLowerCase() === form.title.trim().toLowerCase() && h.id !== form.id
     )
     if (dupTitle) {
-      setMsg(`Ya existe un himno con el título "${dupTitle.title}"`)
+      setMsg(`Ya existe una alabanza con el título "${dupTitle.title}"`)
       return
     }
     const lyrics = buildLyrics(verses, coro, puente)
     const payload = { ...form, id: form.id || 'h' + Date.now(), number: num, lyrics }
     if (form.id) {
       if (!updateHymn(payload)) {
-        setMsg(`Ya existe el himno número ${num} en otro himno`)
+        setMsg(`Ya existe la alabanza número ${num} en otra categoría`)
         return
       }
     } else {
       if (!addHymn(payload)) {
-        setMsg(`Ya existe el himno número ${num}`)
+        setMsg(`Ya existe la alabanza número ${num}`)
         return
       }
     }
@@ -196,7 +196,7 @@ export default function Admin() {
   }
 
   function remove(h) {
-    if (confirm('¿Eliminar el himno ' + h.number + '?')) deleteHymn(h.id)
+    if (confirm('¿Eliminar la alabanza ' + h.number + '?')) deleteHymn(h.id)
   }
 
   function addCat() {
@@ -313,7 +313,7 @@ export default function Admin() {
             <Search size={18} />
           </span>
           <input
-            placeholder="Buscar himno..."
+            placeholder="Buscar alabanza..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -370,7 +370,7 @@ export default function Admin() {
             <button className="modal-close" onClick={() => setShowModal(false)} aria-label="Cerrar">
               ✕
             </button>
-            <h2>{form.id ? 'Editar himno' : 'Nuevo himno'}</h2>
+            <h2>{form.id ? 'Editar alabanza' : 'Nueva alabanza'}</h2>
             <div className="form-grid">
               <div className="field">
                 <label>Número</label>
@@ -382,14 +382,14 @@ export default function Admin() {
                 />
                 {numTaken && (
                   <small className="muted" style={{ color: '#c62828' }}>
-                    El número {form.number} ya lo usa otro himno
+                    El número {form.number} ya lo usa otra alabanza
                   </small>
                 )}
               </div>
               <div className="field">
                 <label>Título</label>
                 <input
-                  placeholder="Nombre del himno"
+                  placeholder="Nombre de la alabanza"
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
                 />

@@ -9,7 +9,7 @@ export default function Favorites() {
 
   const favs = hymns.filter((h) => ids.includes(h.id))
 
-  if (favs.length === 0) return <div className="empty">Aún no tienes himnos favoritos. Toca ☆ en un himno.</div>
+  if (favs.length === 0) return <div className="empty">Aún no tienes alabanzas favoritas. Toca ☆ en una alabanza.</div>
 
   return (
     <ul className="hymn-list">

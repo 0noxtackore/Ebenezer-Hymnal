@@ -28,7 +28,7 @@ export default function SearchByName() {
         <i className="bi bi-search"></i>
         <input
           autoFocus
-          placeholder="Buscar himno por nombre o número..."
+          placeholder="Buscar alabanza por nombre o número..."
           value={q}
           onChange={(e) => setQ(e.target.value)}
         />
@@ -54,7 +54,7 @@ export default function SearchByName() {
         </div>
       )}
 
-      <div className="count-pill">{results.length} himno(s) encontrado(s)</div>
+      <div className="count-pill">{results.length} alabanza(s) encontrada(s)</div>
 
       <ul className="hymn-list">
         {results.map((h) => (
