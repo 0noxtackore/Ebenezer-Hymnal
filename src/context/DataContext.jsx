@@ -4,15 +4,21 @@ import { db } from '../firebase.js'
 
 const DataContext = createContext(null)
 const OVERRIDES_KEY = 'he_hymns_overrides'
+const DATA_CACHE_KEY = 'he_data_cache'
 const FB_NODE = 'hymnario'
 
 export function DataProvider({ children }) {
-  const [base, setBase] = useState({ hymns: [], categories: [] })
+  const [base, setBase] = useState(() => {
+    try {
+      const cached = localStorage.getItem(DATA_CACHE_KEY)
+      if (cached) return JSON.parse(cached)
+    } catch {}
+    return { hymns: [], categories: [] }
+  })
   const [overrides, setOverrides] = useState(() => {
     try {
       const raw = localStorage.getItem(OVERRIDES_KEY) || 'null'
       const data = JSON.parse(raw)
-      // Deduplicar overrides por número al cargar
       if (data?.hymns?.length) {
         const seen = new Set()
         data.hymns = data.hymns.filter((h) => {
@@ -26,25 +32,26 @@ export function DataProvider({ children }) {
       return null
     }
   })
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(() => {
+    try {
+      return !localStorage.getItem(DATA_CACHE_KEY)
+    } catch {
+      return true
+    }
+  })
 
   useEffect(() => {
     let cancelled = false
-
-    async function seedFirebase(data) {
-      try {
-        await set(ref(db, FB_NODE), data)
-      } catch {
-        // Sin conexión: se continúa en modo local
-      }
-    }
 
     async function load() {
       try {
         const snap = await get(ref(db, FB_NODE))
         const fb = snap.exists() && snap.val() ? snap.val() : null
         if (fb && Array.isArray(fb.hymns)) {
-          if (!cancelled) setBase({ hymns: fb.hymns, categories: fb.categories || [] })
+          if (!cancelled) {
+            setBase({ hymns: fb.hymns, categories: fb.categories || [] })
+            try { localStorage.setItem(DATA_CACHE_KEY, JSON.stringify({ hymns: fb.hymns, categories: fb.categories || [] })) } catch {}
+          }
           return
         }
         throw new Error('empty')
@@ -53,10 +60,14 @@ export function DataProvider({ children }) {
           const r = await fetch('/hymns.json')
           const d = await r.json()
           if (cancelled) return
-          setBase(d || { hymns: [], categories: [] })
-          seedFirebase(d || { hymns: [], categories: [] })
+          const data = d || { hymns: [], categories: [] }
+          setBase(data)
+          try { localStorage.setItem(DATA_CACHE_KEY, JSON.stringify(data)) } catch {}
+          try { await set(ref(db, FB_NODE), data) } catch {}
         } catch {
-          if (!cancelled) setBase({ hymns: [], categories: [] })
+          if (!cancelled && !localStorage.getItem(DATA_CACHE_KEY)) {
+            setBase({ hymns: [], categories: [] })
+          }
         }
       } finally {
         if (!cancelled) setLoading(false)
@@ -64,16 +75,13 @@ export function DataProvider({ children }) {
     }
 
     load()
-    return () => {
-      cancelled = true
-    }
+    return () => { cancelled = true }
   }, [])
 
   const ov = overrides || { hymns: [], removed: [], categories: [] }
   const categories = [...(base.categories || []), ...(ov.categories || [])]
   let hymns = (base.hymns || []).filter((h) => !(ov.removed || []).includes(h.id))
   if (ov.hymns) hymns = [...hymns, ...ov.hymns]
-  // Deduplicar por categoría + número: conservar primera aparición
   const seenKeys = new Set()
   hymns = hymns.filter((h) => {
     const key = (h.category || '') + '#' + h.number
@@ -83,16 +91,11 @@ export function DataProvider({ children }) {
   })
 
   function updateFirebase(finalHymns, finalCategories) {
-    try {
-      set(ref(db, FB_NODE), { hymns: finalHymns, categories: finalCategories })
-    } catch {
-      // Sin conexión: se continúa en modo local
-    }
+    try { set(ref(db, FB_NODE), { hymns: finalHymns, categories: finalCategories }) } catch {}
   }
 
   function persist(next) {
     let hymnsList = next.hymns ?? ov.hymns ?? []
-    // Deduplicar por categoría + número antes de persistir
     {
       const seen = new Set()
       hymnsList = hymnsList.filter((h) => {
@@ -115,6 +118,7 @@ export function DataProvider({ children }) {
       ...(merged.hymns || [])
     ]
     const finalCategories = [...(base.categories || []), ...(merged.categories || [])]
+    try { localStorage.setItem(DATA_CACHE_KEY, JSON.stringify({ hymns: finalHymns, categories: finalCategories })) } catch {}
     updateFirebase(finalHymns, finalCategories)
   }
 
@@ -155,12 +159,9 @@ export function DataProvider({ children }) {
 
   function resetData() {
     localStorage.removeItem(OVERRIDES_KEY)
+    localStorage.removeItem(DATA_CACHE_KEY)
     setOverrides(null)
-    try {
-      set(ref(db, FB_NODE), { hymns: base.hymns || [], categories: base.categories || [] })
-    } catch {
-      // Sin conexión: se continúa en modo local
-    }
+    try { set(ref(db, FB_NODE), { hymns: base.hymns || [], categories: base.categories || [] }) } catch {}
   }
 
   const value = { hymns, categories, loading, addHymn, updateHymn, deleteHymn, addCategory, resetData }

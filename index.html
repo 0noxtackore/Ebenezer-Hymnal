@@ -2,9 +2,6 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/images/logo.png" />
-    <link rel="apple-touch-icon" href="/images/logo_app.png" />
-    <link rel="manifest" href="/manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#C9A227" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -12,18 +9,52 @@
     <meta name="apple-mobile-web-app-title" content="Himnario Ebenezer" />
     <meta name="description" content="Himnario Ebenezer - Instrumento de Adoración" />
     <title>Himnario Ebenezer</title>
+
+    <link rel="icon" type="image/png" href="/images/logo.png" />
+    <link rel="apple-touch-icon" href="/images/logo_app.png" />
+    <link rel="manifest" href="/manifest.json" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://hymnario-ebenezer-default-rtdb.firebaseio.com" />
+    <link rel="dns-prefetch" href="https://hymnario-ebenezer-default-rtdb.firebaseio.com" />
+
+    <link rel="preload" as="image" href="/images/logo.png" />
+    <link rel="preload" as="image" href="/images/logo_dark.png" />
+
     <link
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
+
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: #0e0e10; color: #f0f0f0; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
+      #root { min-height: 100dvh; }
+      .splash { position: fixed; inset: 0; z-index: 9999; background: #0e0e10; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
+      .splash-logo { width: 110px; height: 110px; border-radius: 50%; overflow: hidden; background: radial-gradient(circle at 30% 30%, #1c1c1e 0%, #0e0e10 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 3px rgba(201,162,39,0.15), 0 0 40px rgba(201,162,39,0.15); }
+      .splash-logo img { width: 100%; height: 100%; object-fit: contain; }
+      .splash-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; letter-spacing: 1.5px; color: #C9A227; text-transform: uppercase; }
+      .splash-sub { font-size: 12px; color: #888; letter-spacing: 2px; text-transform: uppercase; }
+      .splash-ring { width: 40px; height: 40px; border: 3px solid rgba(201,162,39,0.15); border-top-color: #C9A227; border-radius: 50%; animation: spin 0.8s linear infinite; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      .skeleton-loader { width: 100%; padding: 16px; }
+      .skeleton-line { background: linear-gradient(90deg, #1c1c1e 25%, #2a2a2c 50%, #1c1c1e 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 8px; }
+      @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+      @media (prefers-color-scheme: light) { body { background: #f5f5f7; color: #1d1d1f; } .splash { background: #f5f5f7; } .splash-logo { background: radial-gradient(circle at 30% 30%, #fff 0%, #e8e8e8 100%); } .skeleton-line { background: linear-gradient(90deg, #e8e8e8 25%, #f0f0f0 50%, #e8e8e8 75%); background-size: 200% 100%; } }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="splash">
+        <div class="splash-logo"><img src="/images/logo.png" alt="logo" /></div>
+        <div class="splash-title">Himnario Ebenezer</div>
+        <div class="splash-sub">Instrumento de Adoración</div>
+        <div class="splash-ring"></div>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
     <script>
-      // Remove Netlify badge
       document.querySelectorAll('[data-nf-variant]').forEach(el => el.remove());
       new MutationObserver(() => {
         document.querySelectorAll('[data-nf-variant], [data-netlify-site-id]').forEach(el => el.remove());
