@@ -91,8 +91,7 @@ export default function HymnDetail() {
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         await navigator.share({
           files: [file],
-          title: `${h.number}. ${h.title}`,
-          text: 'Himno del Himnario Ebenezer'
+          title: `${h.number}. ${h.title}`
         })
       } else {
         downloadBlob(blob, file.name)
