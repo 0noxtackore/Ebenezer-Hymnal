@@ -614,6 +614,29 @@ a { color: inherit; }
   flex-shrink: 0;
 }
 
+.compilation-sub {
+  font-size: 13px;
+  color: #fff;
+}
+
+.compilation-action {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.compilation-action:active {
+  background: rgba(255, 255, 255, 0.35);
+}
+
 .compilation-coros {
   margin-bottom: 4px;
 }
