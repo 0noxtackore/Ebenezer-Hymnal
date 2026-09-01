@@ -1,13 +1,30 @@
+import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSettings } from '../context/SettingsContext.jsx'
 import { useData } from '../context/DataContext.jsx'
 import LazyImage from '../components/LazyImage.jsx'
-import { getIcon } from '../utils/icons.js'
+import { Music } from 'lucide-react'
 
 export default function Home() {
   const nav = useNavigate()
   const { night } = useSettings()
-  const { categories } = useData()
+  const { hymns } = useData()
+
+  const keyGroups = useMemo(() => {
+    const groups = {}
+    hymns.forEach((h) => {
+      const k = (h.musicKey || '').trim()
+      const s = (h.scale || '').trim()
+      const label = k ? (s ? k + ' ' + s : k) : 'Sin tono'
+      if (!groups[label]) groups[label] = { label, key: k, scale: s, count: 0 }
+      groups[label].count++
+    })
+    return Object.values(groups).sort((a, b) => {
+      if (a.label === 'Sin tono') return 1
+      if (b.label === 'Sin tono') return -1
+      return a.label.localeCompare(b.label, 'es')
+    })
+  }, [hymns])
 
   return (
     <div className="home-screen">
@@ -22,26 +39,24 @@ export default function Home() {
         </div>
       </section>
 
-      {categories.length > 0 && (
-        <div className="cat-row">
-          {categories.map((c) => {
-            const Icon = getIcon(c.icon)
-            return (
-              <div
-                key={c.id}
-                className="cat-circle"
-                style={{ cursor: 'pointer' }}
-                onClick={() => nav('/buscar-nombre', { state: { category: c.name } })}
-              >
-                <span className="cat-icon">
-                  <Icon size={30} />
-                </span>
-                <span className="cat-label">{c.name}</span>
-              </div>
-            )
-          })}
-        </div>
-      )}
+      <div className="key-list">
+        {keyGroups.map((g) => (
+          <div
+            key={g.label}
+            className="key-row"
+            onClick={() => nav('/tono/' + encodeURIComponent(g.label))}
+          >
+            <span className="key-icon">
+              <Music size={20} />
+            </span>
+            <div className="key-info">
+              <span className="key-name">{g.label}</span>
+              <span className="key-count">{g.count} alabanza{g.count !== 1 ? 's' : ''}</span>
+            </div>
+          </div>
+        ))}
+        {keyGroups.length === 0 && <div className="empty">Sin alabanzas registradas.</div>}
+      </div>
 
       <div className="home-actions" style={{ marginTop: 14 }}>
         <button className="btn" onClick={() => nav('/buscar-numero')}>

@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth'
-import { Eye, EyeOff, Plus, Pencil, Trash2, Text, Search } from 'lucide-react'
+import { Eye, EyeOff, Plus, Pencil, Trash2, Text, Search, FolderOpen, List } from 'lucide-react'
 import { auth } from '../firebase.js'
 import { useData } from '../context/DataContext.jsx'
 import { getIcon } from '../utils/icons.js'
@@ -32,6 +32,8 @@ export default function Admin() {
   const [searchQuery, setSearchQuery] = useState('')
   const [catFilter, setCatFilter] = useState('')
   const [page, setPage] = useState(1)
+  const [groupedView, setGroupedView] = useState(true)
+  const [collapsed, setCollapsed] = useState({})
   const PER_PAGE = 10
 
   useEffect(() => {
@@ -308,6 +310,29 @@ export default function Admin() {
   const totalPages = Math.ceil(filtered.length / PER_PAGE)
   const paginated = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE)
 
+  const groupedData = useMemo(() => {
+    const groups = {}
+    filtered.forEach((h) => {
+      const k = (h.musicKey || '').trim() || 'Sin tono'
+      const s = (h.scale || '').trim()
+      const keyLabel = s ? k + ' ' + s : k
+      if (!groups[keyLabel]) groups[keyLabel] = {}
+      const cat = h.category || 'Sin categoría'
+      if (!groups[keyLabel][cat]) groups[keyLabel][cat] = []
+      groups[keyLabel][cat].push(h)
+    })
+    const sorted = Object.entries(groups).sort(([a], [b]) => {
+      if (a === 'Sin tono') return 1
+      if (b === 'Sin tono') return -1
+      return a.localeCompare(b, 'es')
+    })
+    return sorted
+  }, [filtered])
+
+  function toggleFolder(label) {
+    setCollapsed((prev) => ({ ...prev, [label]: !prev[label] }))
+  }
+
   return (
     <div>
       {msg && toastVisible && (
@@ -366,35 +391,92 @@ export default function Admin() {
         </div>
       )}
 
-      <ul className="hymn-list" style={{ marginTop: 0 }}>
-        {paginated.map((h) => (
-          <li key={h.id} className="hymn-row">
-            <div className="hymn-num">{h.number}</div>
-            <div className="hymn-meta">
-              <div className="hymn-name">{h.title}</div>
-            </div>
-            <button className="btn ghost" style={{ width: 'auto', padding: '8px 12px' }} onClick={() => startEdit(h)}>
-              <Pencil size={18} />
-            </button>
-            <button className="btn ghost" style={{ width: 'auto', padding: '8px 12px' }} onClick={() => remove(h)}>
-              <Trash2 size={18} />
-            </button>
-          </li>
-        ))}
-      </ul>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+        <button className={'btn sm' + (groupedView ? ' gold' : ' ghost')} onClick={() => setGroupedView(true)}>
+          <FolderOpen size={14} /> Carpetas
+        </button>
+        <button className={'btn sm' + (!groupedView ? ' gold' : ' ghost')} onClick={() => setGroupedView(false)}>
+          <List size={14} /> Lista
+        </button>
+        <span style={{ flex: 1 }} />
+        <span className="count-pill">{filtered.length} resultado{filtered.length !== 1 ? 's' : ''}</span>
+      </div>
 
-      {totalPages > 1 && (
-        <div className="pagination">
-          {page > 1 && <button className="btn ghost" onClick={() => setPage(page - 1)}>Anterior</button>}
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-            <button
-              key={p}
-              className={'btn' + (p === page ? ' gold' : ' ghost')}
-              onClick={() => setPage(p)}
-            >{p}</button>
-          ))}
-          {page < totalPages && <button className="btn ghost" onClick={() => setPage(page + 1)}>Siguiente</button>}
+      {groupedView ? (
+        <div className="admin-folders">
+          {groupedData.map(([keyLabel, cats]) => {
+            const isCollapsed = collapsed[keyLabel]
+            const totalInKey = Object.values(cats).reduce((s, arr) => s + arr.length, 0)
+            return (
+              <div key={keyLabel} className="folder-group">
+                <div className="folder-header" onClick={() => toggleFolder(keyLabel)}>
+                  <span className="folder-arrow">{isCollapsed ? '\u25B6' : '\u25BC'}</span>
+                  <span className="folder-name">{keyLabel}</span>
+                  <span className="folder-count">{totalInKey}</span>
+                </div>
+                {!isCollapsed && (
+                  <div className="folder-body">
+                    {Object.entries(cats).sort(([a], [b]) => a.localeCompare(b, 'es')).map(([cat, items]) => (
+                      <div key={cat} className="folder-sub">
+                        <div className="folder-sub-label">{cat}</div>
+                        <ul className="hymn-list">
+                          {items.map((h) => (
+                            <li key={h.id} className="hymn-row">
+                              <div className="hymn-num">{h.number}</div>
+                              <div className="hymn-meta">
+                                <div className="hymn-name">{h.title}</div>
+                              </div>
+                              <button className="btn ghost" style={{ width: 'auto', padding: '8px 12px' }} onClick={() => startEdit(h)}>
+                                <Pencil size={18} />
+                              </button>
+                              <button className="btn ghost" style={{ width: 'auto', padding: '8px 12px' }} onClick={() => remove(h)}>
+                                <Trash2 size={18} />
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )
+          })}
+          {groupedData.length === 0 && <div className="empty">Sin resultados.</div>}
         </div>
+      ) : (
+        <>
+          <ul className="hymn-list" style={{ marginTop: 0 }}>
+            {paginated.map((h) => (
+              <li key={h.id} className="hymn-row">
+                <div className="hymn-num">{h.number}</div>
+                <div className="hymn-meta">
+                  <div className="hymn-name">{h.title}</div>
+                </div>
+                <button className="btn ghost" style={{ width: 'auto', padding: '8px 12px' }} onClick={() => startEdit(h)}>
+                  <Pencil size={18} />
+                </button>
+                <button className="btn ghost" style={{ width: 'auto', padding: '8px 12px' }} onClick={() => remove(h)}>
+                  <Trash2 size={18} />
+                </button>
+              </li>
+            ))}
+          </ul>
+
+          {totalPages > 1 && (
+            <div className="pagination">
+              {page > 1 && <button className="btn ghost" onClick={() => setPage(page - 1)}>Anterior</button>}
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                <button
+                  key={p}
+                  className={'btn' + (p === page ? ' gold' : ' ghost')}
+                  onClick={() => setPage(p)}
+                >{p}</button>
+              ))}
+              {page < totalPages && <button className="btn ghost" onClick={() => setPage(page + 1)}>Siguiente</button>}
+            </div>
+          )}
+        </>
       )}
 
       {showModal && (
