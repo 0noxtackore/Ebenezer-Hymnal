@@ -8,6 +8,7 @@ import SearchByNumber from './pages/SearchByNumber.jsx'
 import SearchByName from './pages/SearchByName.jsx'
 import HymnDetail from './pages/HymnDetail.jsx'
 import KeyList from './pages/KeyList.jsx'
+import ChorusCompilation from './pages/ChorusCompilation.jsx'
 import Settings from './pages/Settings.jsx'
 import Favorites from './pages/Favorites.jsx'
 import Admin from './pages/Admin.jsx'
@@ -34,6 +35,7 @@ export default function App() {
           <Route path="/buscar-nombre" element={<SearchByName />} />
           <Route path="/himno/:id" element={<HymnDetail />} />
           <Route path="/tono/:key" element={<KeyList />} />
+          <Route path="/coros/:category/:key" element={<ChorusCompilation />} />
           <Route path="/favoritos" element={<Favorites />} />
           <Route path="/configuraciones" element={<Settings />} />
           <Route path="/admin" element={<Admin />} />

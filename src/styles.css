@@ -591,6 +591,68 @@ a { color: inherit; }
   border-bottom: none;
 }
 
+/* ---------- Chorus Compilation ---------- */
+.compilation-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  background: var(--gold);
+  color: #fff;
+  border-radius: 14px;
+  margin-bottom: 16px;
+}
+
+.compilation-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.compilation-coros {
+  margin-bottom: 4px;
+}
+
+.compilation-coros-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--card);
+  border-radius: 12px 12px 0 0;
+}
+
+.compilation-coros-num {
+  background: var(--gold);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.compilation-coros-title {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.compilation-coros .lyrics {
+  background: var(--card);
+  border-radius: 0 0 12px 12px;
+  padding: 0 14px 14px;
+}
+
+.compilation-divider {
+  height: 2px;
+  background: var(--border);
+  margin: 12px 0;
+}
+
 /* ---------- Splash ---------- */
 .splash {
   position: fixed;
