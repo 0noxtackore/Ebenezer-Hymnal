@@ -3,7 +3,6 @@ import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebas
 import { Eye, EyeOff, Plus, Pencil, Trash2, Text, Search } from 'lucide-react'
 import { auth } from '../firebase.js'
 import { useData } from '../context/DataContext.jsx'
-import { useFavorites } from '../context/FavoritesContext.jsx'
 import { getIcon } from '../utils/icons.js'
 import LazyImage from '../components/LazyImage.jsx'
 
@@ -13,7 +12,6 @@ function blank() {
 
 export default function Admin() {
   const { hymns, categories, addHymn, updateHymn, deleteHymn } = useData()
-  const { ids } = useFavorites()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -299,12 +297,14 @@ export default function Admin() {
       <div className="stat-grid">
         <div className="stat">
           <b>{hymns.length}</b>
-          <span>Himnos</span>
+          <span>Alabanzas</span>
         </div>
-        <div className="stat">
-          <b>{ids.length}</b>
-          <span>Favoritos</span>
-        </div>
+        {categories.map((c) => (
+          <div className="stat" key={c.name}>
+            <b>{hymns.filter((h) => h.category === c.name).length}</b>
+            <span>{c.name}</span>
+          </div>
+        ))}
       </div>
 
       <div style={{ display: 'flex', gap: 8, maxWidth: 400, marginBottom: 12 }}>
