@@ -278,10 +278,12 @@ export default function Admin() {
     Number(form.number) > 0 &&
     catHymns.some((h) => h.number === Number(form.number) && h.id !== form.id)
 
+  const strip = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+  const catFilterNorm = strip(catFilter)
   const filtered = hymns.filter((h) => {
     const q = searchQuery.trim().toLowerCase()
     const matchesText = !q || h.title.toLowerCase().includes(q) || String(h.number).includes(q)
-    const matchesCat = !catFilter || h.category === catFilter
+    const matchesCat = !catFilterNorm || strip(h.category || '') === catFilterNorm
     return matchesText && matchesCat
   })
 
