@@ -299,12 +299,14 @@ export default function Admin() {
 
   const strip = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
   const catFilterNorm = strip(catFilter)
-  const filtered = hymns.filter((h) => {
-    const q = searchQuery.trim().toLowerCase()
-    const matchesText = !q || h.title.toLowerCase().includes(q) || String(h.number).includes(q)
-    const matchesCat = !catFilterNorm || strip(h.category || '') === catFilterNorm
-    return matchesText && matchesCat
-  })
+  const filtered = hymns
+    .filter((h) => {
+      const q = searchQuery.trim().toLowerCase()
+      const matchesText = !q || h.title.toLowerCase().includes(q) || String(h.number).includes(q)
+      const matchesCat = !catFilterNorm || strip(h.category || '') === catFilterNorm
+      return matchesText && matchesCat
+    })
+    .sort((a, b) => (a.number || 0) - (b.number || 0))
 
   const canGroup = strip(catFilter) === 'coros lentos' || strip(catFilter) === 'coros rapidos' || strip(catFilter) === 'gospel'
   const showGrouped = canGroup
