@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth'
 import { Eye, EyeOff, Plus, Pencil, Trash2, Text, Search, FolderOpen, List } from 'lucide-react'
 import { auth } from '../firebase.js'
@@ -310,7 +310,7 @@ export default function Admin() {
   const totalPages = Math.ceil(filtered.length / PER_PAGE)
   const paginated = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE)
 
-  const groupedData = useMemo(() => {
+  const groupedData = (() => {
     const groups = {}
     filtered.forEach((h) => {
       const k = (h.musicKey || '').trim() || 'Sin tono'
@@ -321,13 +321,12 @@ export default function Admin() {
       if (!groups[keyLabel][cat]) groups[keyLabel][cat] = []
       groups[keyLabel][cat].push(h)
     })
-    const sorted = Object.entries(groups).sort(([a], [b]) => {
+    return Object.entries(groups).sort(([a], [b]) => {
       if (a === 'Sin tono') return 1
       if (b === 'Sin tono') return -1
       return a.localeCompare(b, 'es')
     })
-    return sorted
-  }, [filtered])
+  })()
 
   function toggleFolder(label) {
     setCollapsed((prev) => ({ ...prev, [label]: !prev[label] }))
