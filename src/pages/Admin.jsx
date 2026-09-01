@@ -73,6 +73,29 @@ export default function Admin() {
     return lyrics
   }
 
+  function autoFormatVerse(text) {
+    if (!text) return text
+    if (text.includes('\n')) return text
+    const maxLen = 45
+    const words = text.split(' ')
+    const lines = []
+    let current = ''
+    for (const word of words) {
+      if ((current + ' ' + word).trim().length > maxLen && current) {
+        lines.push(current.trim())
+        current = word
+      } else {
+        current = current ? current + ' ' + word : word
+      }
+      if (/[.,;!]$/.test(word) && current.length > 20) {
+        lines.push(current.trim())
+        current = ''
+      }
+    }
+    if (current.trim()) lines.push(current.trim())
+    return lines.join('\n')
+  }
+
   function addVerse() {
     setVerses([...verses, ''])
   }
@@ -84,7 +107,7 @@ export default function Admin() {
 
   function updateVerse(i, text) {
     const next = [...verses]
-    next[i] = text
+    next[i] = autoFormatVerse(text)
     setVerses(next)
   }
 
@@ -483,14 +506,16 @@ export default function Admin() {
                   onChange={(e) => updateCoro(e.target.value)}
                 />
               </div>
-              <div className="field">
-                <label>Puente</label>
-                <textarea
-                  placeholder="Texto del puente (opcional)..."
-                  value={puente}
-                  onChange={(e) => setPuente(e.target.value)}
-                />
-              </div>
+              {strip(form.category) === 'especiales' && (
+                <div className="field">
+                  <label>Puente</label>
+                  <textarea
+                    placeholder="Texto del puente (opcional)..."
+                    value={puente}
+                    onChange={(e) => setPuente(e.target.value)}
+                  />
+                </div>
+              )}
             </div>
             <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
               <button className="btn" onClick={submit}>
