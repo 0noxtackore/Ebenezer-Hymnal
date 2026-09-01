@@ -92,12 +92,13 @@ export function DataProvider({ children }) {
 
   function persist(next) {
     let hymnsList = next.hymns ?? ov.hymns ?? []
-    // Deduplicar por número antes de persistir
+    // Deduplicar por categoría + número antes de persistir
     {
       const seen = new Set()
       hymnsList = hymnsList.filter((h) => {
-        if (seen.has(h.number)) return false
-        seen.add(h.number)
+        const key = (h.category || '') + '#' + h.number
+        if (seen.has(key)) return false
+        seen.add(key)
         return true
       })
     }
