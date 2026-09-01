@@ -444,6 +444,16 @@ a { color: inherit; }
   width: 100%;
 }
 
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
 /* ---------- Key List (Home) ---------- */
 .key-list {
   display: flex;
