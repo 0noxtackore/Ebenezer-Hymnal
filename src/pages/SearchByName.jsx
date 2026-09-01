@@ -19,10 +19,12 @@ export default function SearchByName() {
 
   const itemLabel = (() => {
     const n = strip(cat)
-    if (n === 'himnos clasicos') return { noun: 'himno', adj: 'encontrado' }
-    if (n === 'coros lentos' || n === 'coros rapidos' || n === 'gospel') return { noun: 'coro', adj: 'encontrado' }
-    if (n === 'especiales') return { noun: 'alabanza', adj: 'encontrada' }
-    return { noun: 'alabanza', adj: 'encontrada' }
+    if (n === 'himnos clasicos') return { noun: 'himnos clásicos', adj: 'encontrado' }
+    if (n === 'coros lentos') return { noun: 'coros lentos', adj: 'encontrado' }
+    if (n === 'coros rapidos') return { noun: 'coros rápidos', adj: 'encontrado' }
+    if (n === 'gospel') return { noun: 'alabanzas gospel', adj: 'encontrado' }
+    if (n === 'especiales') return { noun: 'especiales', adj: 'encontrado' }
+    return { noun: 'alabanzas', adj: 'encontrada' }
   })()
 
   const chorusGroups = useMemo(() => {
@@ -99,7 +101,7 @@ export default function SearchByName() {
 
       {isChorusMode ? (
         <>
-          <div className="count-pill">{filteredGroups ? filteredGroups.reduce((s, g) => s + g.items.length, 0) : 0} {itemLabel.noun}(s) en {filteredGroups ? filteredGroups.length : 0} tono(s)</div>
+          <div className="count-pill">{filteredGroups ? filteredGroups.reduce((s, g) => s + g.items.length, 0) : 0} {itemLabel.noun} en {filteredGroups ? filteredGroups.length : 0} tono(s)</div>
           <ul className="hymn-list">
             {filteredGroups && filteredGroups.map((g) => (
               <li
@@ -121,7 +123,7 @@ export default function SearchByName() {
         </>
       ) : (
         <>
-          <div className="count-pill">{results.length} {itemLabel.noun}(s) {itemLabel.adj}(s)</div>
+          <div className="count-pill">{results.length} {itemLabel.noun} {itemLabel.adj}(s)</div>
           <ul className="hymn-list">
             {results.map((h) => (
               <li key={h.id} className="hymn-row" onClick={() => nav('/himno/' + h.id)}>
