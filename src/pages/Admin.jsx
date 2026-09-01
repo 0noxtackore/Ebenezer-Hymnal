@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth'
+import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth'
 import { Eye, EyeOff, Plus, Pencil, Trash2, Text, Search } from 'lucide-react'
 import { auth } from '../firebase.js'
 import { useData } from '../context/DataContext.jsx'
@@ -134,11 +134,6 @@ export default function Admin() {
       default:
         return 'No se pudo iniciar sesión'
     }
-  }
-
-  async function logout() {
-    await signOut(auth)
-    setMsg('')
   }
 
   function startNew() {
@@ -359,10 +354,6 @@ export default function Admin() {
           </li>
         ))}
       </ul>
-
-      <button className="btn ghost" style={{ marginTop: 12 }} onClick={logout}>
-        Cerrar sesión
-      </button>
 
       {showModal && (
         <div className="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) setShowModal(false) }}>
