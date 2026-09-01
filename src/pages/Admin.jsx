@@ -362,7 +362,7 @@ export default function Admin() {
 
       {totalPages > 1 && (
         <div className="pagination">
-          <button className="btn ghost" disabled={page === 1} onClick={() => setPage(page - 1)}>Anterior</button>
+          {page > 1 && <button className="btn ghost" onClick={() => setPage(page - 1)}>Anterior</button>}
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
             <button
               key={p}
@@ -370,7 +370,7 @@ export default function Admin() {
               onClick={() => setPage(p)}
             >{p}</button>
           ))}
-          <button className="btn ghost" disabled={page === totalPages} onClick={() => setPage(page + 1)}>Siguiente</button>
+          {page < totalPages && <button className="btn ghost" onClick={() => setPage(page + 1)}>Siguiente</button>}
         </div>
       )}
 
