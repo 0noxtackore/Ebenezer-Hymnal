@@ -10,7 +10,8 @@ import {
   Share2,
   Users,
   Lock,
-  LogOut
+  LogOut,
+  LayoutDashboard
 } from 'lucide-react'
 import { useSettings } from '../context/SettingsContext.jsx'
 import LazyImage from './LazyImage.jsx'
@@ -92,18 +93,32 @@ export default function Layout() {
             )
           })}
           {user ? (
-            <button
-              className="drawer-item"
-              onClick={() => {
-                setOpen(false)
-                handleSignOut()
-              }}
-            >
-              <span className="di-ico">
-                <LogOut size={20} />
-              </span>
-              Cerrar sesión
-            </button>
+            <>
+              <button
+                className={'drawer-item' + (isActive('/admin') ? ' active' : '')}
+                onClick={() => {
+                  setOpen(false)
+                  navigate('/admin')
+                }}
+              >
+                <span className="di-ico">
+                  <LayoutDashboard size={20} />
+                </span>
+                Ir al panel
+              </button>
+              <button
+                className="drawer-item"
+                onClick={() => {
+                  setOpen(false)
+                  handleSignOut()
+                }}
+              >
+                <span className="di-ico">
+                  <LogOut size={20} />
+                </span>
+                Cerrar sesión
+              </button>
+            </>
           ) : (
             <button
               className={'drawer-item' + (isActive('/admin') ? ' active' : '')}
