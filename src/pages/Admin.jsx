@@ -158,9 +158,9 @@ export default function Admin() {
       return
     }
     const num = Number(form.number)
-    const dupNum = hymns.find((h) => h.number === num && h.id !== form.id)
+    const dupNum = catHymns.find((h) => h.number === num && h.id !== form.id)
     if (dupNum) {
-      setMsg(`Ya existe el himno número ${num} ("${dupNum.title}")`)
+      setMsg(`Ya existe el himno número ${num} en esta categoría ("${dupNum.title}")`)
       return
     }
     const dupTitle = hymns.find(
@@ -263,7 +263,6 @@ export default function Admin() {
     )
   }
 
-  const isEspecial = form.category === 'Especiales'
   const catHymns = hymns.filter((h) => h.category === form.category)
   const lastNum = catHymns.reduce((max, h) => Math.max(max, h.number || 0), 0)
   const nextNum = lastNum + 1
@@ -412,61 +411,37 @@ export default function Admin() {
                   </div>
                 </div>
               )}
-              {!isEspecial ? (
-                <>
-                  <div className="field">
-                    <label>Estrofas</label>
-                    {verses.map((v, i) => (
-                      <div key={i} className="verse-field">
-                        <div className="verse-field-header">
-                          <span>Estrofa {i + 1}</span>
-                          {verses.length > 1 && (
-                            <button type="button" className="btn ghost" onClick={() => removeVerse(i)}>
-                              Quitar
-                            </button>
-                          )}
-                        </div>
-                        <textarea
-                          placeholder={i === 0 ? 'Primera estrofa...' : `Estrofa ${i + 1}...`}
-                          value={v}
-                          onChange={(e) => updateVerse(i, e.target.value)}
-                        />
-                      </div>
-                    ))}
-                    <button type="button" className="btn ghost" onClick={addVerse}>
-                      + Agregar estrofa
-                    </button>
-                  </div>
-                  <div className="field">
-                    <label>CORO</label>
+              <div className="field">
+                <label>Estrofas</label>
+                {verses.map((v, i) => (
+                  <div key={i} className="verse-field">
+                    <div className="verse-field-header">
+                      <span>Estrofa {i + 1}</span>
+                      {verses.length > 1 && (
+                        <button type="button" className="btn ghost" onClick={() => removeVerse(i)}>
+                          Quitar
+                        </button>
+                      )}
+                    </div>
                     <textarea
-                      placeholder="Texto del coro..."
-                      value={coro}
-                      onChange={(e) => updateCoro(e.target.value)}
+                      placeholder={i === 0 ? 'Primera estrofa...' : `Estrofa ${i + 1}...`}
+                      value={v}
+                      onChange={(e) => updateVerse(i, e.target.value)}
                     />
                   </div>
-                </>
-              ) : (
-                <>
-                  <div className="field">
-                    <label>Texto</label>
-                    <textarea
-                      placeholder="Texto del especial..."
-                      value={verses[0] || ''}
-                      onChange={(e) => setVerses([e.target.value])}
-                      style={{ minHeight: 160 }}
-                    />
-                  </div>
-                  <div className="field">
-                    <label>CORO</label>
-                    <textarea
-                      placeholder="Texto del coro..."
-                      value={coro}
-                      onChange={(e) => updateCoro(e.target.value)}
-                    />
-                  </div>
-                </>
-              )}
+                ))}
+                <button type="button" className="btn ghost" onClick={addVerse}>
+                  + Agregar estrofa
+                </button>
+              </div>
+              <div className="field">
+                <label>CORO</label>
+                <textarea
+                  placeholder="Texto del coro..."
+                  value={coro}
+                  onChange={(e) => updateCoro(e.target.value)}
+                />
+              </div>
             </div>
             <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
               <button className="btn" onClick={submit}>
