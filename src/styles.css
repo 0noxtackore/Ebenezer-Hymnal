@@ -1537,3 +1537,5 @@ a { color: inherit; }
     transform: translateX(-50%) translateY(12px);
   }
 }
+
+[data-nf-variant="public"] { display: none !important; }
