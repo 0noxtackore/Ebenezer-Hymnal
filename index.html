@@ -16,5 +16,12 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      // Remove Netlify badge
+      document.querySelectorAll('[data-nf-variant]').forEach(el => el.remove());
+      new MutationObserver(() => {
+        document.querySelectorAll('[data-nf-variant], [data-netlify-site-id]').forEach(el => el.remove());
+      }).observe(document.body, { childList: true, subtree: true });
+    </script>
   </body>
 </html>
