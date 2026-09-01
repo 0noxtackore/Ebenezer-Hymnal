@@ -307,6 +307,9 @@ export default function Admin() {
     return matchesText && matchesCat
   })
 
+  const canGroup = strip(catFilter) === 'coros lentos' || strip(catFilter) === 'coros rapidos'
+  const showGrouped = groupedView && canGroup
+
   const totalPages = Math.ceil(filtered.length / PER_PAGE)
   const paginated = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE)
 
@@ -390,18 +393,23 @@ export default function Admin() {
         </div>
       )}
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-        <button className={'btn sm' + (groupedView ? ' gold' : ' ghost')} onClick={() => setGroupedView(true)}>
-          <FolderOpen size={14} /> Carpetas
-        </button>
-        <button className={'btn sm' + (!groupedView ? ' gold' : ' ghost')} onClick={() => setGroupedView(false)}>
-          <List size={14} /> Lista
-        </button>
-        <span style={{ flex: 1 }} />
+      {canGroup && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+          <button className={'btn sm' + (groupedView ? ' gold' : ' ghost')} onClick={() => setGroupedView(true)}>
+            <FolderOpen size={14} /> Carpetas
+          </button>
+          <button className={'btn sm' + (!groupedView ? ' gold' : ' ghost')} onClick={() => setGroupedView(false)}>
+            <List size={14} /> Lista
+          </button>
+          <span style={{ flex: 1 }} />
+        </div>
+      )}
+
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginBottom: 10 }}>
         <span className="count-pill">{filtered.length} resultado{filtered.length !== 1 ? 's' : ''}</span>
       </div>
 
-      {groupedView ? (
+      {showGrouped ? (
         <div className="admin-folders">
           {groupedData.map(([keyLabel, cats]) => {
             const isCollapsed = collapsed[keyLabel]
