@@ -117,15 +117,15 @@ export function DataProvider({ children }) {
   }
 
   function addHymn(h) {
-    const allNumbers = hymns.map((x) => x.number)
-    if (allNumbers.includes(h.number)) return false
+    const catNums = hymns.filter((x) => x.category === h.category).map((x) => x.number)
+    if (catNums.includes(h.number)) return false
     persist({ hymns: [...(ov.hymns || []), h] })
     return true
   }
 
   function updateHymn(h) {
     const conflict = hymns.find(
-      (x) => x.number === h.number && x.id !== h.id
+      (x) => x.number === h.number && x.id !== h.id && x.category === h.category
     )
     if (conflict) return false
     const existing = (ov.hymns || []).find((x) => x.id === h.id)
