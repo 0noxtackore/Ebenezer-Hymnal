@@ -630,6 +630,7 @@ export default function Admin() {
       {deleteTarget && (
         <div className="modal-overlay" onClick={() => setDeleteTarget(null)}>
           <div className="modal delete-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setDeleteTarget(null)}>&times;</button>
             <div className="delete-modal-logo">
               <img src="/images/logo.webp" alt="logo" />
             </div>
