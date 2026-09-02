@@ -1834,6 +1834,16 @@ a { color: inherit; }
   max-width: 340px;
 }
 
+.delete-modal .modal-close {
+  color: var(--gold);
+  background: var(--gold-soft);
+}
+
+.delete-modal .modal-close:hover {
+  color: #fff;
+  background: var(--gold);
+}
+
 .delete-modal-logo {
   width: 64px;
   height: 64px;
