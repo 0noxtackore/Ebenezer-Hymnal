@@ -11,8 +11,9 @@ const strip = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').
 function getDeleteLabel(category) {
   const c = strip(category)
   if (c === 'himnos clasicos') return 'himno'
-  if (c === 'coros lentos' || c === 'coros rapidos') return 'coro'
-  if (c === 'gospel') return 'alabanza gospel'
+  if (c === 'coros lentos') return 'coro lento'
+  if (c === 'coros rapidos') return 'coro rápido'
+  if (c === 'gospel') return 'gospel'
   if (c === 'especiales') return 'especial'
   return 'alabanza'
 }
@@ -634,7 +635,7 @@ export default function Admin() {
             </div>
             <h3>Eliminar {getDeleteLabel(deleteTarget.category)}</h3>
             <p className="delete-modal-text">
-              ¿Estás seguro de eliminar <strong>#{deleteTarget.number} — {deleteTarget.title}</strong>?
+              ¿Estás seguro de eliminar <strong>N° {deleteTarget.number} — {deleteTarget.title}</strong>?
             </p>
             <p className="delete-modal-warn">Esta acción no se puede deshacer.</p>
             <div className="delete-modal-actions">
