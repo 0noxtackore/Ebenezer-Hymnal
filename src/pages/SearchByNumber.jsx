@@ -22,7 +22,7 @@ export default function SearchByNumber() {
   const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
 
   return (
-    <div>
+    <div className="center-screen">
       <div className="num-label">Número de la Alabanza</div>
       <div className="num-display">{num || '0'}</div>
 
