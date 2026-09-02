@@ -1,0 +1,7 @@
+com.ebenezer.hymnal.app-pngs-0 C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\build\generated\res\pngs\debug
+com.ebenezer.hymnal.app-resValues-1 C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\build\generated\res\resValues\debug
+com.ebenezer.hymnal.app-packageDebugResources-2 C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
+com.ebenezer.hymnal.app-packageDebugResources-3 C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
+com.ebenezer.hymnal.app-merged_res-4 C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\build\intermediates\merged_res\debug
+com.ebenezer.hymnal.app-debug-5 C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\src\debug\res
+com.ebenezer.hymnal.app-main-6 C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\src\main\res

@@ -1,0 +1,55 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.ebenezer.hymnal"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="24"
+9        android:targetSdkVersion="34" />
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\src\main\AndroidManifest.xml:5:5-67
+11-->C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\src\main\AndroidManifest.xml:5:22-64
+12    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+12-->C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\src\main\AndroidManifest.xml:6:5-79
+12-->C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\src\main\AndroidManifest.xml:6:22-76
+13
+14    <application
+14-->C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\src\main\AndroidManifest.xml:8:5-24:19
+15        android:allowBackup="true"
+15-->C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\src\main\AndroidManifest.xml:9:9-35
+16        android:debuggable="true"
+17        android:extractNativeLibs="false"
+18        android:icon="@mipmap/ic_launcher"
+18-->C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\src\main\AndroidManifest.xml:10:9-43
+19        android:label="Himnario Ebenezer"
+19-->C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\src\main\AndroidManifest.xml:11:9-42
+20        android:supportsRtl="true"
+20-->C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\src\main\AndroidManifest.xml:12:9-35
+21        android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+21-->C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\src\main\AndroidManifest.xml:13:9-67
+22        android:usesCleartextTraffic="true" >
+22-->C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\src\main\AndroidManifest.xml:14:9-44
+23        <activity
+23-->C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\src\main\AndroidManifest.xml:15:9-23:20
+24            android:name="com.ebenezer.hymnal.MainActivity"
+24-->C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\src\main\AndroidManifest.xml:16:13-41
+25            android:configChanges="orientation|screenSize|keyboardHidden"
+25-->C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\src\main\AndroidManifest.xml:18:13-74
+26            android:exported="true" >
+26-->C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\src\main\AndroidManifest.xml:17:13-36
+27            <intent-filter>
+27-->C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\src\main\AndroidManifest.xml:19:13-22:29
+28                <action android:name="android.intent.action.MAIN" />
+28-->C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\src\main\AndroidManifest.xml:20:17-69
+28-->C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\src\main\AndroidManifest.xml:20:25-66
+29
+30                <category android:name="android.intent.category.LAUNCHER" />
+30-->C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\src\main\AndroidManifest.xml:21:17-77
+30-->C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\android\app\src\main\AndroidManifest.xml:21:27-74
+31            </intent-filter>
+32        </activity>
+33    </application>
+34
+35</manifest>

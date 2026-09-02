@@ -80,33 +80,35 @@ export default function HymnDetail() {
   const share = async () => {
     setSharing(true)
     try {
-      const card = shareCardRef.current
-      if (!card) throw new Error('no-card')
-      const canvas = await html2canvas(card, { scale: 2, backgroundColor: '#faf8f3', useCORS: true })
-      const blob = await new Promise((res) => canvas.toBlob(res, 'image/png'))
-      if (!blob) throw new Error('no-blob')
-      const catSlug = (h.category || 'himno').toLowerCase().replace(/\s+/g, '-')
-      const file = new File([blob], `${catSlug}-${h.number}-${h.title.replace(/\s+/g, '-')}.png`, {
-        type: 'image/png'
-      })
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({
-          files: [file],
-          title: `${h.number}. ${h.title}`
-        })
-      } else {
-        downloadBlob(blob, file.name)
+      const url = window.location.href
+      const title = `${h.number}. ${h.title}`
+      const text = `${h.category || 'Himno'} ${h.number} — ${h.title}\nHimnario Ebenezer`
+
+      try {
+        const card = shareCardRef.current
+        if (card && typeof html2canvas === 'function') {
+          const canvas = await html2canvas(card, { scale: 2, backgroundColor: '#faf8f3', useCORS: true, logging: false })
+          const blob = await new Promise((res) => canvas.toBlob(res, 'image/png'))
+          if (blob) {
+            const catSlug = (h.category || 'himno').toLowerCase().replace(/\s+/g, '-')
+            const file = new File([blob], `${catSlug}-${h.number}-${h.title.replace(/\s+/g, '-')}.png`, { type: 'image/png' })
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+              await navigator.share({ files: [file], title })
+              return
+            }
+          }
+        }
+      } catch {}
+
+      if (navigator.share) {
+        await navigator.share({ title, text, url })
+      } else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(text + '\n' + url)
+        alert('Enlace copiado al portapapeles')
       }
     } catch (e) {
-      const url = window.location.href
-      try {
-        if (navigator.share) await navigator.share({ title: h.title, url })
-        else {
-          await navigator.clipboard.writeText(url)
-          alert('No se pudo generar la captura; enlace copiado al portapapeles')
-        }
-      } catch {
-        /* cancelado */
+      if (e.name !== 'AbortError') {
+        try { await navigator.clipboard.writeText(window.location.href) } catch {}
       }
     } finally {
       setSharing(false)

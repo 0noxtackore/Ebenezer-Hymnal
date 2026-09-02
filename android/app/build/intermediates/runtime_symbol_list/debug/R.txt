@@ -1,0 +1,4 @@
+int id progressBar 0x7f010000
+int id webView 0x7f010001
+int layout activity_main 0x7f020000
+int mipmap ic_launcher 0x7f030000
