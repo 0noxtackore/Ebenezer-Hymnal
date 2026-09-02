@@ -7,6 +7,23 @@ const OVERRIDES_KEY = 'he_hymns_overrides'
 const DATA_CACHE_KEY = 'he_data_cache'
 const FB_NODE = 'hymnario'
 
+const CHORUS_CATS = ['coros lentos', 'coros rapidos', 'gospel']
+
+function renumberChorus(hymns) {
+  const groups = {}
+  hymns.forEach((h) => {
+    const cat = (h.category || '').toLowerCase()
+    if (!CHORUS_CATS.includes(cat)) return
+    const key = cat + '#' + ((h.musicKey || '').trim()) + '#' + ((h.scale || '').trim())
+    if (!groups[key]) groups[key] = []
+    groups[key].push(h)
+  })
+  Object.values(groups).forEach((list) => {
+    list.sort((a, b) => (a.number || 0) - (b.number || 0))
+    list.forEach((h, i) => { h.number = i + 1 })
+  })
+}
+
 export function DataProvider({ children }) {
   const [base, setBase] = useState(() => {
     try {
@@ -89,6 +106,7 @@ export function DataProvider({ children }) {
     seenKeys.add(key)
     return true
   })
+  renumberChorus(hymns)
 
   function updateFirebase(finalHymns, finalCategories) {
     try { set(ref(db, FB_NODE), { hymns: finalHymns, categories: finalCategories }) } catch {}
@@ -113,27 +131,48 @@ export function DataProvider({ children }) {
     setOverrides(merged)
     localStorage.setItem(OVERRIDES_KEY, JSON.stringify(merged))
 
-    const finalHymns = [
+    let finalHymns = [
       ...(base.hymns || []).filter((h) => !(merged.removed || []).includes(h.id)),
       ...(merged.hymns || [])
     ]
+    renumberChorus(finalHymns)
     const finalCategories = [...(base.categories || []), ...(merged.categories || [])]
     try { localStorage.setItem(DATA_CACHE_KEY, JSON.stringify({ hymns: finalHymns, categories: finalCategories })) } catch {}
     updateFirebase(finalHymns, finalCategories)
   }
 
   function addHymn(h) {
-    const catNums = hymns.filter((x) => x.category === h.category).map((x) => x.number)
-    if (catNums.includes(h.number)) return false
+    const cat = (h.category || '').toLowerCase()
+    if (CHORUS_CATS.includes(cat)) {
+      const dup = hymns.find(
+        (x) => x.number === h.number && x.category === h.category &&
+          (x.musicKey || '').trim() === (h.musicKey || '').trim() &&
+          (x.scale || '').trim() === (h.scale || '').trim()
+      )
+      if (dup) return false
+    } else {
+      const catNums = hymns.filter((x) => x.category === h.category).map((x) => x.number)
+      if (catNums.includes(h.number)) return false
+    }
     persist({ hymns: [...(ov.hymns || []), h] })
     return true
   }
 
   function updateHymn(h) {
-    const conflict = hymns.find(
-      (x) => x.number === h.number && x.id !== h.id && x.category === h.category
-    )
-    if (conflict) return false
+    const cat = (h.category || '').toLowerCase()
+    if (CHORUS_CATS.includes(cat)) {
+      const conflict = hymns.find(
+        (x) => x.number === h.number && x.id !== h.id && x.category === h.category &&
+          (x.musicKey || '').trim() === (h.musicKey || '').trim() &&
+          (x.scale || '').trim() === (h.scale || '').trim()
+      )
+      if (conflict) return false
+    } else {
+      const conflict = hymns.find(
+        (x) => x.number === h.number && x.id !== h.id && x.category === h.category
+      )
+      if (conflict) return false
+    }
     const existing = (ov.hymns || []).find((x) => x.id === h.id)
     const baseIds = (base.hymns || []).map((x) => x.id)
     const inBase = baseIds.includes(h.id)

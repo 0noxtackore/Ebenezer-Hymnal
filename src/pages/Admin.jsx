@@ -6,6 +6,12 @@ import { useData } from '../context/DataContext.jsx'
 import { getIcon } from '../utils/icons.js'
 import LazyImage from '../components/LazyImage.jsx'
 
+const CHORUS_CATS = ['coros lentos', 'coros rapidos', 'gospel']
+
+function isChorusCategory(cat) {
+  return CHORUS_CATS.includes(strip(cat))
+}
+
 const strip = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
 function getDeleteLabel(category) {
@@ -193,15 +199,22 @@ export default function Admin() {
   }
 
   function submit() {
-    if (!form.number || !form.title) {
+    const isChorus = isChorusCategory(form.category)
+    if (!isChorus && (!form.number || !form.title)) {
       setMsg('Número y título son obligatorios')
       return
     }
-    const num = Number(form.number)
-    const dupNum = catHymns.find((h) => h.number === num && h.id !== form.id)
-    if (dupNum) {
-      setMsg(`Ya existe la alabanza número ${num} en esta categoría ("${dupNum.title}")`)
+    if (isChorus && !form.title) {
+      setMsg('El título es obligatorio')
       return
+    }
+    const num = isChorus ? nextNum : Number(form.number)
+    if (!isChorus) {
+      const dupNum = catHymns.find((h) => h.number === num && h.id !== form.id)
+      if (dupNum) {
+        setMsg(`Ya existe la alabanza número ${num} en esta categoría ("${dupNum.title}")`)
+        return
+      }
     }
     const dupTitle = hymns.find(
       (h) => h.title.toLowerCase() === form.title.trim().toLowerCase() && h.id !== form.id
@@ -312,9 +325,14 @@ export default function Admin() {
   }
 
   const catHymns = hymns.filter((h) => h.category === form.category)
-  const lastNum = catHymns.reduce((max, h) => Math.max(max, h.number || 0), 0)
+  const isChorusMode = isChorusCategory(form.category)
+  const keyScaleHymns = isChorusMode
+    ? catHymns.filter((h) => (h.musicKey || '').trim() === (form.musicKey || '').trim() && (h.scale || '').trim() === (form.scale || '').trim())
+    : catHymns
+  const lastNum = keyScaleHymns.reduce((max, h) => Math.max(max, h.number || 0), 0)
   const nextNum = lastNum + 1
   const numTaken =
+    !isChorusMode &&
     Number(form.number) > 0 &&
     catHymns.some((h) => h.number === Number(form.number) && h.id !== form.id)
 
@@ -503,20 +521,33 @@ export default function Admin() {
             </button>
             <h2>{form.id ? 'Editar alabanza' : 'Nueva alabanza'}</h2>
             <div className="form-grid">
-              <div className="field">
-                <label>Número</label>
-                <input
-                  placeholder={form.id ? String(form.number) : String(nextNum)}
-                  inputMode="numeric"
-                  value={form.number}
-                  onChange={(e) => setForm({ ...form, number: e.target.value.replace(/\D/g, '') })}
-                />
-                {numTaken && (
-                  <small className="muted" style={{ color: '#c62828' }}>
-                    El número {form.number} ya lo usa otra alabanza
-                  </small>
-                )}
-              </div>
+              {!isChorusMode && (
+                <div className="field">
+                  <label>Número</label>
+                  <input
+                    placeholder={form.id ? String(form.number) : String(nextNum)}
+                    inputMode="numeric"
+                    value={form.number}
+                    onChange={(e) => setForm({ ...form, number: e.target.value.replace(/\D/g, '') })}
+                  />
+                  {numTaken && (
+                    <small className="muted" style={{ color: '#c62828' }}>
+                      El número {form.number} ya lo usa otra alabanza
+                    </small>
+                  )}
+                </div>
+              )}
+              {isChorusMode && (
+                <div className="field">
+                  <label>Número</label>
+                  <input
+                    disabled
+                    value={form.id ? form.number : nextNum}
+                    style={{ opacity: 0.6, cursor: 'not-allowed' }}
+                  />
+                  <small className="muted">Se asigna automáticamente por tono</small>
+                </div>
+              )}
               <div className="field">
                 <label>Título</label>
                 <input
