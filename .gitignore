@@ -19,6 +19,11 @@ fb-test.mjs
 __pycache__/
 *.pyc
 
+# Android
+android/.gradle/
+android/app/build/
+android/local.properties
+
 # Logs and system
 *.log
 .DS_Store
