@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/images/logo_solid.png" alt="Himnario Ebenezer" width="100%"/>
+  <img src="assets/images/logo_solid.png" alt="Himnario Ebenezer" width="100%">
 </p>
 
 <h1 align="center">Ebenezer Hymnal</h1>
