@@ -1,20 +1,27 @@
 package com.ebenezer.hymnal;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ProgressBar;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
     private WebView webView;
-    private ProgressBar progressBar;
+    private LinearLayout errorView;
+    private boolean pageLoaded = false;
     private static final String URL = "https://ebenezer-hymnal.netlify.app/";
+    private static final String TAG = "EbenezerHymnal";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +33,9 @@ public class MainActivity extends Activity {
         );
         setContentView(getResources().getIdentifier("activity_main", "layout", getPackageName()));
 
-        progressBar = findViewById(getResources().getIdentifier("progressBar", "id", getPackageName()));
         webView = findViewById(getResources().getIdentifier("webView", "id", getPackageName()));
+        errorView = findViewById(getResources().getIdentifier("errorView", "id", getPackageName()));
+        TextView retryBtn = findViewById(getResources().getIdentifier("retryBtn", "id", getPackageName()));
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -40,20 +48,49 @@ public class MainActivity extends Activity {
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                Log.d(TAG, "onPageStarted: " + url);
+                pageLoaded = false;
+                errorView.setVisibility(View.GONE);
+                webView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                progressBar.setVisibility(View.GONE);
+                Log.d(TAG, "onPageFinished: " + url);
+                pageLoaded = true;
+                errorView.setVisibility(View.GONE);
                 webView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                super.onReceivedError(view, request, error);
+                Log.d(TAG, "onReceivedError: " + request.getUrl() + " isForMain=" + request.isForMainFrame() + " error=" + error);
+                if (request.isForMainFrame() && !pageLoaded) {
+                    webView.setVisibility(View.GONE);
+                    errorView.setVisibility(View.VISIBLE);
+                }
             }
         });
 
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
-                progressBar.setProgress(newProgress);
+                Log.d(TAG, "progress: " + newProgress);
             }
         });
 
+        retryBtn.setOnClickListener(v -> {
+            pageLoaded = false;
+            errorView.setVisibility(View.GONE);
+            webView.setVisibility(View.VISIBLE);
+            webView.loadUrl(URL);
+        });
+
+        Log.d(TAG, "Loading URL: " + URL);
         webView.loadUrl(URL);
     }
 
