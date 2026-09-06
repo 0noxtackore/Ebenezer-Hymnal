@@ -34,7 +34,7 @@ public class MainActivity extends Activity {
         "        var reader = new FileReader();" +
         "        reader.onload = function() {" +
         "          var base64 = reader.result.split(',')[1];" +
-        "          var tmpFile = ShareBridge.writeBase64File(base64, file.name || 'share.png');" +
+        "          var tmpFile = ShareBridge.writeBase64File(base64, file.name || 'share.jpg');" +
         "          if (tmpFile) {" +
         "            ShareBridge.share(opts.title || '', opts.text || '', tmpFile);" +
         "            resolve();" +
