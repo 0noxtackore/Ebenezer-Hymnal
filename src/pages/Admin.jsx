@@ -57,6 +57,7 @@ export default function Admin() {
   const coroRef = useRef(null)
   const puenteRef = useRef(null)
   const [verseKey, setVerseKey] = useState(0)
+  const [hasVerses, setHasVerses] = useState(true)
 
   useEffect(() => {
     if (msg) {
@@ -86,9 +87,10 @@ export default function Admin() {
   }
 
   function buildLyrics(versesList, coroText, puenteText) {
-    let lyrics = autoFormatVerse((versesList[0] || '').trim())
+    const hasContent = versesList.some((v) => v.trim())
+    let lyrics = hasContent ? autoFormatVerse((versesList[0] || '').trim()) : ''
     if (coroText.trim()) {
-      lyrics += '\n\nCORO\n' + coroText.trim()
+      lyrics += (lyrics ? '\n\n' : '') + 'CORO\n' + coroText.trim()
     }
     if (puenteText.trim()) {
       lyrics += '\n\nPUENTE\n' + puenteText.trim()
@@ -200,6 +202,7 @@ export default function Admin() {
     setCoro('')
     setPuente('')
     setMsg('')
+    setHasVerses(true)
     setShowModal(true)
   }
 
@@ -209,6 +212,7 @@ export default function Admin() {
     setVerses(v.length ? v : [''])
     setCoro(c)
     setPuente(p)
+    setHasVerses(v.some((v) => v.trim()))
     setShowModal(true)
   }
 
@@ -227,12 +231,14 @@ export default function Admin() {
     if (isChorus && !form.scale) {
       errors.push('Escala')
     }
-    const currentVerses = readVerses()
+    const currentVerses = hasVerses ? readVerses() : []
     const currentCoro = readCoro()
     const currentPuente = readPuente()
-    for (let i = 0; i < currentVerses.length; i++) {
-      if (!currentVerses[i].trim()) {
-        errors.push(`Estrofa ${i + 1}`)
+    if (hasVerses) {
+      for (let i = 0; i < currentVerses.length; i++) {
+        if (!currentVerses[i].trim()) {
+          errors.push(`Estrofa ${i + 1}`)
+        }
       }
     }
     if (!currentCoro.trim()) {
@@ -640,28 +646,38 @@ export default function Admin() {
                 </div>
               )}
               <div className="field">
-                <label>Estrofas</label>
-                {verses.map((v, i) => (
-                  <div key={i} className="verse-field">
-                    <div className="verse-field-header">
-                      <span>Estrofa {i + 1}</span>
-                      {verses.length > 1 && (
-                        <button type="button" className="btn ghost" onClick={() => removeVerse(i)}>
-                          Quitar
-                        </button>
-                      )}
-                    </div>
-                    <textarea
-                      key={verseKey + '-' + i}
-                      placeholder={i === 0 ? 'Primera estrofa...' : `Estrofa ${i + 1}...`}
-                      defaultValue={v}
-                      ref={(el) => { verseRefs.current[i] = el }}
-                    />
-                  </div>
-                ))}
-                <button type="button" className="btn ghost" onClick={addVerse}>
-                  + Agregar estrofa
-                </button>
+                <div className="field-header">
+                  <label>Estrofas</label>
+                  <label className="switch">
+                    <input type="checkbox" checked={hasVerses} onChange={(e) => setHasVerses(e.target.checked)} />
+                    <span className="switch-slider"></span>
+                  </label>
+                </div>
+                {hasVerses && (
+                  <>
+                    {verses.map((v, i) => (
+                      <div key={i} className="verse-field">
+                        <div className="verse-field-header">
+                          <span>Estrofa {i + 1}</span>
+                          {verses.length > 1 && (
+                            <button type="button" className="btn ghost" onClick={() => removeVerse(i)}>
+                              Quitar
+                            </button>
+                          )}
+                        </div>
+                        <textarea
+                          key={verseKey + '-' + i}
+                          placeholder={i === 0 ? 'Primera estrofa...' : `Estrofa ${i + 1}...`}
+                          defaultValue={v}
+                          ref={(el) => { verseRefs.current[i] = el }}
+                        />
+                      </div>
+                    ))}
+                    <button type="button" className="btn ghost" onClick={addVerse}>
+                      + Agregar estrofa
+                    </button>
+                  </>
+                )}
               </div>
               <div className="field">
                 <label>CORO</label>
