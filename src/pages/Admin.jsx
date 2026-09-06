@@ -61,15 +61,17 @@ export default function Admin() {
   useEffect(() => {
     if (msg) {
       setToastVisible(true)
-      const t = setTimeout(() => {
-        setMsg('')
-        setToastVisible(false)
-      }, 3500)
-      return () => clearTimeout(t)
+      if (!showModal) {
+        const t = setTimeout(() => {
+          setMsg('')
+          setToastVisible(false)
+        }, 3500)
+        return () => clearTimeout(t)
+      }
     } else {
       setToastVisible(false)
     }
-  }, [msg])
+  }, [msg, showModal])
 
   function parseLyricsToBlocks(lyrics) {
     if (!lyrics || !lyrics.trim()) return { verses: [''], coro: '', puente: '' }
@@ -197,6 +199,7 @@ export default function Admin() {
     setVerses([''])
     setCoro('')
     setPuente('')
+    setMsg('')
     setShowModal(true)
   }
 
