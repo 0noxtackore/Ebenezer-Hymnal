@@ -58,6 +58,17 @@ export default function Admin() {
   const puenteRef = useRef(null)
   const [verseKey, setVerseKey] = useState(0)
   const [hasVerses, setHasVerses] = useState(true)
+  const [hasCoro, setHasCoro] = useState(true)
+
+  function toggleVerses(val) {
+    if (!val && !hasCoro) return
+    setHasVerses(val)
+  }
+
+  function toggleCoro(val) {
+    if (!val && !hasVerses) return
+    setHasCoro(val)
+  }
 
   useEffect(() => {
     if (msg) {
@@ -203,6 +214,7 @@ export default function Admin() {
     setPuente('')
     setMsg('')
     setHasVerses(true)
+    setHasCoro(true)
     setShowModal(true)
   }
 
@@ -212,7 +224,10 @@ export default function Admin() {
     setVerses(v.length ? v : [''])
     setCoro(c)
     setPuente(p)
-    setHasVerses(v.some((v) => v.trim()))
+    const vHasVerses = v.some((v) => v.trim())
+    const vHasCoro = !!c.trim()
+    setHasVerses(vHasVerses || !vHasCoro)
+    setHasCoro(vHasCoro || !vHasVerses)
     setShowModal(true)
   }
 
@@ -232,7 +247,7 @@ export default function Admin() {
       errors.push('Escala')
     }
     const currentVerses = hasVerses ? readVerses() : []
-    const currentCoro = readCoro()
+    const currentCoro = hasCoro ? readCoro() : ''
     const currentPuente = readPuente()
     if (hasVerses) {
       for (let i = 0; i < currentVerses.length; i++) {
@@ -241,7 +256,7 @@ export default function Admin() {
         }
       }
     }
-    if (!currentCoro.trim()) {
+    if (hasCoro && !currentCoro.trim()) {
       errors.push('Coro')
     }
     if (errors.length > 0) {
@@ -649,7 +664,7 @@ export default function Admin() {
                 <div className="field-header">
                   <label>Estrofas</label>
                   <label className="switch">
-                    <input type="checkbox" checked={hasVerses} onChange={(e) => setHasVerses(e.target.checked)} />
+                    <input type="checkbox" checked={hasVerses} onChange={(e) => toggleVerses(e.target.checked)} />
                     <span className="switch-slider"></span>
                   </label>
                 </div>
@@ -680,13 +695,21 @@ export default function Admin() {
                 )}
               </div>
               <div className="field">
-                <label>CORO</label>
-                <textarea
-                  placeholder="Texto del coro..."
-                  key={'coro-' + verseKey}
-                  defaultValue={coro}
-                  ref={coroRef}
-                />
+                <div className="field-header">
+                  <label>CORO</label>
+                  <label className="switch">
+                    <input type="checkbox" checked={hasCoro} onChange={(e) => toggleCoro(e.target.checked)} />
+                    <span className="switch-slider"></span>
+                  </label>
+                </div>
+                {hasCoro && (
+                  <textarea
+                    placeholder="Texto del coro..."
+                    key={'coro-' + verseKey}
+                    defaultValue={coro}
+                    ref={coroRef}
+                  />
+                )}
               </div>
               {strip(form.category) === 'especiales' && (
                 <div className="field">
