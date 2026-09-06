@@ -1572,6 +1572,11 @@ a { color: inherit; }
   transform: translateX(18px);
 }
 
+.switch-disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
 .modal-overlay {
   position: fixed;
   inset: 0;

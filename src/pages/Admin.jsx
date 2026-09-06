@@ -663,8 +663,8 @@ export default function Admin() {
               <div className="field">
                 <div className="field-header">
                   <label>Estrofas</label>
-                  <label className="switch">
-                    <input type="checkbox" checked={hasVerses} onChange={(e) => toggleVerses(e.target.checked)} />
+                  <label className={'switch' + (!hasCoro ? ' switch-disabled' : '')}>
+                    <input type="checkbox" checked={hasVerses} onChange={(e) => toggleVerses(e.target.checked)} disabled={!hasCoro} />
                     <span className="switch-slider"></span>
                   </label>
                 </div>
@@ -697,8 +697,8 @@ export default function Admin() {
               <div className="field">
                 <div className="field-header">
                   <label>CORO</label>
-                  <label className="switch">
-                    <input type="checkbox" checked={hasCoro} onChange={(e) => toggleCoro(e.target.checked)} />
+                  <label className={'switch' + (!hasVerses ? ' switch-disabled' : '')}>
+                    <input type="checkbox" checked={hasCoro} onChange={(e) => toggleCoro(e.target.checked)} disabled={!hasVerses} />
                     <span className="switch-slider"></span>
                   </label>
                 </div>
