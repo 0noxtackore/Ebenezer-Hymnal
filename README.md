@@ -12,6 +12,8 @@
   <img src="https://img.shields.io/badge/React-18-61DAFB?logo=react" />
   <img src="https://img.shields.io/badge/Vite-5-646cff?logo=vite" />
   <img src="https://img.shields.io/badge/Firebase-FFCA28?logo=firebase" />
+  <img src="https://img.shields.io/badge/Java-ED8B00?logo=openjdk&logoColor=white" />
+  <img src="https://img.shields.io/badge/Android-3DDC84?logo=android&logoColor=white" />
   <img src="https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript" />
   <img src="https://img.shields.io/badge/License-MIT-green" />
 </p>
@@ -47,6 +49,8 @@ Ebenezer Hymnal is a mobile-first React application designed for church congrega
   <img src="https://img.shields.io/badge/Framer_Motion-0055FF?logo=framer&logoColor=white" />
   <img src="https://img.shields.io/badge/html2canvas-DD0000" />
   <img src="https://img.shields.io/badge/Lucide_React-000000?logo=lucide" />
+  <img src="https://img.shields.io/badge/Android_WebView-3DDC84?logo=android&logoColor=white" />
+  <img src="https://img.shields.io/badge/Java-ED8B00?logo=openjdk&logoColor=white" />
 </p>
 
 - **React 18** — Component-based UI with hooks
@@ -56,6 +60,8 @@ Ebenezer Hymnal is a mobile-first React application designed for church congrega
 - **Framer Motion** — Page transitions and animations
 - **html2canvas** — Client-side hymn card generation
 - **Lucide React** — Consistent iconography
+- **Android WebView** — Native wrapper for APK distribution
+- **Java** — Native bridge for share functionality via ShareBridge
 
 ## Getting Started
 
@@ -96,6 +102,14 @@ npm run preview
 
 ```
 Ebenezer-Hymnal/
+├── android/                    # Android WebView wrapper
+│   └── app/src/main/
+│       ├── java/com/ebenezer/hymnal/
+│       │   ├── MainActivity.java    # WebView setup, JS injection
+│       │   └── ShareBridge.java     # Java ↔ JS share bridge
+│       ├── res/xml/
+│       │   └── file_paths.xml       # FileProvider config
+│       └── AndroidManifest.xml
 ├── assets/
 │   ├── images/               # Logos, banners, gallery images
 │   ├── hymns.json            # 221 hymns (source data)
@@ -116,6 +130,7 @@ Ebenezer-Hymnal/
 │   ├── firebase.js           # Firebase initialization
 │   ├── main.jsx              # Entry point
 │   └── styles.css            # Global styles and design tokens
+├── Himnario-Ebenezer.apk     # Signed release APK
 ├── index.html
 ├── package.json
 ├── vite.config.js
@@ -134,6 +149,29 @@ Ebenezer-Hymnal/
 ## License
 
 Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for details.
+
+## Android APK
+
+The app is distributed as a native Android APK using a WebView wrapper that loads the Netlify-deployed React app.
+
+### Building the APK
+
+```bash
+cd android
+./gradlew assembleRelease
+```
+
+The signed APK will be at `android/app/build/outputs/apk/release/app-release.apk`.
+
+### Share Bridge (ShareBridge.java)
+
+Android WebView does not support the Web Share API (`navigator.share`). `ShareBridge.java` is a JavaScript interface that bridges the gap:
+
+- **`ShareBridge.writeBase64File()`** — Receives base64 image data from JS, writes it to a temp file in cache
+- **`ShareBridge.share()`** — Opens Android's native share intent (Intent.ACTION_SEND) with the image via FileProvider
+- **`ShareBridge.shareText()`** — Opens share intent with plain text fallback
+
+The bridge is injected into the WebView via `evaluateJavascript()` on every page load, overriding `navigator.share` so the React code works without modifications.
 
 ---
 
