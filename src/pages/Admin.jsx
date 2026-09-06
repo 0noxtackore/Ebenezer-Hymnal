@@ -408,7 +408,7 @@ export default function Admin() {
 
   return (
     <div>
-      {msg && toastVisible && (
+      {msg && toastVisible && !showModal && (
         <div className="toast">
           <LazyImage src="/images/logo.webp" alt="logo" style={{ width: 28, height: 28, borderRadius: '50%', flexShrink: 0 }} />
           <span>{msg}</span>
@@ -552,6 +552,7 @@ export default function Admin() {
               ✕
             </button>
             <h2>{form.id ? 'Editar alabanza' : 'Nueva alabanza'}</h2>
+            {msg && <div className="modal-msg">{msg}</div>}
             <div className="form-grid">
               {!isChorusMode && (
                 <div className="field">

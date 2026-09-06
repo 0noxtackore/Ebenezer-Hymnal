@@ -1570,6 +1570,22 @@ a { color: inherit; }
   margin-bottom: 14px;
 }
 
+.modal-msg {
+  background: #fef3f2;
+  color: #b42318;
+  border: 1px solid #fecdca;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+
+body.night .modal-msg {
+  background: #3b1a17;
+  color: #f97066;
+  border-color: #5c2a24;
+}
+
 .modal .field textarea,
 .modal .verse-field textarea {
   min-height: 90px;
