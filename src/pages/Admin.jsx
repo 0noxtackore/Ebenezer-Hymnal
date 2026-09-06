@@ -210,34 +210,33 @@ export default function Admin() {
   }
 
   function submit() {
+    const errors = []
     const isChorus = isChorusCategory(form.category)
     if (!isChorus && !form.number) {
-      setMsg('Completa el campo Número')
-      return
+      errors.push('Número')
     }
     if (!form.title.trim()) {
-      setMsg('Completa el campo Título')
-      return
+      errors.push('Título')
     }
     if (isChorus && !form.musicKey) {
-      setMsg('Selecciona la Tonalidad')
-      return
+      errors.push('Tonalidad')
     }
     if (isChorus && !form.scale) {
-      setMsg('Selecciona la Escala')
-      return
+      errors.push('Escala')
     }
     const currentVerses = readVerses()
     const currentCoro = readCoro()
     const currentPuente = readPuente()
     for (let i = 0; i < currentVerses.length; i++) {
       if (!currentVerses[i].trim()) {
-        setMsg(`Completa el campo Estrofa ${i + 1}`)
-        return
+        errors.push(`Estrofa ${i + 1}`)
       }
     }
     if (!currentCoro.trim()) {
-      setMsg('Completa el campo Coro')
+      errors.push('Coro')
+    }
+    if (errors.length > 0) {
+      setMsg(`Completa: ${errors.join(', ')}`)
       return
     }
     const num = isChorus ? nextNum : Number(form.number)
@@ -552,7 +551,6 @@ export default function Admin() {
               ✕
             </button>
             <h2>{form.id ? 'Editar alabanza' : 'Nueva alabanza'}</h2>
-            {msg && <div className="modal-msg">{msg}</div>}
             <div className="form-grid">
               {!isChorusMode && (
                 <div className="field">
@@ -683,6 +681,7 @@ export default function Admin() {
                 </div>
               )}
             </div>
+            {msg && <div className="modal-msg">{msg}</div>}
             <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
               <button className="btn" onClick={submit}>
                 Guardar
