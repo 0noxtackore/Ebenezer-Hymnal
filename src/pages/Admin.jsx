@@ -211,28 +211,33 @@ export default function Admin() {
 
   function submit() {
     const isChorus = isChorusCategory(form.category)
-    if (!isChorus && (!form.number || !form.title)) {
-      setMsg('Número y título son obligatorios')
+    if (!isChorus && !form.number) {
+      setMsg('Completa el campo Número')
       return
     }
-    if (isChorus && !form.title) {
-      setMsg('El título es obligatorio')
+    if (!form.title.trim()) {
+      setMsg('Completa el campo Título')
       return
     }
-    if (isChorus && (!form.musicKey || !form.scale)) {
-      setMsg('Tonalidad y escala son obligatorias')
+    if (isChorus && !form.musicKey) {
+      setMsg('Selecciona la Tonalidad')
+      return
+    }
+    if (isChorus && !form.scale) {
+      setMsg('Selecciona la Escala')
       return
     }
     const currentVerses = readVerses()
     const currentCoro = readCoro()
     const currentPuente = readPuente()
-    const hasEmptyVerse = currentVerses.some((v) => !v.trim())
-    if (hasEmptyVerse) {
-      setMsg('Todas las estrofas deben tener contenido')
-      return
+    for (let i = 0; i < currentVerses.length; i++) {
+      if (!currentVerses[i].trim()) {
+        setMsg(`Completa el campo Estrofa ${i + 1}`)
+        return
+      }
     }
     if (!currentCoro.trim()) {
-      setMsg('El coro es obligatorio')
+      setMsg('Completa el campo Coro')
       return
     }
     const num = isChorus ? nextNum : Number(form.number)
