@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth'
 import { Eye, EyeOff, Plus, Pencil, Trash2, Text, Search } from 'lucide-react'
 import { auth } from '../firebase.js'
@@ -53,6 +53,10 @@ export default function Admin() {
   const [collapsed, setCollapsed] = useState({})
   const [deleteTarget, setDeleteTarget] = useState(null)
   const PER_PAGE = 10
+  const verseRefs = useRef({})
+  const coroRef = useRef(null)
+  const puenteRef = useRef(null)
+  const [verseKey, setVerseKey] = useState(0)
 
   useEffect(() => {
     if (msg) {
@@ -80,7 +84,7 @@ export default function Admin() {
   }
 
   function buildLyrics(versesList, coroText, puenteText) {
-    let lyrics = (versesList[0] || '').trim()
+    let lyrics = autoFormatVerse((versesList[0] || '').trim())
     if (coroText.trim()) {
       lyrics += '\n\nCORO\n' + coroText.trim()
     }
@@ -88,7 +92,7 @@ export default function Admin() {
       lyrics += '\n\nPUENTE\n' + puenteText.trim()
     }
     if (versesList.length > 1) {
-      lyrics += '\n\n' + versesList.slice(1).map((v) => v.trim()).filter((v) => v).join('\n\n')
+      lyrics += '\n\n' + versesList.slice(1).map((v) => autoFormatVerse(v.trim())).filter((v) => v).join('\n\n')
     }
     return lyrics
   }
@@ -118,21 +122,28 @@ export default function Admin() {
 
   function addVerse() {
     setVerses([...verses, ''])
+    setVerseKey((k) => k + 1)
   }
 
   function removeVerse(i) {
     if (verses.length <= 1) return
     setVerses(verses.filter((_, idx) => idx !== i))
+    setVerseKey((k) => k + 1)
   }
 
-  function updateVerse(i, text) {
-    const next = [...verses]
-    next[i] = autoFormatVerse(text)
-    setVerses(next)
+  function readVerses() {
+    return verses.map((_, i) => {
+      const el = verseRefs.current[i]
+      return el ? el.value : ''
+    })
   }
 
-  function updateCoro(text) {
-    setCoro(text)
+  function readCoro() {
+    return coroRef.current ? coroRef.current.value : ''
+  }
+
+  function readPuente() {
+    return puenteRef.current ? puenteRef.current.value : ''
   }
 
   useEffect(() => {
@@ -208,6 +219,22 @@ export default function Admin() {
       setMsg('El título es obligatorio')
       return
     }
+    if (isChorus && (!form.musicKey || !form.scale)) {
+      setMsg('Tonalidad y escala son obligatorias')
+      return
+    }
+    const currentVerses = readVerses()
+    const currentCoro = readCoro()
+    const currentPuente = readPuente()
+    const hasEmptyVerse = currentVerses.some((v) => !v.trim())
+    if (hasEmptyVerse) {
+      setMsg('Todas las estrofas deben tener contenido')
+      return
+    }
+    if (!currentCoro.trim()) {
+      setMsg('El coro es obligatorio')
+      return
+    }
     const num = isChorus ? nextNum : Number(form.number)
     if (!isChorus) {
       const dupNum = catHymns.find((h) => h.number === num && h.id !== form.id)
@@ -223,7 +250,7 @@ export default function Admin() {
       setMsg(`Ya existe una alabanza con el título "${dupTitle.title}"`)
       return
     }
-    const lyrics = buildLyrics(verses, coro, puente)
+    const lyrics = buildLyrics(currentVerses, currentCoro, currentPuente)
     const payload = { ...form, id: form.id || 'h' + Date.now(), number: num, lyrics }
     if (form.id) {
       if (!updateHymn(payload)) {
@@ -541,9 +568,10 @@ export default function Admin() {
                 <div className="field">
                   <label>Número</label>
                   <input
-                    disabled
-                    value={form.id ? form.number : nextNum}
-                    style={{ opacity: 0.6, cursor: 'not-allowed' }}
+                    placeholder={form.id ? String(form.number) : String(nextNum)}
+                    inputMode="numeric"
+                    value={form.number}
+                    onChange={(e) => setForm({ ...form, number: e.target.value.replace(/\D/g, '') })}
                   />
                   <small className="muted">Se asigna automáticamente por tono</small>
                 </div>
@@ -617,9 +645,10 @@ export default function Admin() {
                       )}
                     </div>
                     <textarea
+                      key={verseKey + '-' + i}
                       placeholder={i === 0 ? 'Primera estrofa...' : `Estrofa ${i + 1}...`}
-                      value={v}
-                      onChange={(e) => updateVerse(i, e.target.value)}
+                      defaultValue={v}
+                      ref={(el) => { verseRefs.current[i] = el }}
                     />
                   </div>
                 ))}
@@ -631,18 +660,20 @@ export default function Admin() {
                 <label>CORO</label>
                 <textarea
                   placeholder="Texto del coro..."
-                  value={coro}
-                  onChange={(e) => updateCoro(e.target.value)}
+                  key={'coro-' + verseKey}
+                  defaultValue={coro}
+                  ref={coroRef}
                 />
               </div>
               {strip(form.category) === 'especiales' && (
                 <div className="field">
-                  <label>Puente</label>
-                  <textarea
-                    placeholder="Texto del puente (opcional)..."
-                    value={puente}
-                    onChange={(e) => setPuente(e.target.value)}
-                  />
+                <label>Puente</label>
+                <textarea
+                  placeholder="Texto del puente (opcional)..."
+                  key={'puente-' + verseKey}
+                  defaultValue={puente}
+                  ref={puenteRef}
+                />
                 </div>
               )}
             </div>
