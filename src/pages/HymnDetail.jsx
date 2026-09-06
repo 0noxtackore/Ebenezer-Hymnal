@@ -58,6 +58,14 @@ export default function HymnDetail() {
   const [playing, setPlaying] = useState(false)
   const [progress, setProgress] = useState(0)
   const [sharing, setSharing] = useState(false)
+  const [toast, setToast] = useState('')
+
+  useEffect(() => {
+    if (toast) {
+      const t = setTimeout(() => setToast(''), 3000)
+      return () => clearTimeout(t)
+    }
+  }, [toast])
 
   useEffect(() => {
     setPlaying(false)
@@ -81,8 +89,11 @@ export default function HymnDetail() {
     setSharing(true)
     try {
       const url = window.location.href
-      const title = `${h.number}. ${h.title}`
-      const text = `${h.category || 'Himno'} ${h.number} — ${h.title}\nHimnario Ebenezer`
+      const header = `${h.category || 'Himno'} ${h.number} — ${h.title}`
+      const body = parseLyrics(h.lyrics)
+        .map((v) => (v.label ? v.label + '\n' + v.lines.join('\n') : v.lines.join('\n')))
+        .join('\n\n')
+      const fullText = header + '\n\n' + body + '\n\n' + url
 
       try {
         const card = shareCardRef.current
@@ -93,7 +104,7 @@ export default function HymnDetail() {
             const catSlug = (h.category || 'himno').toLowerCase().replace(/\s+/g, '-')
             const file = new File([blob], `${catSlug}-${h.number}-${h.title.replace(/\s+/g, '-')}.png`, { type: 'image/png' })
             if (navigator.canShare && navigator.canShare({ files: [file] })) {
-              await navigator.share({ files: [file], title })
+              await navigator.share({ files: [file], title: header })
               return
             }
           }
@@ -101,14 +112,18 @@ export default function HymnDetail() {
       } catch {}
 
       if (navigator.share) {
-        await navigator.share({ title, text, url })
+        await navigator.share({ title: header, text: fullText })
       } else if (navigator.clipboard) {
-        await navigator.clipboard.writeText(text + '\n' + url)
-        alert('Enlace copiado al portapapeles')
+        await navigator.clipboard.writeText(fullText)
+        setToast('Letra copiada al portapapeles')
       }
     } catch (e) {
       if (e.name !== 'AbortError') {
-        try { await navigator.clipboard.writeText(window.location.href) } catch {}
+        try {
+          const fallbackText = `${h.number}. ${h.title}\nHimnario Ebenezer\n${window.location.href}`
+          await navigator.clipboard.writeText(fallbackText)
+          setToast('Enlace copiado al portapapeles')
+        } catch {}
       }
     } finally {
       setSharing(false)
@@ -206,6 +221,12 @@ export default function HymnDetail() {
         </div>
         <div className="share-card-foot">Instrumento de Adoración</div>
       </div>
+      {toast && (
+        <div className="toast">
+          <LazyImage src="/images/logo.webp" alt="logo" style={{ width: 28, height: 28, borderRadius: '50%', flexShrink: 0 }} />
+          <span>{toast}</span>
+        </div>
+      )}
     </div>
   )
 }
