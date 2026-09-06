@@ -88,42 +88,41 @@ export default function HymnDetail() {
   const share = async () => {
     setSharing(true)
     try {
-      const url = window.location.href
       const header = `${h.category || 'Himno'} ${h.number} — ${h.title}`
-      const body = parseLyrics(h.lyrics)
-        .map((v) => (v.label ? v.label + '\n' + v.lines.join('\n') : v.lines.join('\n')))
-        .join('\n\n')
-      const fullText = header + '\n\n' + body + '\n\n' + url
+      const card = shareCardRef.current
 
-      try {
-        const card = shareCardRef.current
-        if (card && typeof html2canvas === 'function') {
+      if (card && typeof html2canvas === 'function') {
+        try {
           const canvas = await html2canvas(card, { scale: 2, backgroundColor: '#faf8f3', useCORS: true, logging: false })
           const blob = await new Promise((res) => canvas.toBlob(res, 'image/png'))
           if (blob) {
             const catSlug = (h.category || 'himno').toLowerCase().replace(/\s+/g, '-')
-            const file = new File([blob], `${catSlug}-${h.number}-${h.title.replace(/\s+/g, '-')}.png`, { type: 'image/png' })
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            const fileName = `${catSlug}-${h.number}-${h.title.replace(/\s+/g, '-')}.png`
+            const file = new File([blob], fileName, { type: 'image/png' })
+
+            if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
               await navigator.share({ files: [file], title: header })
               return
             }
-          }
-        }
-      } catch {}
 
-      if (navigator.share) {
-        await navigator.share({ title: header, text: fullText })
-      } else if (navigator.clipboard) {
-        await navigator.clipboard.writeText(fullText)
-        setToast('Letra copiada al portapapeles')
+            const url = URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.href = url
+            a.download = fileName
+            document.body.appendChild(a)
+            a.click()
+            a.remove()
+            setTimeout(() => URL.revokeObjectURL(url), 3000)
+            setToast('Imagen descargada — compartela desde tu galeria')
+            return
+          }
+        } catch {}
       }
+
+      setToast('No se pudo generar la imagen')
     } catch (e) {
       if (e.name !== 'AbortError') {
-        try {
-          const fallbackText = `${h.number}. ${h.title}\nHimnario Ebenezer\n${window.location.href}`
-          await navigator.clipboard.writeText(fallbackText)
-          setToast('Enlace copiado al portapapeles')
-        } catch {}
+        setToast('Error al compartir')
       }
     } finally {
       setSharing(false)
