@@ -26,7 +26,6 @@ public class MainActivity extends Activity {
     private static final String SHARE_OVERRIDE_JS =
         "if (!window.__shareBridgeLoaded) {" +
         "  window.__shareBridgeLoaded = true;" +
-        "  window.__origShare = navigator.share.bind(navigator);" +
         "  navigator.share = function(opts) {" +
         "    if (opts && opts.files && opts.files.length > 0) {" +
         "      var file = opts.files[0];" +
@@ -50,7 +49,6 @@ public class MainActivity extends Activity {
         "      return Promise.resolve();" +
         "    }" +
         "  };" +
-        "  Object.defineProperty(navigator, 'canShare', { value: function() { return true; }, writable: false });" +
         "}";
 
     @Override

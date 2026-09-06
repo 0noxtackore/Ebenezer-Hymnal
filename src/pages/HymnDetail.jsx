@@ -92,31 +92,29 @@ export default function HymnDetail() {
       const card = shareCardRef.current
 
       if (card && typeof html2canvas === 'function') {
-        try {
-          const canvas = await html2canvas(card, { scale: 1.5, backgroundColor: '#faf8f3', useCORS: true, logging: false })
-          const blob = await new Promise((res) => canvas.toBlob(res, 'image/jpeg', 0.8))
-          if (blob) {
-            const catSlug = (h.category || 'himno').toLowerCase().replace(/\s+/g, '-')
-            const fileName = `${catSlug}-${h.number}-${h.title.replace(/\s+/g, '-')}.jpg`
-            const file = new File([blob], fileName, { type: 'image/png' })
+        const canvas = await html2canvas(card, { scale: 1.5, backgroundColor: '#faf8f3', useCORS: true, logging: false })
+        const blob = await new Promise((res) => canvas.toBlob(res, 'image/jpeg', 0.8))
+        if (blob) {
+          const catSlug = (h.category || 'himno').toLowerCase().replace(/\s+/g, '-')
+          const fileName = `${catSlug}-${h.number}-${h.title.replace(/\s+/g, '-')}.jpg`
+          const file = new File([blob], fileName, { type: 'image/jpeg' })
 
-            if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-              await navigator.share({ files: [file], title: header })
-              return
-            }
-
-            const url = URL.createObjectURL(blob)
-            const a = document.createElement('a')
-            a.href = url
-            a.download = fileName
-            document.body.appendChild(a)
-            a.click()
-            a.remove()
-            setTimeout(() => URL.revokeObjectURL(url), 3000)
-            setToast('Imagen descargada — compartela desde tu galeria')
+          if (navigator.share) {
+            await navigator.share({ files: [file], title: header })
             return
           }
-        } catch {}
+
+          const url = URL.createObjectURL(blob)
+          const a = document.createElement('a')
+          a.href = url
+          a.download = fileName
+          document.body.appendChild(a)
+          a.click()
+          a.remove()
+          setTimeout(() => URL.revokeObjectURL(url), 3000)
+          setToast('Imagen descargada — compartela desde tu galeria')
+          return
+        }
       }
 
       setToast('No se pudo generar la imagen')
