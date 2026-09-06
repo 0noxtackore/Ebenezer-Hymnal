@@ -548,8 +548,8 @@ export default function Admin() {
       )}
 
       {showModal && (
-        <div className="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) setShowModal(false) }}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-overlay">
+          <div className="modal">
             <button className="modal-close" onClick={() => setShowModal(false)} aria-label="Cerrar">
               ✕
             </button>
