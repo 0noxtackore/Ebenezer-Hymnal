@@ -23,6 +23,36 @@ public class MainActivity extends Activity {
     private static final String URL = "https://ebenezer-hymnal.netlify.app/";
     private static final String TAG = "EbenezerHymnal";
 
+    private static final String SHARE_OVERRIDE_JS =
+        "if (!window.__shareBridgeLoaded) {" +
+        "  window.__shareBridgeLoaded = true;" +
+        "  window.__origShare = navigator.share.bind(navigator);" +
+        "  navigator.share = function(opts) {" +
+        "    if (opts && opts.files && opts.files.length > 0) {" +
+        "      var file = opts.files[0];" +
+        "      return new Promise(function(resolve, reject) {" +
+        "        var reader = new FileReader();" +
+        "        reader.onload = function() {" +
+        "          var base64 = reader.result.split(',')[1];" +
+        "          var tmpFile = ShareBridge.writeBase64File(base64, file.name || 'share.png');" +
+        "          if (tmpFile) {" +
+        "            ShareBridge.share(opts.title || '', opts.text || '', tmpFile);" +
+        "            resolve();" +
+        "          } else {" +
+        "            reject(new Error('Failed to write file'));" +
+        "          }" +
+        "        };" +
+        "        reader.onerror = function() { reject(reader.error); };" +
+        "        reader.readAsDataURL(file);" +
+        "      });" +
+        "    } else {" +
+        "      ShareBridge.shareText(opts.title || '', opts.text || '');" +
+        "      return Promise.resolve();" +
+        "    }" +
+        "  };" +
+        "  Object.defineProperty(navigator, 'canShare', { value: function() { return true; }, writable: false });" +
+        "}";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,10 +71,13 @@ public class MainActivity extends Activity {
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setAllowFileAccess(true);
+        settings.setAllowContentAccess(true);
         settings.setLoadWithOverviewMode(true);
         settings.setUseWideViewPort(true);
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+
+        webView.addJavascriptInterface(new ShareBridge(this), "ShareBridge");
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -54,6 +87,7 @@ public class MainActivity extends Activity {
                 pageLoaded = false;
                 errorView.setVisibility(View.GONE);
                 webView.setVisibility(View.VISIBLE);
+                view.evaluateJavascript(SHARE_OVERRIDE_JS, null);
             }
 
             @Override
@@ -63,6 +97,7 @@ public class MainActivity extends Activity {
                 pageLoaded = true;
                 errorView.setVisibility(View.GONE);
                 webView.setVisibility(View.VISIBLE);
+                view.evaluateJavascript(SHARE_OVERRIDE_JS, null);
             }
 
             @Override
