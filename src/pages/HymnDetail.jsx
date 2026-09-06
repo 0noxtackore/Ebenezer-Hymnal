@@ -92,8 +92,8 @@ export default function HymnDetail() {
       const card = shareCardRef.current
 
       if (card && typeof html2canvas === 'function') {
-        const canvas = await html2canvas(card, { scale: 1.5, backgroundColor: '#faf8f3', useCORS: true, logging: false })
-        const blob = await new Promise((res) => canvas.toBlob(res, 'image/jpeg', 0.8))
+          const canvas = await html2canvas(card, { scale: 1, backgroundColor: '#faf8f3', useCORS: true, logging: false })
+          const blob = await new Promise((res) => canvas.toBlob(res, 'image/jpeg', 0.7))
         if (blob) {
           const catSlug = (h.category || 'himno').toLowerCase().replace(/\s+/g, '-')
           const fileName = `${catSlug}-${h.number}-${h.title.replace(/\s+/g, '-')}.jpg`
