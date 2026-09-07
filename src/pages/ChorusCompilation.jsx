@@ -15,12 +15,15 @@ function parseLyrics(lyrics) {
 
   const out = []
   let verse = 0
+  let coroFound = false
   for (const block of blocks) {
     let lines = [...block]
     let label = null
 
     const firstNorm = lines[0].replace(/[^\p{L}]/gu, '').toUpperCase()
     if (firstNorm === 'CORO') {
+      if (coroFound) continue
+      coroFound = true
       label = 'CORO'
       lines = lines.slice(1)
     } else if (firstNorm === 'PUENTE') {
