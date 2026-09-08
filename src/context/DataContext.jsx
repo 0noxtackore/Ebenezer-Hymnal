@@ -100,8 +100,14 @@ export function DataProvider({ children }) {
   }, [])
 
   const ov = overrides || { hymns: [], removed: [], categories: [] }
-  const categories = [...(base.categories || []), ...(ov.categories || [])]
-  let hymns = (base.hymns || []).filter((h) => !(ov.removed || []).includes(h.id))
+  const rawBaseCategories = base.categories || []
+  const baseCategories = Array.isArray(rawBaseCategories) ? rawBaseCategories : Object.values(rawBaseCategories)
+  const rawOvCategories = ov.categories || []
+  const ovCategories = Array.isArray(rawOvCategories) ? rawOvCategories : Object.values(rawOvCategories)
+  const categories = [...baseCategories, ...ovCategories]
+  const rawBaseHymns = base.hymns || []
+  const baseHymns = Array.isArray(rawBaseHymns) ? rawBaseHymns : Object.values(rawBaseHymns)
+  let hymns = baseHymns.filter((h) => !(ov.removed || []).includes(h.id))
   if (ov.hymns) hymns = [...hymns, ...ov.hymns]
   const seenKeys = new Set()
   hymns = hymns.filter((h) => {
@@ -145,12 +151,16 @@ export function DataProvider({ children }) {
     setOverrides(merged)
     localStorage.setItem(OVERRIDES_KEY, JSON.stringify(merged))
 
+    const rawBh = base.hymns || []
+    const baseHymns = Array.isArray(rawBh) ? rawBh : Object.values(rawBh)
     let finalHymns = [
-      ...(base.hymns || []).filter((h) => !(merged.removed || []).includes(h.id)),
+      ...baseHymns.filter((h) => !(merged.removed || []).includes(h.id)),
       ...(merged.hymns || [])
     ]
     renumberChorus(finalHymns)
-    const finalCategories = [...(base.categories || []), ...(merged.categories || [])]
+    const rawMergedCats = merged.categories || []
+    const mergedCats = Array.isArray(rawMergedCats) ? rawMergedCats : Object.values(rawMergedCats)
+    const finalCategories = [...baseCategories, ...mergedCats]
     try { localStorage.setItem(DATA_CACHE_KEY, JSON.stringify({ hymns: finalHymns, categories: finalCategories })) } catch {}
     updateFirebase(finalHymns, finalCategories)
   }
@@ -188,7 +198,7 @@ export function DataProvider({ children }) {
       if (conflict) return false
     }
     const existing = (ov.hymns || []).find((x) => x.id === h.id)
-    const baseIds = (base.hymns || []).map((x) => x.id)
+    const baseIds = baseHymns.map((x) => x.id)
     const inBase = baseIds.includes(h.id)
     let list
     if (existing) list = ov.hymns.map((x) => (x.id === h.id ? h : x))
@@ -214,7 +224,9 @@ export function DataProvider({ children }) {
     localStorage.removeItem(OVERRIDES_KEY)
     localStorage.removeItem(DATA_CACHE_KEY)
     setOverrides(null)
-    try { set(ref(db, FB_NODE), { hymns: base.hymns || [], categories: base.categories || [] }) } catch {}
+    const hymnsDict = {}
+    baseHymns.forEach((h, i) => { hymnsDict[h.id || String(i)] = h })
+    try { set(ref(db, FB_NODE), { hymns: hymnsDict, categories: baseCategories }) } catch {}
   }
 
   const value = { hymns, categories, loading, addHymn, updateHymn, deleteHymn, addCategory, resetData }
