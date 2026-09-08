@@ -1,6 +1,7 @@
 import { useMemo, useState, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Music, Star, Share2 } from 'lucide-react'
+import html2canvas from 'html2canvas'
 import { useData } from '../context/DataContext.jsx'
 import { useFavorites } from '../context/FavoritesContext.jsx'
 
