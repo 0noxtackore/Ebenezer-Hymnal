@@ -118,7 +118,8 @@ export default function ChorusCompilation() {
       {coros.map((h, idx) => (
         <div key={h.id} className="compilation-coros">
           <div className="compilation-coros-header">
-            <span className="compilation-coros-num">{h.number}</span>
+            {h.nomenclature && <span className="compilation-coros-num">{h.nomenclature}</span>}
+            {!h.nomenclature && <span className="compilation-coros-num">{h.number}</span>}
             <span className="compilation-coros-title">{h.title}</span>
           </div>
           <div className="lyrics">

@@ -159,7 +159,7 @@ export default function HymnDetail() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.25 }}
       >
-        <div className="hnum">{h.number}</div>
+        <div className="hnum">{h.nomenclature || h.number}</div>
         <h2>{h.title}</h2>
         <div className="actions">
           <button className={fav ? 'on' : ''} onClick={() => toggle(h.id)} title="Favorito">
@@ -205,7 +205,7 @@ export default function HymnDetail() {
         <div className="share-card-logo">
           <img src="/images/logo.webp" alt="logo" crossOrigin="anonymous" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
         </div>
-        <div className="share-card-app">{h.category || 'Himno'} {h.number} · Himnario Ebenezer</div>
+        <div className="share-card-app">{h.category || 'Himno'} {h.nomenclature || h.number} · Himnario Ebenezer</div>
         <h3 className="share-card-title">{h.title}</h3>
         <div className="share-card-lyrics">
           {parseLyrics(h.lyrics).map((v, i) => (

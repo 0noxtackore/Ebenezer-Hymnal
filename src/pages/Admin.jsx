@@ -25,7 +25,7 @@ function getDeleteLabel(category) {
 }
 
 function blank() {
-  return { id: '', number: '', title: '', category: 'Himnos Clásicos', musicKey: '', scale: '', lyrics: '', audioUrl: '', imageUrl: '' }
+  return { id: '', number: '', title: '', category: 'Himnos Clásicos', musicKey: '', scale: '', nomenclature: '', lyrics: '', audioUrl: '', imageUrl: '' }
 }
 
 export default function Admin() {
@@ -631,6 +631,7 @@ export default function Admin() {
                 </div>
               </div>
               {(strip(form.category) === 'coros lentos' || strip(form.category) === 'coros rapidos' || strip(form.category) === 'gospel') && (
+                <>
                 <div className="field-row">
                   <div className="field">
                     <label>Tonalidad</label>
@@ -659,6 +660,16 @@ export default function Admin() {
                     </div>
                   </div>
                 </div>
+                <div className="field">
+                  <label>Nomenclatura</label>
+                  <input
+                    placeholder="Ej: C001, GR005, FR012"
+                    value={form.nomenclature}
+                    onChange={(e) => setForm({ ...form, nomenclature: e.target.value.toUpperCase() })}
+                  />
+                  <small className="muted">Código del coro (ej: C001 = Do Lento #1)</small>
+                </div>
+                </>
               )}
               <div className="field">
                 <div className="field-header">

@@ -65,7 +65,7 @@ export default function SearchByName() {
     const catNorm = strip(cat)
     return hymns
       .filter((h) => {
-        const matchesText = !t || strip(h.title + ' ' + h.number + ' ' + (h.category || '') + ' ' + (h.musicKey || '') + ' ' + (h.scale || '')).includes(t)
+        const matchesText = !t || strip(h.title + ' ' + h.number + ' ' + (h.nomenclature || '') + ' ' + (h.category || '') + ' ' + (h.musicKey || '') + ' ' + (h.scale || '')).includes(t)
         const matchesCat = !catNorm || strip(h.category || '') === catNorm
         return matchesText && matchesCat
       })
