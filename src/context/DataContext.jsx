@@ -9,10 +9,12 @@ const FB_NODE = 'hymnario'
 
 const CHORUS_CATS = ['coros lentos', 'coros rapidos', 'gospel']
 
+const strip = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+
 function renumberChorus(hymns) {
   const groups = {}
   hymns.forEach((h) => {
-    const cat = (h.category || '').toLowerCase()
+    const cat = strip(h.category)
     if (!CHORUS_CATS.includes(cat)) return
     const key = cat + '#' + ((h.musicKey || '').trim()) + '#' + ((h.scale || '').trim())
     if (!groups[key]) groups[key] = []
@@ -142,7 +144,7 @@ export function DataProvider({ children }) {
   }
 
   function addHymn(h) {
-    const cat = (h.category || '').toLowerCase()
+    const cat = strip(h.category)
     if (CHORUS_CATS.includes(cat)) {
       const dup = hymns.find(
         (x) => x.number === h.number && x.category === h.category &&
@@ -159,7 +161,7 @@ export function DataProvider({ children }) {
   }
 
   function updateHymn(h) {
-    const cat = (h.category || '').toLowerCase()
+    const cat = strip(h.category)
     if (CHORUS_CATS.includes(cat)) {
       const conflict = hymns.find(
         (x) => x.number === h.number && x.id !== h.id && x.category === h.category &&
