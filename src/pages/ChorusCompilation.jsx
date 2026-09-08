@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Music, Star, Share2 } from 'lucide-react'
 import { useData } from '../context/DataContext.jsx'
@@ -52,6 +52,8 @@ export default function ChorusCompilation() {
   const { hymns } = useData()
   const { isFavorite, toggle } = useFavorites()
   const [sharing, setSharing] = useState(false)
+  const [toast, setToast] = useState('')
+  const shareCardRef = useRef(null)
 
   const decodedCat = decodeURIComponent(category || '')
   const decodedKey = decodeURIComponent(key || '')
@@ -74,16 +76,37 @@ export default function ChorusCompilation() {
   const share = async () => {
     setSharing(true)
     try {
-      const text = coros.map((h) => `#${h.number} ${h.title}\n${h.lyrics || ''}`).join('\n\n---\n\n')
-      const title = `${decodedKey} - ${decodedCat} (${coros.length} coros)`
-      if (navigator.share) {
-        await navigator.share({ title, text })
-      } else {
-        await navigator.clipboard.writeText(text)
-        alert('Copiado al portapapeles')
+      const card = shareCardRef.current
+      if (card && typeof html2canvas === 'function') {
+        const canvas = await html2canvas(card, { scale: 1, backgroundColor: '#faf8f3', useCORS: true, logging: false })
+        const blob = await new Promise((res) => canvas.toBlob(res, 'image/jpeg', 0.7))
+        if (blob) {
+          const slug = `${decodedCat}-${decodedKey}`.toLowerCase().replace(/\s+/g, '-')
+          const fileName = `${slug}-coros.jpg`
+          const file = new File([blob], fileName, { type: 'image/jpeg' })
+
+          if (navigator.share) {
+            await navigator.share({ files: [file], title: `${decodedKey} - ${decodedCat}` })
+            return
+          }
+
+          const url = URL.createObjectURL(blob)
+          const a = document.createElement('a')
+          a.href = url
+          a.download = fileName
+          document.body.appendChild(a)
+          a.click()
+          a.remove()
+          setTimeout(() => URL.revokeObjectURL(url), 3000)
+          setToast('Imagen descargada — compartela desde tu galeria')
+          return
+        }
       }
-    } catch {
-      /* cancelado */
+      setToast('No se pudo generar la imagen')
+    } catch (e) {
+      if (e.name !== 'AbortError') {
+        setToast('Error al compartir')
+      }
     } finally {
       setSharing(false)
     }
@@ -138,6 +161,42 @@ export default function ChorusCompilation() {
       ))}
 
       {coros.length === 0 && <div className="empty">No hay coros en esta tonalidad.</div>}
+
+      <div ref={shareCardRef} className="share-card" aria-hidden="true">
+        <div className="share-card-logo">
+          <img src="/images/logo.webp" alt="logo" crossOrigin="anonymous" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+        </div>
+        <div className="share-card-app">{decodedCat} · {decodedKey}</div>
+        <h3 className="share-card-title">{coros.length} Coro{coros.length !== 1 ? 's' : ''}</h3>
+        <div className="share-card-lyrics">
+          {coros.map((h, idx) => (
+            <div key={h.id} style={{ marginBottom: 20 }}>
+              <div style={{ fontWeight: 700, fontSize: 14, color: '#8a6d14', marginBottom: 4 }}>
+                {h.nomenclature || h.number} — {h.title}
+              </div>
+              {parseLyrics(h.lyrics).map((v, i) => (
+                <div key={i} style={{ marginBottom: 8 }}>
+                  {v.label && <div className="share-card-verse-label">{v.label}</div>}
+                  <div className="share-card-verse-dir">
+                    {v.lines.map((line, j) => (
+                      <span key={j}>{line}</span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              {idx < coros.length - 1 && <div style={{ borderTop: '1px solid #e0d8c4', margin: '12px 0' }} />}
+            </div>
+          ))}
+        </div>
+        <div className="share-card-foot">Instrumento de Adoración · Himnario Ebenezer</div>
+      </div>
+
+      {toast && (
+        <div className="toast">
+          <img src="/images/logo.webp" alt="logo" style={{ width: 28, height: 28, borderRadius: '50%', flexShrink: 0 }} />
+          <span>{toast}</span>
+        </div>
+      )}
     </div>
   )
 }
