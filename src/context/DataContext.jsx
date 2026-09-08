@@ -69,8 +69,9 @@ export function DataProvider({ children }) {
         if (fb && fb.hymns) {
           const hymnsList = Array.isArray(fb.hymns) ? fb.hymns : Object.values(fb.hymns)
           if (!cancelled) {
-            setBase({ hymns: hymnsList, categories: fb.categories || [] })
-            try { localStorage.setItem(DATA_CACHE_KEY, JSON.stringify({ hymns: hymnsList, categories: fb.categories || [] })) } catch {}
+            const cats = Array.isArray(fb.categories) ? fb.categories : Object.values(fb.categories || {})
+            setBase({ hymns: hymnsList, categories: cats })
+            try { localStorage.setItem(DATA_CACHE_KEY, JSON.stringify({ hymns: hymnsList, categories: cats })) } catch {}
           }
           return
         }
