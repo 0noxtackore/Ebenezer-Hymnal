@@ -66,10 +66,11 @@ export function DataProvider({ children }) {
       try {
         const snap = await get(ref(db, FB_NODE))
         const fb = snap.exists() && snap.val() ? snap.val() : null
-        if (fb && Array.isArray(fb.hymns)) {
+        if (fb && fb.hymns) {
+          const hymnsList = Array.isArray(fb.hymns) ? fb.hymns : Object.values(fb.hymns)
           if (!cancelled) {
-            setBase({ hymns: fb.hymns, categories: fb.categories || [] })
-            try { localStorage.setItem(DATA_CACHE_KEY, JSON.stringify({ hymns: fb.hymns, categories: fb.categories || [] })) } catch {}
+            setBase({ hymns: hymnsList, categories: fb.categories || [] })
+            try { localStorage.setItem(DATA_CACHE_KEY, JSON.stringify({ hymns: hymnsList, categories: fb.categories || [] })) } catch {}
           }
           return
         }
@@ -115,7 +116,9 @@ export function DataProvider({ children }) {
   renumberChorus(hymns)
 
   function updateFirebase(finalHymns, finalCategories) {
-    try { set(ref(db, FB_NODE), { hymns: finalHymns, categories: finalCategories }) } catch {}
+    const hymnsDict = {}
+    finalHymns.forEach((h, i) => { hymnsDict[h.id || String(i)] = h })
+    try { set(ref(db, FB_NODE), { hymns: hymnsDict, categories: finalCategories }) } catch {}
   }
 
   function persist(next) {
