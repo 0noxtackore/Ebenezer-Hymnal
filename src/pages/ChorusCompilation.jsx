@@ -6,6 +6,12 @@ import { useFavorites } from '../context/FavoritesContext.jsx'
 
 const strip = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
+const ROMANS = [
+  'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
+  'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX',
+  'XXI', 'XXII', 'XXIII', 'XXIV', 'XXV', 'XXVI', 'XXVII', 'XXVIII', 'XXIX', 'XXX'
+]
+
 function parseLyrics(lyrics) {
   if (!lyrics) return []
   const blocks = lyrics
@@ -33,7 +39,7 @@ function parseLyrics(lyrics) {
       const m = lines[0].match(/^(\d{1,3})[.\-–]\s*(.*)$/)
       if (m) lines = [m[2] || lines[0], ...lines.slice(1)]
       verse += 1
-      label = String(verse)
+      label = ROMANS[verse - 1] || String(verse)
     }
     if (lines.length > 0) out.push({ label, lines })
   }
