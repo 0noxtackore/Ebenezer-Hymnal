@@ -149,7 +149,7 @@ export default function ChorusCompilation() {
         doc.setFont('helvetica', 'bold')
         doc.setFontSize(11)
         doc.setTextColor(...darkGold)
-        doc.text(`${numLabel} — ${h.title}`, ml + 3, y)
+        doc.text(`${numLabel} — ${h.title}`, pw / 2, y, { align: 'center' })
         y += 8
 
         doc.setTextColor(...brown)
@@ -160,7 +160,7 @@ export default function ChorusCompilation() {
             doc.setFont('helvetica', 'bold')
             doc.setFontSize(9)
             doc.setTextColor(...darkGold)
-            doc.text(v.label, ml + 2, y)
+            doc.text(v.label, pw / 2, y, { align: 'center' })
             y += 5
           }
 
@@ -172,7 +172,7 @@ export default function ChorusCompilation() {
             const split = doc.splitTextToSize(line, cw - 4)
             split.forEach((sl) => {
               checkPage(5)
-              doc.text(sl, ml + 2, y)
+              doc.text(sl, pw / 2, y, { align: 'center' })
               y += 4.5
             })
           })
