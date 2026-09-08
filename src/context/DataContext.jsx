@@ -103,7 +103,11 @@ export function DataProvider({ children }) {
   if (ov.hymns) hymns = [...hymns, ...ov.hymns]
   const seenKeys = new Set()
   hymns = hymns.filter((h) => {
-    const key = (h.category || '') + '#' + h.number
+    const cat = (h.category || '')
+    const isChorus = CHORUS_CATS.includes(strip(cat))
+    const key = isChorus
+      ? cat + '#' + h.number + '#' + (h.musicKey || '') + '#' + (h.scale || '')
+      : cat + '#' + h.number
     if (seenKeys.has(key)) return false
     seenKeys.add(key)
     return true
@@ -119,7 +123,11 @@ export function DataProvider({ children }) {
     {
       const seen = new Set()
       hymnsList = hymnsList.filter((h) => {
-        const key = (h.category || '') + '#' + h.number
+        const cat = (h.category || '')
+        const isChorus = CHORUS_CATS.includes(strip(cat))
+        const key = isChorus
+          ? cat + '#' + h.number + '#' + (h.musicKey || '') + '#' + (h.scale || '')
+          : cat + '#' + h.number
         if (seen.has(key)) return false
         seen.add(key)
         return true
