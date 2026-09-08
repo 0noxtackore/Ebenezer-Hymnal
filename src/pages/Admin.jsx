@@ -98,16 +98,17 @@ export default function Admin() {
   }
 
   function buildLyrics(versesList, coroText, puenteText) {
+    const u = (s) => (s || '').toUpperCase()
     const hasContent = versesList.some((v) => v.trim())
-    let lyrics = hasContent ? autoFormatVerse((versesList[0] || '').trim()) : ''
+    let lyrics = hasContent ? autoFormatVerse(u((versesList[0] || '').trim())) : ''
     if (coroText.trim()) {
-      lyrics += (lyrics ? '\n\n' : '') + 'CORO\n' + coroText.trim()
+      lyrics += (lyrics ? '\n\n' : '') + 'CORO\n' + u(coroText.trim())
     }
     if (puenteText.trim()) {
-      lyrics += '\n\nPUENTE\n' + puenteText.trim()
+      lyrics += '\n\nPUENTE\n' + u(puenteText.trim())
     }
     if (versesList.length > 1) {
-      lyrics += '\n\n' + versesList.slice(1).map((v) => autoFormatVerse(v.trim())).filter((v) => v).join('\n\n')
+      lyrics += '\n\n' + versesList.slice(1).map((v) => autoFormatVerse(u(v.trim()))).filter((v) => v).join('\n\n')
     }
     return lyrics
   }
@@ -609,7 +610,7 @@ export default function Admin() {
                 <input
                   placeholder="Nombre de la alabanza"
                   value={form.title}
-                  onChange={(e) => setForm({ ...form, title: e.target.value })}
+                  onChange={(e) => setForm({ ...form, title: e.target.value.toUpperCase() })}
                 />
               </div>
               <div className="field">

@@ -1653,6 +1653,11 @@ body.night .modal-msg {
   resize: vertical;
 }
 
+.modal .field input,
+.modal .field textarea {
+  text-transform: uppercase;
+}
+
 .field input:focus,
 .field textarea:focus,
 .field select:focus,
