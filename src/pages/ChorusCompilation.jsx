@@ -111,10 +111,14 @@ export default function ChorusCompilation() {
 
       {coros.map((h, idx) => (
         <div key={h.id} className="compilation-coros">
+          <div className="compilation-coros-header">
+            <span className="compilation-coros-num">{h.number}</span>
+            <span className="compilation-coros-title">{h.title}</span>
+          </div>
           <div className="lyrics">
             {parseLyrics(h.lyrics).map((v, i) => (
               <div className="verse" key={i}>
-                {v.label && <div className="verse-label">{v.label}</div>}
+                {v.label && v.label !== 'CORO' && <div className="verse-label">{v.label}</div>}
                 {v.lines.map((line, j) => (
                   <div className="verse-line" key={j}>{line}</div>
                 ))}
