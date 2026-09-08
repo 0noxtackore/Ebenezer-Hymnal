@@ -1,7 +1,7 @@
-import { useMemo, useState, useRef } from 'react'
+import { useMemo, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Music, Star, Share2 } from 'lucide-react'
-import html2canvas from 'html2canvas'
+import { jsPDF } from 'jspdf'
 import { useData } from '../context/DataContext.jsx'
 import { useFavorites } from '../context/FavoritesContext.jsx'
 
@@ -54,7 +54,6 @@ export default function ChorusCompilation() {
   const { isFavorite, toggle } = useFavorites()
   const [sharing, setSharing] = useState(false)
   const [toast, setToast] = useState('')
-  const shareCardRef = useRef(null)
 
   const decodedCat = decodeURIComponent(category || '')
   const decodedKey = decodeURIComponent(key || '')
@@ -77,36 +76,111 @@ export default function ChorusCompilation() {
   const share = async () => {
     setSharing(true)
     try {
-      const card = shareCardRef.current
-      if (card && typeof html2canvas === 'function') {
-        const canvas = await html2canvas(card, { scale: 1, backgroundColor: '#faf8f3', useCORS: true, logging: false })
-        const blob = await new Promise((res) => canvas.toBlob(res, 'image/jpeg', 0.7))
-        if (blob) {
-          const slug = `${decodedCat}-${decodedKey}`.toLowerCase().replace(/\s+/g, '-')
-          const fileName = `${slug}-coros.jpg`
-          const file = new File([blob], fileName, { type: 'image/jpeg' })
+      const doc = new jsPDF({ unit: 'mm', format: 'letter' })
+      const pw = doc.internal.pageSize.getWidth()
+      const ph = doc.internal.pageSize.getHeight()
+      const ml = 20
+      const mr = 20
+      const mt = 20
+      const cw = pw - ml - mr
 
-          if (navigator.share) {
-            await navigator.share({ files: [file], title: `${decodedKey} - ${decodedCat}` })
-            return
-          }
+      let y = mt
 
-          const url = URL.createObjectURL(blob)
-          const a = document.createElement('a')
-          a.href = url
-          a.download = fileName
-          document.body.appendChild(a)
-          a.click()
-          a.remove()
-          setTimeout(() => URL.revokeObjectURL(url), 3000)
-          setToast('Imagen descargada — compartela desde tu galeria')
-          return
+      const checkPage = (needed) => {
+        if (y + needed > ph - 20) {
+          doc.addPage()
+          y = mt
         }
       }
-      setToast('No se pudo generar la imagen')
+
+      doc.setFont('helvetica', 'bold')
+      doc.setFontSize(18)
+      doc.text(decodedKey, pw / 2, y, { align: 'center' })
+      y += 8
+
+      doc.setFont('helvetica', 'normal')
+      doc.setFontSize(10)
+      doc.setTextColor(120, 110, 90)
+      doc.text(`${coros.length} coro${coros.length !== 1 ? 's' : ''} · ${decodedCat}`, pw / 2, y, { align: 'center' })
+      y += 4
+
+      doc.setDrawColor(200, 190, 170)
+      doc.line(ml, y, pw - mr, y)
+      y += 8
+      doc.setTextColor(0, 0, 0)
+
+      coros.forEach((h, idx) => {
+        checkPage(30)
+
+        doc.setFont('helvetica', 'bold')
+        doc.setFontSize(11)
+        doc.setTextColor(138, 109, 20)
+        const numLabel = h.nomenclature || String(h.number)
+        doc.text(`${numLabel} — ${h.title}`, ml, y)
+        y += 6
+
+        doc.setTextColor(0, 0, 0)
+        const verses = parseLyrics(h.lyrics)
+        verses.forEach((v) => {
+          if (v.label) {
+            checkPage(8)
+            doc.setFont('helvetica', 'bold')
+            doc.setFontSize(9)
+            doc.setTextColor(138, 109, 20)
+            doc.text(v.label, ml, y)
+            y += 5
+          }
+
+          doc.setFont('helvetica', 'normal')
+          doc.setFontSize(10)
+          doc.setTextColor(0, 0, 0)
+          v.lines.forEach((line) => {
+            checkPage(5)
+            const split = doc.splitTextToSize(line, cw)
+            split.forEach((sl) => {
+              checkPage(5)
+              doc.text(sl, ml, y)
+              y += 4.5
+            })
+          })
+          y += 3
+        })
+
+        if (idx < coros.length - 1) {
+          checkPage(10)
+          y += 2
+          doc.setDrawColor(200, 190, 170)
+          doc.line(ml, y, pw - mr, y)
+          y += 6
+        }
+      })
+
+      doc.setFont('helvetica', 'italic')
+      doc.setFontSize(8)
+      doc.setTextColor(120, 110, 90)
+      doc.text('Instrumento de Adoración · Himnario Ebenezer', pw / 2, ph - 12, { align: 'center' })
+
+      const slug = `${decodedCat}-${decodedKey}`.toLowerCase().replace(/\s+/g, '-')
+      const fileName = `${slug}-coros.pdf`
+      const blob = doc.output('blob')
+      const file = new File([blob], fileName, { type: 'application/pdf' })
+
+      if (navigator.share) {
+        await navigator.share({ files: [file], title: `${decodedKey} - ${decodedCat}` })
+      } else {
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = fileName
+        document.body.appendChild(a)
+        a.click()
+        a.remove()
+        setTimeout(() => URL.revokeObjectURL(url), 3000)
+        setToast('PDF descargado')
+      }
     } catch (e) {
       if (e.name !== 'AbortError') {
-        setToast('Error al compartir')
+        setToast('Error al generar PDF')
       }
     } finally {
       setSharing(false)
@@ -162,35 +236,6 @@ export default function ChorusCompilation() {
       ))}
 
       {coros.length === 0 && <div className="empty">No hay coros en esta tonalidad.</div>}
-
-      <div ref={shareCardRef} className="share-card" aria-hidden="true">
-        <div className="share-card-logo">
-          <img src="/images/logo.webp" alt="logo" crossOrigin="anonymous" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-        </div>
-        <div className="share-card-app">{decodedCat} · {decodedKey}</div>
-        <h3 className="share-card-title">{coros.length} Coro{coros.length !== 1 ? 's' : ''}</h3>
-        <div className="share-card-lyrics">
-          {coros.map((h, idx) => (
-            <div key={h.id} style={{ marginBottom: 20 }}>
-              <div style={{ fontWeight: 700, fontSize: 14, color: '#8a6d14', marginBottom: 4 }}>
-                {h.nomenclature || h.number} — {h.title}
-              </div>
-              {parseLyrics(h.lyrics).map((v, i) => (
-                <div key={i} style={{ marginBottom: 8 }}>
-                  {v.label && <div className="share-card-verse-label">{v.label}</div>}
-                  <div className="share-card-verse-dir">
-                    {v.lines.map((line, j) => (
-                      <span key={j}>{line}</span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-              {idx < coros.length - 1 && <div style={{ borderTop: '1px solid #e0d8c4', margin: '12px 0' }} />}
-            </div>
-          ))}
-        </div>
-        <div className="share-card-foot">Instrumento de Adoración · Himnario Ebenezer</div>
-      </div>
 
       {toast && (
         <div className="toast">
