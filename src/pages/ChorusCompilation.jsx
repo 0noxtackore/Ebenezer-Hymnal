@@ -4,6 +4,7 @@ import { ArrowLeft, Music, Star, Share2 } from 'lucide-react'
 import { jsPDF } from 'jspdf'
 import { useData } from '../context/DataContext.jsx'
 import { useFavorites } from '../context/FavoritesContext.jsx'
+import logoBase64 from '../../assets/logo_base64.txt?raw'
 
 const strip = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
@@ -79,67 +80,99 @@ export default function ChorusCompilation() {
       const doc = new jsPDF({ unit: 'mm', format: 'letter' })
       const pw = doc.internal.pageSize.getWidth()
       const ph = doc.internal.pageSize.getHeight()
-      const ml = 20
-      const mr = 20
-      const mt = 20
+      const ml = 18
+      const mr = 18
       const cw = pw - ml - mr
 
-      let y = mt
+      const gold = [201, 162, 39]
+      const darkGold = [138, 109, 20]
+      const brown = [22, 19, 12]
+      const lightBorder = [224, 216, 196]
+      const muted = [122, 116, 104]
+
+      let y = 15
 
       const checkPage = (needed) => {
-        if (y + needed > ph - 20) {
+        if (y + needed > ph - 18) {
           doc.addPage()
-          y = mt
+          y = 18
+          drawPageBorder()
         }
       }
 
+      const drawPageBorder = () => {
+        doc.setDrawColor(...gold)
+        doc.setLineWidth(0.8)
+        doc.roundedRect(12, 10, pw - 24, ph - 20, 3, 3)
+        doc.setLineWidth(0.3)
+        doc.roundedRect(14, 12, pw - 28, ph - 24, 2, 2)
+      }
+
+      drawPageBorder()
+
+      const logoDataUrl = 'data:image/png;base64,' + logoBase64
+      try {
+        doc.addImage(logoDataUrl, 'PNG', pw / 2 - 14, y, 28, 28)
+      } catch {}
+      y += 32
+
       doc.setFont('helvetica', 'bold')
-      doc.setFontSize(18)
-      doc.text(decodedKey, pw / 2, y, { align: 'center' })
+      doc.setFontSize(11)
+      doc.setTextColor(...darkGold)
+      const catLabel = decodedCat.toUpperCase()
+      doc.text(catLabel, pw / 2, y, { align: 'center' })
       y += 8
+
+      doc.setFontSize(22)
+      doc.setTextColor(...brown)
+      doc.text(decodedKey, pw / 2, y, { align: 'center' })
+      y += 7
 
       doc.setFont('helvetica', 'normal')
       doc.setFontSize(10)
-      doc.setTextColor(120, 110, 90)
-      doc.text(`${coros.length} coro${coros.length !== 1 ? 's' : ''} · ${decodedCat}`, pw / 2, y, { align: 'center' })
-      y += 4
+      doc.setTextColor(...muted)
+      doc.text(`${coros.length} coro${coros.length !== 1 ? 's' : ''}`, pw / 2, y, { align: 'center' })
+      y += 6
 
-      doc.setDrawColor(200, 190, 170)
-      doc.line(ml, y, pw - mr, y)
-      y += 8
-      doc.setTextColor(0, 0, 0)
+      doc.setDrawColor(...gold)
+      doc.setLineWidth(0.5)
+      doc.line(ml + 30, y, pw - mr - 30, y)
+      y += 10
 
       coros.forEach((h, idx) => {
-        checkPage(30)
+        checkPage(35)
 
+        const numLabel = h.nomenclature || String(h.number)
+
+        doc.setFillColor(250, 248, 243)
+        doc.roundedRect(ml, y - 4, cw, 7, 1, 1, 'F')
         doc.setFont('helvetica', 'bold')
         doc.setFontSize(11)
-        doc.setTextColor(138, 109, 20)
-        const numLabel = h.nomenclature || String(h.number)
-        doc.text(`${numLabel} — ${h.title}`, ml, y)
-        y += 6
+        doc.setTextColor(...darkGold)
+        doc.text(`${numLabel} — ${h.title}`, ml + 3, y)
+        y += 8
 
-        doc.setTextColor(0, 0, 0)
+        doc.setTextColor(...brown)
         const verses = parseLyrics(h.lyrics)
         verses.forEach((v) => {
           if (v.label) {
-            checkPage(8)
+            checkPage(10)
             doc.setFont('helvetica', 'bold')
             doc.setFontSize(9)
-            doc.setTextColor(138, 109, 20)
-            doc.text(v.label, ml, y)
+            doc.setTextColor(...darkGold)
+            doc.text(v.label, ml + 2, y)
             y += 5
           }
 
           doc.setFont('helvetica', 'normal')
           doc.setFontSize(10)
-          doc.setTextColor(0, 0, 0)
+          doc.setTextColor(...brown)
           v.lines.forEach((line) => {
-            checkPage(5)
-            const split = doc.splitTextToSize(line, cw)
+            checkPage(6)
+            const split = doc.splitTextToSize(line, cw - 4)
             split.forEach((sl) => {
               checkPage(5)
-              doc.text(sl, ml, y)
+              doc.text(sl, ml + 2, y)
               y += 4.5
             })
           })
@@ -147,18 +180,30 @@ export default function ChorusCompilation() {
         })
 
         if (idx < coros.length - 1) {
-          checkPage(10)
-          y += 2
-          doc.setDrawColor(200, 190, 170)
-          doc.line(ml, y, pw - mr, y)
-          y += 6
+          checkPage(12)
+          y += 1
+          doc.setDrawColor(...lightBorder)
+          doc.setLineWidth(0.3)
+          doc.line(ml + 10, y, pw - mr - 10, y)
+          y += 7
         }
       })
 
+      y += 6
+      doc.setDrawColor(...gold)
+      doc.setLineWidth(0.4)
+      doc.line(ml + 30, y, pw - mr - 30, y)
+      y += 6
+
       doc.setFont('helvetica', 'italic')
       doc.setFontSize(8)
-      doc.setTextColor(120, 110, 90)
-      doc.text('Instrumento de Adoración · Himnario Ebenezer', pw / 2, ph - 12, { align: 'center' })
+      doc.setTextColor(...muted)
+      doc.text('Instrumento de Adoración', pw / 2, y, { align: 'center' })
+      y += 4
+      doc.setFont('helvetica', 'normal')
+      doc.setFontSize(9)
+      doc.setTextColor(...darkGold)
+      doc.text('Himnario Ebenezer', pw / 2, y, { align: 'center' })
 
       const slug = `${decodedCat}-${decodedKey}`.toLowerCase().replace(/\s+/g, '-')
       const fileName = `${slug}-coros.pdf`
