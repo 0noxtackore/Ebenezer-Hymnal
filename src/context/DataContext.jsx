@@ -210,10 +210,13 @@ export function DataProvider({ children }) {
     const baseIds = baseHymns.map((x) => x.id)
     const inBase = baseIds.includes(h.id)
     let list
-    if (existing) list = ov.hymns.map((x) => (x.id === h.id ? h : x))
-    else list = [...(ov.hymns || []), h]
+    if (existing) {
+      list = ov.hymns.filter((x) => x.id !== h.id)
+    } else {
+      list = [...(ov.hymns || []), h]
+    }
     const removed = new Set(ov.removed || [])
-    if (inBase && !existing) removed.add(h.id)
+    if (inBase) removed.add(h.id)
     await persist({ hymns: list, removed: [...removed] })
     return true
   }
