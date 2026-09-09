@@ -5,6 +5,8 @@ import { db } from '../firebase.js'
 const DataContext = createContext(null)
 const OVERRIDES_KEY = 'he_hymns_overrides'
 const DATA_CACHE_KEY = 'he_data_cache'
+const CACHE_VERSION_KEY = 'he_cache_version'
+const CACHE_VERSION = 2
 const FB_NODE = 'hymnario'
 
 const CHORUS_CATS = ['coros lentos', 'coros rapidos', 'gospel']
@@ -61,6 +63,12 @@ export function DataProvider({ children }) {
 
   useEffect(() => {
     let cancelled = false
+
+    const cachedVersion = parseInt(localStorage.getItem(CACHE_VERSION_KEY) || '0', 10)
+    if (cachedVersion < CACHE_VERSION) {
+      localStorage.removeItem(DATA_CACHE_KEY)
+      localStorage.setItem(CACHE_VERSION_KEY, String(CACHE_VERSION))
+    }
 
     async function load() {
       try {
