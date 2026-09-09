@@ -211,7 +211,7 @@ export function DataProvider({ children }) {
     const inBase = baseIds.includes(h.id)
     let list
     if (existing) {
-      list = ov.hymns.filter((x) => x.id !== h.id)
+      list = ov.hymns.map((x) => (x.id === h.id ? h : x))
     } else {
       list = [...(ov.hymns || []), h]
     }
