@@ -242,7 +242,7 @@ export default function Admin() {
     setShowModal(true)
   }
 
-  function submit() {
+  async function submit() {
     const errors = []
     const isChorus = isChorusCategory(form.category)
     if (!isChorus && !form.number) {
@@ -291,30 +291,38 @@ export default function Admin() {
     }
     const lyrics = buildLyrics(currentVerses, currentCoro, currentPuente)
     const payload = { ...form, id: form.id || 'h' + Date.now(), number: num, lyrics }
-    if (form.id) {
-      if (!updateHymn(payload)) {
-        setMsg(`Ya existe la alabanza número ${num} en otra categoría`)
-        return
+    try {
+      if (form.id) {
+        if (!await updateHymn(payload)) {
+          setMsg(`Ya existe la alabanza número ${num} en otra categoría`)
+          return
+        }
+      } else {
+        if (!await addHymn(payload)) {
+          setMsg(`Ya existe la alabanza número ${num}`)
+          return
+        }
       }
-    } else {
-      if (!addHymn(payload)) {
-        setMsg(`Ya existe la alabanza número ${num}`)
-        return
-      }
+      setShowModal(false)
+      setMsg('Guardado correctamente')
+    } catch (e) {
+      setMsg('Error al guardar: sin conexión a internet')
     }
-    setShowModal(false)
-    setMsg('Guardado correctamente')
   }
 
   function remove(h) {
     setDeleteTarget(h)
   }
 
-  function confirmDelete() {
+  async function confirmDelete() {
     if (deleteTarget) {
-      deleteHymn(deleteTarget.id)
-      setDeleteTarget(null)
-      setMsg('Eliminado correctamente')
+      try {
+        await deleteHymn(deleteTarget.id)
+        setDeleteTarget(null)
+        setMsg('Eliminado correctamente')
+      } catch (e) {
+        setMsg('Error al eliminar: sin conexión a internet')
+      }
     }
   }
 

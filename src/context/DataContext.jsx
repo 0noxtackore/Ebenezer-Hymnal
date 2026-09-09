@@ -130,13 +130,13 @@ export function DataProvider({ children }) {
   })
   renumberChorus(hymns)
 
-  function updateFirebase(finalHymns, finalCategories) {
+  async function updateFirebase(finalHymns, finalCategories) {
     const hymnsDict = {}
     finalHymns.forEach((h, i) => { hymnsDict[h.id || String(i)] = h })
-    try { set(ref(db, FB_NODE), { hymns: hymnsDict, categories: finalCategories }) } catch {}
+    await set(ref(db, FB_NODE), { hymns: hymnsDict, categories: finalCategories })
   }
 
-  function persist(next) {
+  async function persist(next) {
     let hymnsList = next.hymns ?? ov.hymns ?? []
     {
       const seen = new Set()
@@ -170,10 +170,10 @@ export function DataProvider({ children }) {
     const mergedCats = Array.isArray(rawMergedCats) ? rawMergedCats : Object.values(rawMergedCats)
     const finalCategories = [...baseCategories, ...mergedCats]
     try { localStorage.setItem(DATA_CACHE_KEY, JSON.stringify({ hymns: finalHymns, categories: finalCategories })) } catch {}
-    updateFirebase(finalHymns, finalCategories)
+    await updateFirebase(finalHymns, finalCategories)
   }
 
-  function addHymn(h) {
+  async function addHymn(h) {
     const cat = strip(h.category)
     if (CHORUS_CATS.includes(cat)) {
       const dup = hymns.find(
@@ -186,11 +186,11 @@ export function DataProvider({ children }) {
       const catNums = hymns.filter((x) => x.category === h.category).map((x) => x.number)
       if (catNums.includes(h.number)) return false
     }
-    persist({ hymns: [...(ov.hymns || []), h] })
+    await persist({ hymns: [...(ov.hymns || []), h] })
     return true
   }
 
-  function updateHymn(h) {
+  async function updateHymn(h) {
     const cat = strip(h.category)
     if (CHORUS_CATS.includes(cat)) {
       const conflict = hymns.find(
@@ -213,19 +213,19 @@ export function DataProvider({ children }) {
     else list = [...(ov.hymns || []), h]
     const removed = new Set(ov.removed || [])
     if (inBase && !existing) removed.add(h.id)
-    persist({ hymns: list, removed: [...removed] })
+    await persist({ hymns: list, removed: [...removed] })
     return true
   }
 
-  function deleteHymn(id) {
-    persist({
+  async function deleteHymn(id) {
+    await persist({
       hymns: (ov.hymns || []).filter((x) => x.id !== id),
       removed: [...new Set([...(ov.removed || []), id])]
     })
   }
 
-  function addCategory(c) {
-    persist({ categories: [...(ov.categories || []), c] })
+  async function addCategory(c) {
+    await persist({ categories: [...(ov.categories || []), c] })
   }
 
   function resetData() {
