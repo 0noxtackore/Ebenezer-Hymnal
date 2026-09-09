@@ -274,7 +274,7 @@ export default function Admin() {
       setMsg(`Completa: ${errors.join(', ')}`)
       return
     }
-    const num = isChorus ? nextNum : Number(form.number)
+    const num = isChorus ? (form.id ? form.number : nextNum) : Number(form.number)
     if (!isChorus) {
       const dupNum = catHymns.find((h) => h.number === num && h.id !== form.id)
       if (dupNum) {
