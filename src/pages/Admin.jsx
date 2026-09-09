@@ -92,15 +92,21 @@ export default function Admin() {
     const firstVerse = coroParts[0].trim()
     const afterCoro = coroParts[1]
     const puenteParts = afterCoro.split(/\n\nPUENTE\n/)
-    const coroText = puenteParts[0].trim()
+    let coroText = ''
     let puenteText = ''
     let extraVerses = []
+    const coroBlock = puenteParts[0]
+    const coroSubBlocks = coroBlock.split('\n\n').filter((v) => v.trim())
+    if (coroSubBlocks.length > 0) {
+      coroText = coroSubBlocks[0].trim()
+      extraVerses = coroSubBlocks.slice(1)
+    }
     if (puenteParts.length > 1) {
       const afterPuente = puenteParts.slice(1).join('\n\nPUENTE\n')
       const blocks = afterPuente.split('\n\n').filter((v) => v.trim())
       if (blocks.length > 0) {
         puenteText = blocks[0]
-        extraVerses = blocks.slice(1)
+        extraVerses = [...extraVerses, ...blocks.slice(1)]
       }
     }
     const allVerses = [firstVerse, ...extraVerses].filter((v) => v.trim())
