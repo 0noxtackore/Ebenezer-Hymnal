@@ -171,6 +171,7 @@ export function DataProvider({ children }) {
     const finalCategories = [...baseCategories, ...mergedCats]
     try { localStorage.setItem(DATA_CACHE_KEY, JSON.stringify({ hymns: finalHymns, categories: finalCategories })) } catch {}
     await updateFirebase(finalHymns, finalCategories)
+    setBase({ hymns: finalHymns, categories: finalCategories })
   }
 
   async function addHymn(h) {
