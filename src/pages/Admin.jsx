@@ -93,8 +93,18 @@ export default function Admin() {
     const afterCoro = coroParts[1]
     const puenteParts = afterCoro.split(/\n\nPUENTE\n/)
     const coroText = puenteParts[0].trim()
-    const puenteText = (puenteParts[1] || '').trim()
-    return { verses: [firstVerse], coro: coroText, puente: puenteText }
+    let puenteText = ''
+    let extraVerses = []
+    if (puenteParts.length > 1) {
+      const afterPuente = puenteParts.slice(1).join('\n\nPUENTE\n')
+      const blocks = afterPuente.split('\n\n').filter((v) => v.trim())
+      if (blocks.length > 0) {
+        puenteText = blocks[0]
+        extraVerses = blocks.slice(1)
+      }
+    }
+    const allVerses = [firstVerse, ...extraVerses].filter((v) => v.trim())
+    return { verses: allVerses.length ? allVerses : [''], coro: coroText, puente: puenteText }
   }
 
   function buildLyrics(versesList, coroText, puenteText) {
