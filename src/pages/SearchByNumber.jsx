@@ -59,7 +59,7 @@ export default function SearchByNumber() {
         <div className="modal-overlay" onClick={() => setResults([])}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={() => setResults([])}>✕</button>
-            <h2 style={{ margin: '4px 0 14px', paddingRight: 36 }}>Himno número {num}</h2>
+            <h2 style={{ margin: '4px 0 14px', textAlign: 'center', paddingRight: 36 }}>Himno número {num}</h2>
             <div className="search-results">
               {results.map((h) => (
                 <button
