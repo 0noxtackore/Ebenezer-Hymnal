@@ -239,6 +239,25 @@ export default function Admin() {
     setShowModal(true)
   }
 
+  function hasUnsavedContent() {
+    if (form.title.trim()) return true
+    if (form.number && !isChorusCategory(form.category)) return true
+    if (form.musicKey || form.scale) return true
+    if (form.nomenclature.trim()) return true
+    if (verses.some((v) => v.trim())) return true
+    if (coro.trim()) return true
+    if (puente.trim()) return true
+    return false
+  }
+
+  function handleCloseModal() {
+    if (hasUnsavedContent()) {
+      setShowExitConfirm(true)
+    } else {
+      setShowModal(false)
+    }
+  }
+
   function startEdit(h) {
     setForm({ ...h })
     const { verses: v, coro: c, puente: p } = parseLyricsToBlocks(h.lyrics || '')
@@ -600,7 +619,7 @@ export default function Admin() {
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
-            <button className="modal-close" onClick={() => setShowExitConfirm(true)} aria-label="Cerrar">
+            <button className="modal-close" onClick={handleCloseModal} aria-label="Cerrar">
               ✕
             </button>
             <h2>{form.id ? 'Editar alabanza' : 'Nueva alabanza'}</h2>
@@ -765,7 +784,7 @@ export default function Admin() {
               <button className="btn" onClick={submit}>
                 Guardar
               </button>
-              <button className="btn ghost" onClick={() => setShowModal(false)}>
+              <button className="btn ghost" onClick={handleCloseModal}>
                 Cancelar
               </button>
             </div>
