@@ -837,6 +837,47 @@ a { color: inherit; }
   flex: 1;
 }
 
+.search-results {
+  margin-top: 16px;
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.search-result-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--surface);
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text);
+  text-align: left;
+}
+
+.search-result-item:active {
+  background: var(--gold-bg);
+  border-color: var(--gold);
+}
+
+.result-nomen {
+  font-weight: 700;
+  color: var(--gold);
+  min-width: 50px;
+}
+
+.result-title {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* ---------- Buscar por nombre ---------- */
 .search-pill {
   display: flex;

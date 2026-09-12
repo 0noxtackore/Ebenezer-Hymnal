@@ -4,19 +4,30 @@ import { useData } from '../context/DataContext.jsx'
 
 export default function SearchByNumber() {
   const [num, setNum] = useState('')
+  const [results, setResults] = useState([])
   const { hymns } = useData()
   const nav = useNavigate()
 
   const press = (d) => setNum((n) => (n + d).slice(0, 8))
   const del = () => setNum((n) => n.slice(0, -1))
-  const clear = () => setNum('')
+  const clear = () => { setNum(''); setResults([]) }
 
   const search = () => {
+    const query = num.toUpperCase().trim()
+    if (!query) return
     const n = parseInt(num, 10)
-    if (!n && !num) return
-    const h = hymns.find((x) => Number(x.number) === n || (x.nomenclature || '').toUpperCase() === num.toUpperCase())
-    if (h) nav('/himno/' + h.id)
-    else alert('No se encontró la alabanza número ' + num)
+    const matches = hymns.filter((x) => {
+      if ((x.nomenclature || '').toUpperCase() === query) return true
+      if (!isNaN(n) && Number(x.number) === n) return true
+      return false
+    })
+    if (matches.length === 0) {
+      alert('No se encontró la alabanza número ' + num)
+    } else if (matches.length === 1) {
+      nav('/himno/' + matches[0].id)
+    } else {
+      setResults(matches)
+    }
   }
 
   const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
@@ -54,6 +65,21 @@ export default function SearchByNumber() {
           BUSCAR
         </button>
       </div>
+
+      {results.length > 1 && (
+        <div className="search-results">
+          {results.map((h) => (
+            <button
+              key={h.id}
+              className="search-result-item"
+              onClick={() => nav('/himno/' + h.id)}
+            >
+              <span className="result-nomen">{h.nomenclature || h.number}</span>
+              <span className="result-title">{h.title}</span>
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
