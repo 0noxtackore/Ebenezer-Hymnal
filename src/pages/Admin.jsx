@@ -52,6 +52,7 @@ export default function Admin() {
   const [page, setPage] = useState(1)
   const [collapsed, setCollapsed] = useState({})
   const [deleteTarget, setDeleteTarget] = useState(null)
+  const [showExitConfirm, setShowExitConfirm] = useState(false)
   const PER_PAGE = 10
   const verseRefs = useRef({})
   const coroRef = useRef(null)
@@ -599,7 +600,7 @@ export default function Admin() {
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
-            <button className="modal-close" onClick={() => setShowModal(false)} aria-label="Cerrar">
+            <button className="modal-close" onClick={() => setShowExitConfirm(true)} aria-label="Cerrar">
               ✕
             </button>
             <h2>{form.id ? 'Editar alabanza' : 'Nueva alabanza'}</h2>
@@ -766,6 +767,23 @@ export default function Admin() {
               </button>
               <button className="btn ghost" onClick={() => setShowModal(false)}>
                 Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showExitConfirm && (
+        <div className="modal-overlay" onClick={() => setShowExitConfirm(false)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 360, textAlign: 'center' }}>
+            <h3 style={{ margin: '0 0 12px' }}>Salir sin guardar?</h3>
+            <p style={{ margin: '0 0 18px', color: 'var(--muted)' }}>Los cambios no se guardaran.</p>
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
+              <button className="btn ghost" onClick={() => setShowExitConfirm(false)}>
+                Cancelar
+              </button>
+              <button className="btn" onClick={() => { setShowExitConfirm(false); setShowModal(false) }}>
+                Salir
               </button>
             </div>
           </div>
