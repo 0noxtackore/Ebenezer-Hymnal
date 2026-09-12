@@ -56,17 +56,23 @@ export default function SearchByNumber() {
       </div>
 
       {results.length > 1 && (
-        <div className="search-results">
-          {results.map((h) => (
-            <button
-              key={h.id}
-              className="search-result-item"
-              onClick={() => nav('/himno/' + h.id)}
-            >
-              <span className="result-nomen">{h.nomenclature || h.number}</span>
-              <span className="result-title">{h.title}</span>
-            </button>
-          ))}
+        <div className="modal-overlay" onClick={() => setResults([])}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setResults([])}>✕</button>
+            <h2 style={{ margin: '4px 0 14px', paddingRight: 36 }}>Himno número {num}</h2>
+            <div className="search-results">
+              {results.map((h) => (
+                <button
+                  key={h.id}
+                  className="search-result-item"
+                  onClick={() => nav('/himno/' + h.id)}
+                >
+                  <span className="result-nomen">{h.nomenclature || h.number}</span>
+                  <span className="result-title">{h.title}</span>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       )}
     </div>
