@@ -8,21 +8,16 @@ export default function SearchByNumber() {
   const { hymns } = useData()
   const nav = useNavigate()
 
-  const press = (d) => setNum((n) => (n + d).slice(0, 8))
+  const press = (d) => setNum((n) => (n + d).slice(0, 5))
   const del = () => setNum((n) => n.slice(0, -1))
   const clear = () => { setNum(''); setResults([]) }
 
   const search = () => {
-    const query = num.toUpperCase().trim()
-    if (!query) return
     const n = parseInt(num, 10)
-    const matches = hymns.filter((x) => {
-      if ((x.nomenclature || '').toUpperCase() === query) return true
-      if (!isNaN(n) && Number(x.number) === n) return true
-      return false
-    })
+    if (!n) return
+    const matches = hymns.filter((x) => Number(x.number) === n)
     if (matches.length === 0) {
-      alert('No se encontró la alabanza número ' + num)
+      alert('No se encontró el himno número ' + num)
     } else if (matches.length === 1) {
       nav('/himno/' + matches[0].id)
     } else {
@@ -31,19 +26,13 @@ export default function SearchByNumber() {
   }
 
   const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-  const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 
   return (
     <div className="center-screen">
-      <div className="num-label">Número o Nomenclatura</div>
+      <div className="num-label">Número del Himno</div>
       <div className="num-display">{num || '0'}</div>
 
       <div className="keypad">
-        {letters.map((k) => (
-          <button key={k} className="key" onClick={() => press(k)}>
-            {k}
-          </button>
-        ))}
         {keys.map((k) => (
           <button key={k} className="key" onClick={() => press(k)}>
             {k}
