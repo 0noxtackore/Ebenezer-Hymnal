@@ -53,6 +53,7 @@ export default function Admin() {
   const [collapsed, setCollapsed] = useState({})
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [showExitConfirm, setShowExitConfirm] = useState(false)
+  const [initialSnapshot, setInitialSnapshot] = useState(null)
   const PER_PAGE = 10
   const verseRefs = useRef({})
   const coroRef = useRef(null)
@@ -237,17 +238,16 @@ export default function Admin() {
     setHasVerses(true)
     setHasCoro(true)
     setShowModal(true)
+    setInitialSnapshot(JSON.stringify({ form: blank(), verses: [''], coro: '', puente: '', hasVerses: true, hasCoro: true }))
+  }
+
+  function getSnapshot() {
+    return JSON.stringify({ form, verses, coro, puente, hasVerses, hasCoro })
   }
 
   function hasUnsavedContent() {
-    if (form.title.trim()) return true
-    if (form.number && !isChorusCategory(form.category)) return true
-    if (form.musicKey || form.scale) return true
-    if (form.nomenclature.trim()) return true
-    if (verses.some((v) => v.trim())) return true
-    if (coro.trim()) return true
-    if (puente.trim()) return true
-    return false
+    if (!initialSnapshot) return false
+    return getSnapshot() !== initialSnapshot
   }
 
   function handleCloseModal() {
@@ -255,6 +255,7 @@ export default function Admin() {
       setShowExitConfirm(true)
     } else {
       setShowModal(false)
+      setInitialSnapshot(null)
     }
   }
 
@@ -269,6 +270,8 @@ export default function Admin() {
     setHasVerses(vHasVerses || !vHasCoro)
     setHasCoro(vHasCoro || !vHasVerses)
     setShowModal(true)
+    const snap = { form: { ...h }, verses: v.length ? v : [''], coro: c, puente: p, hasVerses: vHasVerses || !vHasCoro, hasCoro: vHasCoro || !vHasVerses }
+    setInitialSnapshot(JSON.stringify(snap))
   }
 
   async function submit() {
@@ -801,7 +804,7 @@ export default function Admin() {
               <button className="btn ghost" onClick={() => setShowExitConfirm(false)}>
                 Cancelar
               </button>
-              <button className="btn" onClick={() => { setShowExitConfirm(false); setShowModal(false) }}>
+              <button className="btn" onClick={() => { setShowExitConfirm(false); setShowModal(false); setInitialSnapshot(null) }}>
                 Salir
               </button>
             </div>
