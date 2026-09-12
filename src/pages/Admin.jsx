@@ -153,29 +153,32 @@ export default function Admin() {
   }
 
   function addVerse() {
-    setVerses([...verses, ''])
+    const currentValues = readVerses()
+    setVerses([...currentValues, ''])
     setVerseKey((k) => k + 1)
   }
 
   function removeVerse(i) {
     if (verses.length <= 1) return
-    setVerses(verses.filter((_, idx) => idx !== i))
+    const currentValues = readVerses()
+    setVerses(currentValues.filter((_, idx) => idx !== i))
     setVerseKey((k) => k + 1)
   }
 
+  function updateVerse(i, val) {
+    setVerses((prev) => prev.map((v, idx) => (idx === i ? val : v)))
+  }
+
   function readVerses() {
-    return verses.map((_, i) => {
-      const el = verseRefs.current[i]
-      return el ? el.value : ''
-    })
+    return verses
   }
 
   function readCoro() {
-    return coroRef.current ? coroRef.current.value : ''
+    return coro
   }
 
   function readPuente() {
-    return puenteRef.current ? puenteRef.current.value : ''
+    return puente
   }
 
   useEffect(() => {
@@ -717,10 +720,9 @@ export default function Admin() {
                           )}
                         </div>
                         <textarea
-                          key={verseKey + '-' + i}
                           placeholder={i === 0 ? 'Primera estrofa...' : `Estrofa ${i + 1}...`}
-                          defaultValue={v}
-                          ref={(el) => { verseRefs.current[i] = el }}
+                          value={v}
+                          onChange={(e) => updateVerse(i, e.target.value)}
                         />
                       </div>
                     ))}
@@ -741,9 +743,8 @@ export default function Admin() {
                 {hasCoro && (
                   <textarea
                     placeholder="Texto del coro..."
-                    key={'coro-' + verseKey}
-                    defaultValue={coro}
-                    ref={coroRef}
+                    value={coro}
+                    onChange={(e) => setCoro(e.target.value)}
                   />
                 )}
               </div>
@@ -752,9 +753,8 @@ export default function Admin() {
                 <label>Puente</label>
                 <textarea
                   placeholder="Texto del puente (opcional)..."
-                  key={'puente-' + verseKey}
-                  defaultValue={puente}
-                  ref={puenteRef}
+                  value={puente}
+                  onChange={(e) => setPuente(e.target.value)}
                 />
                 </div>
               )}
