@@ -133,26 +133,30 @@ export default function Admin() {
 
   function autoFormatVerse(text) {
     if (!text) return text
-    const flat = text.replace(/\n+/g, ' ').replace(/\s+/g, ' ').trim()
-    const maxLen = 42
-    const words = flat.split(' ')
-    const lines = []
-    let current = ''
-    for (const word of words) {
-      const test = current ? current + ' ' + word : word
-      if (test.length > maxLen && current) {
-        lines.push(current.trim())
-        current = word
-      } else {
-        current = test
+    const lines = text.split('\n')
+    const result = []
+    for (const line of lines) {
+      const flat = line.replace(/\s+/g, ' ').trim()
+      if (!flat) { result.push(''); continue }
+      if (flat.length <= 42) { result.push(flat); continue }
+      const words = flat.split(' ')
+      let current = ''
+      for (const word of words) {
+        const test = current ? current + ' ' + word : word
+        if (test.length > 42 && current) {
+          result.push(current.trim())
+          current = word
+        } else {
+          current = test
+        }
+        if (/[.,;:!]$/.test(word) && current.length >= 20) {
+          result.push(current.trim())
+          current = ''
+        }
       }
-      if (/[.,;:!]$/.test(word) && current.length >= 20) {
-        lines.push(current.trim())
-        current = ''
-      }
+      if (current.trim()) result.push(current.trim())
     }
-    if (current.trim()) lines.push(current.trim())
-    return lines.join('\n')
+    return result.join('\n')
   }
 
   function addVerse() {
