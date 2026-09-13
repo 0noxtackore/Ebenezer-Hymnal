@@ -122,8 +122,8 @@ export function DataProvider({ children }) {
     const cat = (h.category || '')
     const isChorus = CHORUS_CATS.includes(strip(cat))
     const key = isChorus
-      ? cat + '#' + h.number + '#' + (h.musicKey || '') + '#' + (h.scale || '')
-      : cat + '#' + h.number
+      ? (h.nomenclature || cat + '#' + h.number + '#' + (h.musicKey || '') + '#' + (h.scale || ''))
+      : (h.nomenclature || cat + '#' + h.number)
     if (seenKeys.has(key)) return false
     seenKeys.add(key)
     return true
