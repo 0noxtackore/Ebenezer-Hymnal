@@ -132,8 +132,7 @@ export default function Admin() {
 
   function autoFormatVerse(text) {
     if (!text) return text
-    const normalized = text.replace(/\n{2,}/g, '\n')
-    const lines = normalized.split('\n')
+    const lines = text.split('\n')
     const result = []
     for (const line of lines) {
       const flat = line.replace(/\s+/g, ' ').trim()
