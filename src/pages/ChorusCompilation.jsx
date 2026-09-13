@@ -17,6 +17,30 @@ const ROMANS = [
 const CHORUS_CATS = ['coros lentos', 'coros rapidos', 'gospel']
 const stripCat = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
+function autoFormatLine(text) {
+  if (!text) return [text]
+  const flat = text.replace(/\s+/g, ' ').trim()
+  if (flat.length <= 42) return [flat]
+  const words = flat.split(' ')
+  const lines = []
+  let current = ''
+  for (const word of words) {
+    const test = current ? current + ' ' + word : word
+    if (test.length > 42 && current) {
+      lines.push(current.trim())
+      current = word
+    } else {
+      current = test
+    }
+    if (/[.,;:!]$/.test(word) && current.length >= 20) {
+      lines.push(current.trim())
+      current = ''
+    }
+  }
+  if (current.trim()) lines.push(current.trim())
+  return lines
+}
+
 function parseLyrics(lyrics, category) {
   if (!lyrics) return []
   const isChorus = CHORUS_CATS.includes(stripCat(category))
@@ -280,9 +304,9 @@ export default function ChorusCompilation() {
             {parseLyrics(h.lyrics, h.category).map((v, i) => (
               <div className="verse" key={i}>
                 {v.label && <div className="verse-label">{v.label}</div>}
-                {v.lines.map((line, j) => (
-                  <div className="verse-line" key={j}>{line}</div>
-                ))}
+                {v.lines.flatMap((line, j) => autoFormatLine(line).map((fl, fj) => (
+                  <div className="verse-line" key={`${j}-${fj}`}>{fl}</div>
+                )))}
               </div>
             ))}
             {!h.lyrics && <div className="muted">Sin letra disponible.</div>}
