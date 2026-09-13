@@ -14,8 +14,19 @@ const ROMANS = [
   'XXI', 'XXII', 'XXIII', 'XXIV', 'XXV', 'XXVI', 'XXVII', 'XXVIII', 'XXIX', 'XXX'
 ]
 
-function parseLyrics(lyrics) {
+const CHORUS_CATS = ['coros lentos', 'coros rapidos', 'gospel']
+const stripCat = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+
+function parseLyrics(lyrics, category) {
   if (!lyrics) return []
+  const isChorus = CHORUS_CATS.includes(stripCat(category))
+  const hasCoroMarker = /\n\s*\n\s*CORO\s*\n/i.test(lyrics)
+
+  if (isChorus && !hasCoroMarker) {
+    const lines = lyrics.split('\n').map((l) => l.trim()).filter(Boolean)
+    return lines.length > 0 ? [{ label: 'CORO', lines }] : []
+  }
+
   const blocks = lyrics
     .split(/\n\s*\n/)
     .map((b) => b.split('\n').map((l) => l.trim()).filter(Boolean))
@@ -153,7 +164,7 @@ export default function ChorusCompilation() {
         y += 8
 
         doc.setTextColor(...brown)
-        const verses = parseLyrics(h.lyrics)
+        const verses = parseLyrics(h.lyrics, h.category)
         verses.forEach((v) => {
           if (v.label) {
             checkPage(10)
@@ -266,7 +277,7 @@ export default function ChorusCompilation() {
             <span className="compilation-coros-title">{h.title}</span>
           </div>
           <div className="lyrics">
-            {parseLyrics(h.lyrics).map((v, i) => (
+            {parseLyrics(h.lyrics, h.category).map((v, i) => (
               <div className="verse" key={i}>
                 {v.label && v.label !== 'CORO' && <div className="verse-label">{v.label}</div>}
                 {v.lines.map((line, j) => (
