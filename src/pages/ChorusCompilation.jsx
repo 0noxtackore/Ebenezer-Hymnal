@@ -335,9 +335,9 @@ export default function ChorusCompilation() {
             {parseLyrics(h.lyrics, h.category).map((v, i) => (
               <div className="verse" key={i}>
                 {v.label && <div className="verse-label">{v.label}</div>}
-                {v.lines.flatMap((line, j) => autoFormatLine(line).map((fl, fj) => (
-                  <div className="verse-line" key={`${j}-${fj}`}>{fl}</div>
-                )))}
+                {v.lines.map((line, j) => (
+                  <div className="verse-line" key={j}>{line}</div>
+                ))}
               </div>
             ))}
             {!h.lyrics && <div className="muted">Sin letra disponible.</div>}
