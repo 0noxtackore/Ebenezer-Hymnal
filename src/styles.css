@@ -1192,6 +1192,9 @@ a { color: inherit; }
 .verse-line {
   white-space: pre-line;
 }
+.verse-line:empty {
+  height: 0.75em;
+}
 
 /* ---------- Tarjeta para compartir (captura) ---------- */
 .share-card {

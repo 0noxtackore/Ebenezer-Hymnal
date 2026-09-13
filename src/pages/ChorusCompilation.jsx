@@ -58,7 +58,7 @@ function parseLyrics(lyrics, category) {
 
   if (isChorus) {
     const out = []
-    let verseLines = []
+    const verseBlocks = []
     let coroLines = []
     let puenteLines = []
     let section = 'verse'
@@ -71,14 +71,17 @@ function parseLyrics(lyrics, category) {
         section = 'puente'
         puenteLines.push(...block.slice(1))
       } else if (section === 'verse') {
-        verseLines.push(...block)
+        verseBlocks.push(block)
       } else if (section === 'coro') {
         coroLines.push(...block)
       } else {
         puenteLines.push(...block)
       }
     }
-    if (verseLines.length) out.push({ label: null, lines: verseLines })
+    if (verseBlocks.length) {
+      const merged = verseBlocks.flatMap((b, i) => i === 0 ? b : ['', ...b])
+      out.push({ label: null, lines: merged })
+    }
     if (coroLines.length) out.push({ label: 'CORO', lines: coroLines })
     if (puenteLines.length) out.push({ label: 'PUENTE', lines: puenteLines })
     return out
