@@ -172,6 +172,11 @@ export default function Admin() {
     setVerses((prev) => prev.map((v, idx) => (idx === i ? val : v)))
   }
 
+  function formatOnBlur(val) {
+    if (!val) return val
+    return autoFormatVerse(val.toUpperCase())
+  }
+
   function readVerses() {
     return verses
   }
@@ -747,6 +752,7 @@ export default function Admin() {
                           placeholder={i === 0 ? 'Primera estrofa...' : `Estrofa ${i + 1}...`}
                           value={v}
                           onChange={(e) => updateVerse(i, e.target.value)}
+                          onBlur={(e) => updateVerse(i, formatOnBlur(e.target.value))}
                         />
                       </div>
                     ))}
@@ -769,6 +775,7 @@ export default function Admin() {
                     placeholder="Texto del coro..."
                     value={coro}
                     onChange={(e) => setCoro(e.target.value)}
+                    onBlur={(e) => setCoro(formatOnBlur(e.target.value))}
                   />
                 )}
               </div>
@@ -779,6 +786,7 @@ export default function Admin() {
                   placeholder="Texto del puente (opcional)..."
                   value={puente}
                   onChange={(e) => setPuente(e.target.value)}
+                  onBlur={(e) => setPuente(formatOnBlur(e.target.value))}
                 />
                 </div>
               )}
