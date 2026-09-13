@@ -1098,6 +1098,26 @@ a { color: inherit; }
   top: -4px;
 }
 
+.hnum-chorus {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--gold);
+  background: transparent;
+  border: 1.5px solid var(--gold);
+  border-radius: 6px;
+  padding: 3px 8px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.hnum-chorus sup {
+  font-size: 9px;
+  margin-left: 1px;
+  position: relative;
+  top: -4px;
+}
+
 .hnum::after {
   content: "";
   position: absolute;

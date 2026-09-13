@@ -196,7 +196,7 @@ export default function HymnDetail() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.25 }}
       >
-        <div className="hnum">
+        <div className={isChorus ? 'hnum-chorus' : 'hnum'}>
           {(() => {
             const nom = h.nomenclature || String(h.number)
             const m = nom.match(/^([A-Za-z]+)(\d+)$/)
