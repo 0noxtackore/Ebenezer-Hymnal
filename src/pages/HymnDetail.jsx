@@ -196,11 +196,18 @@ export default function HymnDetail() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.25 }}
       >
-        <div className="hnum">{h.nomenclature || h.number}</div>
-        <h2>{h.title}</h2>
+        <div className="hnum">
+          {(() => {
+            const nom = h.nomenclature || String(h.number)
+            const m = nom.match(/^([A-Za-z]+)(\d+)$/)
+            if (m) return <>{m[1]}<sup>{m[2]}</sup></>
+            return nom
+          })()}
+        </div>
+        <h2 style={{ textAlign: 'center' }}>{h.title}</h2>
         <div className="actions">
           <button className={fav ? 'on' : ''} onClick={() => toggle(h.id)} title="Favorito">
-            <Star size={20} fill={fav ? 'currentColor' : 'none'} />
+            <Star size={20} fill={fav ? 'currentColor' : 'none' } />
           </button>
           <button onClick={share} title="Compartir" disabled={sharing}>
             <Share2 size={20} />
