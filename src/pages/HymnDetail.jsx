@@ -19,12 +19,6 @@ const strip = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').
 function parseLyrics(lyrics, category) {
   if (!lyrics) return []
   const isChorus = CHORUS_CATS.includes(strip(category))
-  const hasCoroMarker = /\n\s*\n\s*CORO\s*\n/i.test(lyrics)
-
-  if (isChorus && !hasCoroMarker) {
-    const lines = lyrics.split('\n').map((l) => l.trim()).filter(Boolean)
-    return lines.length > 0 ? [{ label: 'CORO', lines }] : []
-  }
 
   const blocks = lyrics
     .split(/\n\s*\n/)
