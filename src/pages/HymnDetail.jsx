@@ -20,42 +20,47 @@ function parseLyrics(lyrics, category) {
   if (!lyrics) return []
   const isChorus = CHORUS_CATS.includes(strip(category))
 
+  const toLines = (t) => t.split('\n').map((l) => l.trim()).filter(Boolean)
+
+  if (isChorus) {
+    const hasCoro = /\n\nCORO\n/.test(lyrics)
+    if (!hasCoro) {
+      return [{ label: null, lines: toLines(lyrics) }]
+    }
+    const coroParts = lyrics.split(/\n\nCORO\n/)
+    const verse1 = coroParts[0].trim()
+    const afterCoro = coroParts[1]
+    const hasPuente = /\n\nPUENTE\n/.test(afterCoro)
+    if (!hasPuente) {
+      return [
+        ...(verse1 ? [{ label: null, lines: toLines(verse1) }] : []),
+        { label: 'CORO', lines: toLines(afterCoro) }
+      ]
+    }
+    const puenteParts = afterCoro.split(/\n\nPUENTE\n/)
+    const coroText = puenteParts[0].trim()
+    if (puenteParts.length < 2) {
+      return [
+        ...(verse1 ? [{ label: null, lines: toLines(verse1) }] : []),
+        { label: 'CORO', lines: toLines(coroText) }
+      ]
+    }
+    const afterPuenteRaw = puenteParts[1]
+    const puenteSplit = afterPuenteRaw.split(/\n\n/)
+    const puenteText = puenteSplit[0].trim()
+    const extraVerses = puenteSplit.slice(1).join('\n\n').trim()
+    return [
+      ...(verse1 ? [{ label: null, lines: toLines(verse1) }] : []),
+      { label: 'CORO', lines: toLines(coroText) },
+      { label: 'PUENTE', lines: toLines(puenteText) },
+      ...(extraVerses ? [{ label: null, lines: toLines(extraVerses) }] : [])
+    ]
+  }
+
   const blocks = lyrics
     .split(/\n\s*\n/)
     .map((b) => b.split('\n').map((l) => l.trim()).filter(Boolean))
     .filter((b) => b.length > 0)
-
-  if (isChorus) {
-    const out = []
-    const coroIdx = blocks.findIndex((b) => b[0].replace(/[^\p{L}]/gu, '').toUpperCase() === 'CORO')
-    const puenteIdx = blocks.findIndex((b) => b[0].replace(/[^\p{L}]/gu, '').toUpperCase() === 'PUENTE')
-
-    if (coroIdx < 0) {
-      blocks.forEach((b, i) => out.push({ label: ROMANS[i] || String(i + 1), lines: b }))
-      return out
-    }
-
-    const verse1 = blocks.slice(0, coroIdx).flatMap((b) => b)
-
-    const coroLines = blocks[coroIdx].slice(1)
-
-    const afterCoroStart = coroIdx + 1
-    const afterCoroEnd = puenteIdx > coroIdx ? puenteIdx : blocks.length
-    let extraVerses = blocks.slice(afterCoroStart, afterCoroEnd).flatMap((b) => b)
-
-    let puenteLines = []
-    if (puenteIdx >= 0) {
-      puenteLines = blocks[puenteIdx].slice(1)
-      const afterPuente = blocks.slice(puenteIdx + 1).flatMap((b) => b)
-      if (afterPuente.length) extraVerses.push(...afterPuente)
-    }
-
-    if (verse1.length) out.push({ label: null, lines: verse1 })
-    if (coroLines.length) out.push({ label: 'CORO', lines: coroLines })
-    if (extraVerses.length) out.push({ label: null, lines: extraVerses })
-    if (puenteLines.length) out.push({ label: 'PUENTE', lines: puenteLines })
-    return out
-  }
 
   const out = []
   let verse = 0
