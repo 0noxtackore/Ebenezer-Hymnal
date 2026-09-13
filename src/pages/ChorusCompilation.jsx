@@ -279,7 +279,7 @@ export default function ChorusCompilation() {
           <div className="lyrics">
             {parseLyrics(h.lyrics, h.category).map((v, i) => (
               <div className="verse" key={i}>
-                {v.label && v.label !== 'CORO' && <div className="verse-label">{v.label}</div>}
+                {v.label && <div className="verse-label">{v.label}</div>}
                 {v.lines.map((line, j) => (
                   <div className="verse-line" key={j}>{line}</div>
                 ))}
