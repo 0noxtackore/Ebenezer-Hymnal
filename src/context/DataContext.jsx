@@ -6,7 +6,7 @@ const DataContext = createContext(null)
 const OVERRIDES_KEY = 'he_hymns_overrides'
 const DATA_CACHE_KEY = 'he_data_cache'
 const CACHE_VERSION_KEY = 'he_cache_version'
-const CACHE_VERSION = 4
+const CACHE_VERSION = 5
 const FB_NODE = 'hymnario'
 
 const CHORUS_CATS = ['coros lentos', 'coros rapidos', 'gospel']
