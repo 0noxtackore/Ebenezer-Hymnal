@@ -137,12 +137,12 @@ export default function Admin() {
     for (const line of lines) {
       const flat = line.replace(/\s+/g, ' ').trim()
       if (!flat) { result.push(''); continue }
-      if (flat.length <= 42) { result.push(flat); continue }
+      if (flat.length <= 22) { result.push(flat); continue }
       const words = flat.split(' ')
       let current = ''
       for (const word of words) {
         const test = current ? current + ' ' + word : word
-        if (test.length > 42 && current) {
+        if (test.length > 22 && current) {
           result.push(current.trim())
           current = word
         } else {

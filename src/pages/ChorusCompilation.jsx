@@ -20,13 +20,13 @@ const stripCat = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '
 function autoFormatLine(text) {
   if (!text) return [text]
   const flat = text.replace(/\s+/g, ' ').trim()
-  if (flat.length <= 42) return [flat]
+  if (flat.length <= 22) return [flat]
   const words = flat.split(' ')
   const lines = []
   let current = ''
   for (const word of words) {
     const test = current ? current + ' ' + word : word
-    if (test.length > 42 && current) {
+    if (test.length > 22 && current) {
       lines.push(current.trim())
       current = word
     } else {
