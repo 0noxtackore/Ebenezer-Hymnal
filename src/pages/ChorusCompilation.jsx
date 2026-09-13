@@ -56,6 +56,34 @@ function parseLyrics(lyrics, category) {
     .map((b) => b.split('\n').map((l) => l.trim()).filter(Boolean))
     .filter((b) => b.length > 0)
 
+  if (isChorus) {
+    const out = []
+    let verseLines = []
+    let coroLines = []
+    let puenteLines = []
+    let section = 'verse'
+    for (const block of blocks) {
+      const firstNorm = block[0].replace(/[^\p{L}]/gu, '').toUpperCase()
+      if (firstNorm === 'CORO') {
+        section = 'coro'
+        coroLines.push(...block.slice(1))
+      } else if (firstNorm === 'PUENTE') {
+        section = 'puente'
+        puenteLines.push(...block.slice(1))
+      } else if (section === 'verse') {
+        verseLines.push(...block)
+      } else if (section === 'coro') {
+        coroLines.push(...block)
+      } else {
+        puenteLines.push(...block)
+      }
+    }
+    if (verseLines.length) out.push({ label: null, lines: verseLines })
+    if (coroLines.length) out.push({ label: 'CORO', lines: coroLines })
+    if (puenteLines.length) out.push({ label: 'PUENTE', lines: puenteLines })
+    return out
+  }
+
   const out = []
   let verse = 0
   let coroFound = false
