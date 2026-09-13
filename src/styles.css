@@ -674,9 +674,9 @@ a { color: inherit; }
 
 .compilation-coros-header {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
+  gap: 6px;
   padding: 12px 14px;
   background: var(--card);
   border-radius: 12px 12px 0 0;
