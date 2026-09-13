@@ -2,6 +2,9 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useData } from '../context/DataContext.jsx'
 
+const CHORUS_CATS = ['coros lentos', 'coros rapidos', 'gospel']
+const strip = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+
 export default function SearchByNumber() {
   const [num, setNum] = useState('')
   const [results, setResults] = useState([])
@@ -15,7 +18,7 @@ export default function SearchByNumber() {
   const search = () => {
     const n = parseInt(num, 10)
     if (!n) return
-    const matches = hymns.filter((x) => Number(x.number) === n)
+    const matches = hymns.filter((x) => Number(x.number) === n && !CHORUS_CATS.includes(strip(x.category)))
     if (matches.length === 0) {
       alert('No se encontró el himno número ' + num)
     } else if (matches.length === 1) {
