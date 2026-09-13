@@ -25,7 +25,9 @@ function parseLyrics(lyrics, category) {
   if (isChorus) {
     const hasCoro = /\n\nCORO\n/.test(lyrics)
     if (!hasCoro) {
-      return [{ label: null, lines: toLines(lyrics) }]
+      const blocks = lyrics.split(/\n\s*\n/).map((b) => b.split('\n').map((l) => l.trim()).filter(Boolean)).filter((b) => b.length > 0)
+      blocks.forEach((b) => out.push({ label: null, lines: b }))
+      return out
     }
     const coroParts = lyrics.split(/\n\nCORO\n/)
     const verse1 = coroParts[0].trim()
