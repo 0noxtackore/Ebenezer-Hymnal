@@ -92,6 +92,7 @@ export default function HymnDetail() {
 
   const h = hymns.find((x) => String(x.id) === String(id))
   const fav = h ? isFavorite(h.id) : false
+  const isChorus = CHORUS_CATS.includes(strip(h?.category))
 
   const audioRef = useRef(null)
   const shareCardRef = useRef(null)
