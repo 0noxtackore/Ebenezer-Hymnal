@@ -33,31 +33,33 @@ function parseLyrics(lyrics, category) {
 
   if (isChorus) {
     const out = []
-    const verseBlocks = []
-    let coroLines = []
+    const coroIdx = blocks.findIndex((b) => b[0].replace(/[^\p{L}]/gu, '').toUpperCase() === 'CORO')
+    const puenteIdx = blocks.findIndex((b) => b[0].replace(/[^\p{L}]/gu, '').toUpperCase() === 'PUENTE')
+
+    if (coroIdx < 0) {
+      const lines = blocks.flatMap((b) => b)
+      if (lines.length) out.push({ label: 'CORO', lines })
+      return out
+    }
+
+    const verse1 = blocks.slice(0, coroIdx).flatMap((b) => b)
+
+    const coroLines = blocks[coroIdx].slice(1)
+
+    const afterCoroStart = coroIdx + 1
+    const afterCoroEnd = puenteIdx > coroIdx ? puenteIdx : blocks.length
+    let extraVerses = blocks.slice(afterCoroStart, afterCoroEnd).flatMap((b) => b)
+
     let puenteLines = []
-    let section = 'verse'
-    for (const block of blocks) {
-      const firstNorm = block[0].replace(/[^\p{L}]/gu, '').toUpperCase()
-      if (firstNorm === 'CORO') {
-        section = 'coro'
-        coroLines.push(...block.slice(1))
-      } else if (firstNorm === 'PUENTE') {
-        section = 'puente'
-        puenteLines.push(...block.slice(1))
-      } else if (section === 'verse') {
-        verseBlocks.push(block)
-      } else if (section === 'coro') {
-        coroLines.push(...block)
-      } else {
-        puenteLines.push(...block)
-      }
+    if (puenteIdx >= 0) {
+      puenteLines = blocks[puenteIdx].slice(1)
+      const afterPuente = blocks.slice(puenteIdx + 1).flatMap((b) => b)
+      if (afterPuente.length) extraVerses.push(...afterPuente)
     }
-    if (verseBlocks.length) {
-      const merged = verseBlocks.flatMap((b, i) => i === 0 ? b : ['', ...b])
-      out.push({ label: null, lines: merged })
-    }
+
+    if (verse1.length) out.push({ label: null, lines: verse1 })
     if (coroLines.length) out.push({ label: 'CORO', lines: coroLines })
+    if (extraVerses.length) out.push({ label: null, lines: extraVerses })
     if (puenteLines.length) out.push({ label: 'PUENTE', lines: puenteLines })
     return out
   }
