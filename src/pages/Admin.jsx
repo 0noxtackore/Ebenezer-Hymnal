@@ -89,30 +89,23 @@ export default function Admin() {
 
   function parseLyricsToBlocks(lyrics) {
     if (!lyrics || !lyrics.trim()) return { verses: [''], coro: '', puente: '' }
+    const hasCoro = /\n\nCORO\n/.test(lyrics)
+    if (!hasCoro) {
+      return { verses: [lyrics.trim()], coro: '', puente: '' }
+    }
     const coroParts = lyrics.split(/\n\nCORO\n/)
-    if (coroParts.length < 2) return { verses: lyrics.split('\n\n').filter((v) => v.trim()), coro: '', puente: '' }
     const firstVerse = coroParts[0].trim()
     const afterCoro = coroParts[1]
+    const hasPuente = /\n\nPUENTE\n/.test(afterCoro)
+    if (!hasPuente) {
+      return { verses: firstVerse ? [firstVerse] : [''], coro: afterCoro.trim(), puente: '' }
+    }
     const puenteParts = afterCoro.split(/\n\nPUENTE\n/)
-    let coroText = ''
-    let puenteText = ''
-    let extraVerses = []
-    const coroBlock = puenteParts[0]
-    const coroSubBlocks = coroBlock.split('\n\n').filter((v) => v.trim())
-    if (coroSubBlocks.length > 0) {
-      coroText = coroSubBlocks[0].trim()
-      extraVerses = coroSubBlocks.slice(1)
-    }
-    if (puenteParts.length > 1) {
-      const afterPuente = puenteParts.slice(1).join('\n\nPUENTE\n')
-      const blocks = afterPuente.split('\n\n').filter((v) => v.trim())
-      if (blocks.length > 0) {
-        puenteText = blocks[0]
-        extraVerses = [...extraVerses, ...blocks.slice(1)]
-      }
-    }
+    const coroText = puenteParts[0].trim()
+    const afterPuente = puenteParts.slice(1).join('\n\nPUENTE\n').trim()
+    const extraVerses = afterPuente ? [afterPuente] : []
     const allVerses = [firstVerse, ...extraVerses].filter((v) => v.trim())
-    return { verses: allVerses.length ? allVerses : [''], coro: coroText, puente: puenteText }
+    return { verses: allVerses.length ? allVerses : [''], coro: coroText, puente: '' }
   }
 
   function buildLyrics(versesList, coroText, puenteText) {
@@ -132,8 +125,7 @@ export default function Admin() {
 
   function autoFormatVerse(text) {
     if (!text) return text
-    const normalized = text.replace(/\n{2,}/g, '\n')
-    const lines = normalized.split('\n')
+    const lines = text.split('\n')
     const result = []
     for (const line of lines) {
       const flat = line.replace(/\s+/g, ' ').trim()
