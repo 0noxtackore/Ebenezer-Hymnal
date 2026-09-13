@@ -91,7 +91,7 @@ export default function Admin() {
     if (!lyrics || !lyrics.trim()) return { verses: [''], coro: '', puente: '' }
     const hasCoro = /\n\nCORO\n/.test(lyrics)
     if (!hasCoro) {
-      return { verses: [lyrics.trim()], coro: '', puente: '' }
+      return { verses: lyrics.split('\n\n').filter((v) => v.trim()), coro: '', puente: '' }
     }
     const coroParts = lyrics.split(/\n\nCORO\n/)
     const firstVerse = coroParts[0].trim()
@@ -102,10 +102,15 @@ export default function Admin() {
     }
     const puenteParts = afterCoro.split(/\n\nPUENTE\n/)
     const coroText = puenteParts[0].trim()
-    const afterPuente = puenteParts.slice(1).join('\n\nPUENTE\n').trim()
-    const extraVerses = afterPuente ? [afterPuente] : []
+    if (puenteParts.length < 2) {
+      return { verses: firstVerse ? [firstVerse] : [''], coro: coroText, puente: '' }
+    }
+    const afterPuenteRaw = puenteParts[1]
+    const puenteSplit = afterPuenteRaw.split(/\n\n/)
+    const puenteText = puenteSplit[0].trim()
+    const extraVerses = puenteSplit.slice(1).filter((v) => v.trim())
     const allVerses = [firstVerse, ...extraVerses].filter((v) => v.trim())
-    return { verses: allVerses.length ? allVerses : [''], coro: coroText, puente: '' }
+    return { verses: allVerses.length ? allVerses : [''], coro: coroText, puente: puenteText }
   }
 
   function buildLyrics(versesList, coroText, puenteText) {
@@ -125,7 +130,8 @@ export default function Admin() {
 
   function autoFormatVerse(text) {
     if (!text) return text
-    const lines = text.split('\n')
+    const normalized = text.replace(/\n{2,}/g, '\n')
+    const lines = normalized.split('\n')
     const result = []
     for (const line of lines) {
       const flat = line.replace(/\s+/g, ' ').trim()
