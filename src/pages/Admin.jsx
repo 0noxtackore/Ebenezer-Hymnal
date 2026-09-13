@@ -116,9 +116,9 @@ export default function Admin() {
   }
 
   function buildLyrics(versesList, coroText, puenteText) {
-    const u = (s) => (s || '').toUpperCase()
+    const u = (s) => autoFormatVerse((s || '').toUpperCase())
     const hasContent = versesList.some((v) => v.trim())
-    let lyrics = hasContent ? autoFormatVerse(u((versesList[0] || '').trim())) : ''
+    let lyrics = hasContent ? u((versesList[0] || '').trim()) : ''
     if (coroText.trim()) {
       lyrics += (lyrics ? '\n\n' : '') + 'CORO\n' + u(coroText.trim())
     }
@@ -126,26 +126,27 @@ export default function Admin() {
       lyrics += '\n\nPUENTE\n' + u(puenteText.trim())
     }
     if (versesList.length > 1) {
-      lyrics += '\n\n' + versesList.slice(1).map((v) => autoFormatVerse(u(v.trim()))).filter((v) => v).join('\n\n')
+      lyrics += '\n\n' + versesList.slice(1).map((v) => u(v.trim())).filter((v) => v).join('\n\n')
     }
     return lyrics
   }
 
   function autoFormatVerse(text) {
     if (!text) return text
-    if (text.includes('\n')) return text
-    const maxLen = 45
-    const words = text.split(' ')
+    const flat = text.replace(/\n+/g, ' ').replace(/\s+/g, ' ').trim()
+    const maxLen = 42
+    const words = flat.split(' ')
     const lines = []
     let current = ''
     for (const word of words) {
-      if ((current + ' ' + word).trim().length > maxLen && current) {
+      const test = current ? current + ' ' + word : word
+      if (test.length > maxLen && current) {
         lines.push(current.trim())
         current = word
       } else {
-        current = current ? current + ' ' + word : word
+        current = test
       }
-      if (/[.,;!]$/.test(word) && current.length > 20) {
+      if (/[.,;:!]$/.test(word) && current.length >= 20) {
         lines.push(current.trim())
         current = ''
       }
