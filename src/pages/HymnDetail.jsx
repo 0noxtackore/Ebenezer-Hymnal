@@ -191,28 +191,52 @@ export default function HymnDetail() {
       </button>
 
       <motion.div
-        className="hymn-header"
+        className={isChorus ? 'hymn-header chorus-header' : 'hymn-header'}
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.25 }}
       >
-        <div className={isChorus ? 'hnum-chorus' : 'hnum'}>
-          {(() => {
-            const nom = h.nomenclature || String(h.number)
-            const m = nom.match(/^([A-Za-z]+)(\d+)$/)
-            if (m) return <>{m[1]}<sup>{m[2]}</sup></>
-            return nom
-          })()}
-        </div>
-        <h2 style={{ textAlign: 'center' }}>{h.title}</h2>
-        <div className="actions">
-          <button className={fav ? 'on' : ''} onClick={() => toggle(h.id)} title="Favorito">
-            <Star size={20} fill={fav ? 'currentColor' : 'none' } />
-          </button>
-          <button onClick={share} title="Compartir" disabled={sharing}>
-            <Share2 size={20} />
-          </button>
-        </div>
+        {isChorus ? (
+          <>
+            <div className="hnum-chorus">
+              {(() => {
+                const nom = h.nomenclature || String(h.number)
+                const m = nom.match(/^([A-Za-z]+)(\d+)$/)
+                if (m) return <>{m[1]}<sup>{m[2]}</sup></>
+                return nom
+              })()}
+            </div>
+            <h2>{h.title}</h2>
+            <div className="actions">
+              <button className={fav ? 'on' : ''} onClick={() => toggle(h.id)} title="Favorito">
+                <Star size={20} fill={fav ? 'currentColor' : 'none' } />
+              </button>
+              <button onClick={share} title="Compartir" disabled={sharing}>
+                <Share2 size={20} />
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="hnum">
+              {(() => {
+                const nom = h.nomenclature || String(h.number)
+                const m = nom.match(/^([A-Za-z]+)(\d+)$/)
+                if (m) return <>{m[1]}<sup>{m[2]}</sup></>
+                return nom
+              })()}
+            </div>
+            <h2>{h.title}</h2>
+            <div className="actions">
+              <button className={fav ? 'on' : ''} onClick={() => toggle(h.id)} title="Favorito">
+                <Star size={20} fill={fav ? 'currentColor' : 'none' } />
+              </button>
+              <button onClick={share} title="Compartir" disabled={sharing}>
+                <Share2 size={20} />
+              </button>
+            </div>
+          </>
+        )}
       </motion.div>
 
       {h.audioUrl && (
