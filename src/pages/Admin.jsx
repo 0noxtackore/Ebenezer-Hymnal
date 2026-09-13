@@ -116,19 +116,18 @@ export default function Admin() {
   }
 
   function buildLyrics(versesList, coroText, puenteText) {
-    const u = (s) => autoFormatVerse((s || '').toUpperCase())
     const hasContent = versesList.some((v) => v.trim())
-    let lyrics = hasContent ? u((versesList[0] || '').trim()) : ''
+    let lyrics = hasContent ? autoFormatVerse((versesList[0] || '').trim()) : ''
     if (coroText.trim()) {
-      lyrics += (lyrics ? '\n\n' : '') + 'CORO\n' + u(coroText.trim())
+      lyrics += (lyrics ? '\n\n' : '') + 'CORO\n' + autoFormatVerse(coroText.trim())
     }
     if (puenteText.trim()) {
-      lyrics += '\n\nPUENTE\n' + u(puenteText.trim())
+      lyrics += '\n\nPUENTE\n' + autoFormatVerse(puenteText.trim())
     }
     if (versesList.length > 1) {
-      lyrics += '\n\n' + versesList.slice(1).map((v) => u(v.trim())).filter((v) => v).join('\n\n')
+      lyrics += '\n\n' + versesList.slice(1).map((v) => autoFormatVerse(v.trim())).filter((v) => v).join('\n\n')
     }
-    return lyrics
+    return lyrics.toUpperCase()
   }
 
   function autoFormatVerse(text) {
@@ -756,7 +755,6 @@ export default function Admin() {
                           placeholder={i === 0 ? 'Primera estrofa...' : `Estrofa ${i + 1}...`}
                           value={v}
                           onChange={(e) => updateVerse(i, e.target.value)}
-                          onBlur={(e) => updateVerse(i, formatOnBlur(e.target.value))}
                         />
                       </div>
                     ))}
@@ -779,7 +777,6 @@ export default function Admin() {
                     placeholder="Texto del coro..."
                     value={coro}
                     onChange={(e) => setCoro(e.target.value)}
-                    onBlur={(e) => setCoro(formatOnBlur(e.target.value))}
                   />
                 )}
               </div>
@@ -790,7 +787,6 @@ export default function Admin() {
                   placeholder="Texto del puente (opcional)..."
                   value={puente}
                   onChange={(e) => setPuente(e.target.value)}
-                  onBlur={(e) => setPuente(formatOnBlur(e.target.value))}
                 />
                 </div>
               )}
