@@ -199,14 +199,7 @@ export default function HymnDetail() {
       >
         {isChorus ? (
           <>
-            <div className="hnum-chorus">
-              {(() => {
-                const nom = h.nomenclature || String(h.number)
-                const m = nom.match(/^([A-Za-z]+)(\d+)$/)
-                if (m) return <>{m[1]}<sup>{m[2]}</sup></>
-                return nom
-              })()}
-            </div>
+            <div className="hnum-chorus">{h.nomenclature || String(h.number)}</div>
             <h2>{h.title}</h2>
             <div className="actions">
               <button className={fav ? 'on' : ''} onClick={() => toggle(h.id)} title="Favorito">

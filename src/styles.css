@@ -1102,20 +1102,14 @@ a { color: inherit; }
   font-family: var(--font-serif);
   font-weight: 700;
   font-size: 13px;
+  letter-spacing: 1px;
   color: var(--gold);
-  background: transparent;
-  border: 1.5px solid var(--gold);
+  background: linear-gradient(135deg, rgba(201,162,39,0.12), rgba(201,162,39,0.04));
+  border: 1.5px solid rgba(201,162,39,0.35);
   border-radius: 6px;
-  padding: 3px 8px;
+  padding: 4px 10px;
   line-height: 1;
   flex-shrink: 0;
-}
-
-.hnum-chorus sup {
-  font-size: 9px;
-  margin-left: 1px;
-  position: relative;
-  top: -4px;
 }
 
 .hnum::after {
