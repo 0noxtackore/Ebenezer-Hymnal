@@ -56,7 +56,8 @@ function parseLyrics(lyrics, category) {
     const puenteIdx = blocks.findIndex((b) => b[0].replace(/[^\p{L}]/gu, '').toUpperCase() === 'PUENTE')
 
     if (coroIdx < 0) {
-      blocks.forEach((b, i) => out.push({ label: ROMANS[i] || String(i + 1), lines: b }))
+      const allLines = blocks.flatMap((b) => b)
+      out.push({ label: null, lines: allLines })
       return out
     }
 
