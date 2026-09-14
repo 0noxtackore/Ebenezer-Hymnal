@@ -10,6 +10,9 @@ const SearchByName = lazy(() => import('./pages/SearchByName.jsx'))
 const HymnDetail = lazy(() => import('./pages/HymnDetail.jsx'))
 const KeyList = lazy(() => import('./pages/KeyList.jsx'))
 const ChorusCompilation = lazy(() => import('./pages/ChorusCompilation.jsx'))
+const ChorusLentos = lazy(() => import('./pages/ChorusLentos.jsx'))
+const ChorusRapidos = lazy(() => import('./pages/ChorusRapidos.jsx'))
+const Gospel = lazy(() => import('./pages/Gospel.jsx'))
 const Settings = lazy(() => import('./pages/Settings.jsx'))
 const Favorites = lazy(() => import('./pages/Favorites.jsx'))
 const Admin = lazy(() => import('./pages/Admin.jsx'))
@@ -50,6 +53,9 @@ export default function App() {
             <Route path="/buscar-nombre" element={<SearchByName />} />
             <Route path="/himno/:id" element={<HymnDetail />} />
             <Route path="/tono/:key" element={<KeyList />} />
+            <Route path="/coros/coros%20lentos/:key" element={<ChorusLentos />} />
+            <Route path="/coros/coros%20r%C3%A1pidos/:key" element={<ChorusRapidos />} />
+            <Route path="/coros/gospel/:key" element={<Gospel />} />
             <Route path="/coros/:category/:key" element={<ChorusCompilation />} />
             <Route path="/favoritos" element={<Favorites />} />
             <Route path="/configuraciones" element={<Settings />} />
