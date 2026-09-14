@@ -21,40 +21,32 @@ function parseLyrics(lyrics) {
   }
 
   const coroParts = lyrics.split(/\n\nCORO\n/)
-  const verse1 = coroParts[0].trim()
+  const firstVerse = coroParts[0].trim()
   const afterCoro = coroParts[1]
   const hasPuente = /\n\nPUENTE\n/.test(afterCoro)
-
   if (!hasPuente) {
-    const afterCoroSplit = afterCoro.split(/\n\n/)
-    const coroOnly = afterCoroSplit[0].trim()
-    const extraAfterCoro = afterCoroSplit.slice(1).filter((v) => v.trim()).map((v) => ({ label: null, lines: toLines(v.trim()) }))
     return [
-      ...(verse1 ? [{ label: null, lines: toLines(verse1) }] : []),
-      { label: 'CORO', lines: toLines(coroOnly) },
-      ...extraAfterCoro
+      ...(firstVerse ? [{ label: null, lines: toLines(firstVerse) }] : []),
+      { label: 'CORO', lines: toLines(afterCoro.trim()) }
     ]
   }
-
   const puenteParts = afterCoro.split(/\n\nPUENTE\n/)
   const coroText = puenteParts[0].trim()
   if (puenteParts.length < 2) {
     return [
-      ...(verse1 ? [{ label: null, lines: toLines(verse1) }] : []),
+      ...(firstVerse ? [{ label: null, lines: toLines(firstVerse) }] : []),
       { label: 'CORO', lines: toLines(coroText) }
     ]
   }
-
   const afterPuenteRaw = puenteParts[1]
   const puenteSplit = afterPuenteRaw.split(/\n\n/)
   const puenteText = puenteSplit[0].trim()
-  const extraBlocks = puenteSplit.slice(1).filter((v) => v.trim()).map((v) => ({ label: null, lines: toLines(v.trim()) }))
-
+  const extraVerses = puenteSplit.slice(1).filter((v) => v.trim())
   return [
-    ...(verse1 ? [{ label: null, lines: toLines(verse1) }] : []),
+    ...(firstVerse ? [{ label: null, lines: toLines(firstVerse) }] : []),
     { label: 'CORO', lines: toLines(coroText) },
     { label: 'PUENTE', lines: toLines(puenteText) },
-    ...extraBlocks
+    ...extraVerses.map((v) => ({ label: null, lines: toLines(v.trim()) }))
   ]
 }
 
