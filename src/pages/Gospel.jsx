@@ -10,6 +10,12 @@ const strip = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').
 
 const CATEGORY = 'gospel'
 
+const ROMANS = [
+  'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
+  'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX',
+  'XXI', 'XXII', 'XXIII', 'XXIV', 'XXV', 'XXVI', 'XXVII', 'XXVIII', 'XXIX', 'XXX'
+]
+
 function parseLyrics(lyrics) {
   if (!lyrics) return []
   const toLines = (t) => t.split('\n').map((l) => l.trim()).filter(Boolean)
@@ -42,12 +48,17 @@ function parseLyrics(lyrics) {
   const puenteSplit = afterPuenteRaw.split(/\n\n/)
   const puenteText = puenteSplit[0].trim()
   const extraVerses = puenteSplit.slice(1).filter((v) => v.trim())
-  return [
+  const result = [
     ...(firstVerse ? [{ label: null, lines: toLines(firstVerse) }] : []),
     { label: 'CORO', lines: toLines(coroText) },
-    { label: 'PUENTE', lines: toLines(puenteText) },
-    ...extraVerses.map((v) => ({ label: null, lines: toLines(v.trim()) }))
+    { label: 'PUENTE', lines: toLines(puenteText) }
   ]
+  let verseNum = 1
+  extraVerses.forEach((v) => {
+    result.push({ label: ROMANS[verseNum] || String(verseNum + 1), lines: toLines(v.trim()) })
+    verseNum++
+  })
+  return result
 }
 
 export default function Gospel() {

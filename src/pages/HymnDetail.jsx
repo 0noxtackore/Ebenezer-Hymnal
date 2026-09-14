@@ -52,12 +52,17 @@ function parseLyrics(lyrics, category) {
     const puenteSplit = afterPuenteRaw.split(/\n\n/)
     const puenteText = puenteSplit[0].trim()
     const extraVerses = puenteSplit.slice(1).filter((v) => v.trim())
-    return [
+    const result = [
       ...(firstVerse ? [{ label: null, lines: toLines(firstVerse) }] : []),
       { label: 'CORO', lines: toLines(coroText) },
-      { label: 'PUENTE', lines: toLines(puenteText) },
-      ...extraVerses.map((v) => ({ label: null, lines: toLines(v.trim()) }))
+      { label: 'PUENTE', lines: toLines(puenteText) }
     ]
+    let verseNum = 1
+    extraVerses.forEach((v) => {
+      result.push({ label: ROMANS[verseNum] || String(verseNum + 1), lines: toLines(v.trim()) })
+      verseNum++
+    })
+    return result
   }
 
   const blocks = lyrics
