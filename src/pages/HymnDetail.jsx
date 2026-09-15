@@ -6,6 +6,7 @@ import { Star, Share2, Play, Pause, ArrowLeft } from 'lucide-react'
 import { useData } from '../context/DataContext.jsx'
 import { useFavorites } from '../context/FavoritesContext.jsx'
 import LazyImage from '../components/LazyImage.jsx'
+import { boldBis } from '../utils/boldBis.js'
 
 const ROMANS = [
   'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
@@ -20,14 +21,14 @@ function parseLyrics(lyrics, category) {
   if (!lyrics) return []
   const isChorus = CHORUS_CATS.includes(strip(category))
 
-  const toLines = (t) => t.split('\n').map((l) => l.trim()).filter(Boolean)
+  const toLines = (t) => t.split('\n').map((l) => l.trim())
 
   if (isChorus) {
     const hasCoro = /\n\nCORO\n/.test(lyrics)
     if (!hasCoro) {
       const blocks = lyrics.split(/\n\s*\n/).map((b) => b.split('\n').map((l) => l.trim()).filter(Boolean)).filter((b) => b.length > 0)
       const result = []
-      blocks.forEach((b) => result.push({ label: null, lines: b }))
+      blocks.forEach((b, i) => result.push({ label: ROMANS[i] || String(i + 1), lines: b }))
       return result
     }
     const coroParts = lyrics.split(/\n\nCORO\n/)
@@ -267,7 +268,7 @@ export default function HymnDetail() {
           <div className="verse" key={i}>
             {v.label && <div className="verse-label">{v.label}</div>}
             {v.lines.map((line, j) => (
-              <div className="verse-line" key={j}>{line}</div>
+              <div className="verse-line" key={j} dangerouslySetInnerHTML={{ __html: boldBis(line) }} />
             ))}
           </div>
         ))}
@@ -286,7 +287,7 @@ export default function HymnDetail() {
               {v.label && <div className="share-card-verse-label">{v.label}</div>}
               <div className="share-card-verse-dir">
                 {v.lines.map((line, j) => (
-                  <span key={j}>{line}</span>
+                  <span key={j} dangerouslySetInnerHTML={{ __html: boldBis(line) }} />
                 ))}
               </div>
             </div>

@@ -115,46 +115,22 @@ export default function Admin() {
 
   function buildLyrics(versesList, coroText, puenteText) {
     const hasContent = versesList.some((v) => v.trim())
-    let lyrics = hasContent ? autoFormatVerse((versesList[0] || '').trim()) : ''
+    let lyrics = hasContent ? (versesList[0] || '').trim() : ''
     if (coroText.trim()) {
-      lyrics += (lyrics ? '\n\n' : '') + 'CORO\n' + autoFormatVerse(coroText.trim())
+      lyrics += (lyrics ? '\n\n' : '') + 'CORO\n' + coroText.trim()
     }
     if (puenteText.trim()) {
-      lyrics += '\n\nPUENTE\n' + autoFormatVerse(puenteText.trim())
+      lyrics += '\n\nPUENTE\n' + puenteText.trim()
     }
     if (versesList.length > 1) {
-      lyrics += '\n\n' + versesList.slice(1).map((v) => autoFormatVerse(v.trim())).filter((v) => v).join('\n\n')
+      lyrics += '\n\n' + versesList.slice(1).map((v) => v.trim()).filter((v) => v).join('\n\n')
     }
     return lyrics.toUpperCase()
   }
 
   function autoFormatVerse(text) {
     if (!text) return text
-    const normalized = text.replace(/\n{2,}/g, '\n')
-    const lines = normalized.split('\n')
-    const result = []
-    for (const line of lines) {
-      const flat = line.replace(/\s+/g, ' ').trim()
-      if (!flat) { result.push(''); continue }
-      if (flat.length <= 22) { result.push(flat); continue }
-      const words = flat.split(' ')
-      let current = ''
-      for (const word of words) {
-        const test = current ? current + ' ' + word : word
-        if (test.length > 22 && current) {
-          result.push(current.trim())
-          current = word
-        } else {
-          current = test
-        }
-        if (/[.,;:!]$/.test(word) && current.length >= 20) {
-          result.push(current.trim())
-          current = ''
-        }
-      }
-      if (current.trim()) result.push(current.trim())
-    }
-    return result.join('\n')
+    return text.replace(/\n{3,}/g, '\n\n')
   }
 
   function addVerse() {
@@ -176,7 +152,7 @@ export default function Admin() {
 
   function formatOnBlur(val) {
     if (!val) return val
-    return autoFormatVerse(val.toUpperCase())
+    return val.toUpperCase()
   }
 
   function readVerses() {

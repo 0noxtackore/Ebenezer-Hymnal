@@ -1,68 +1,67 @@
-import json
+import json, urllib.request
 
-with open(r"C:\Users\PC\Documents\PROGRAMATION\Flutter\Ebenezer-Hymnal\assets\coros-2026.json", "r", encoding="utf-8") as f:
-    data = json.load(f)
+a = 'AIzaSyCPnsegptU8dCOOimhsPSmHUE5KwbXiDoM'
+u = 'https://ebenezer-hymnal-default-rtdb.europe-west1.firebasedatabase.app'
+d = json.dumps({'email': 'ramon@ebenezer.dev', 'password': 'Ramon2026', 'returnSecureToken': True}).encode()
+r = urllib.request.Request(f'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={a}', data=d, headers={'Content-Type': 'application/json'})
+t = json.loads(urllib.request.urlopen(r).read().decode())['idToken']
+h = json.loads(urllib.request.urlopen(f'{u}/hymnario/hymns.json?auth={t}').read().decode())
 
-coros = data['coros']
+# Format: nomenclature -> (section_index_before_coro)
+# For 2-section songs: insert CORO before section 1 (0-indexed)
+# For 3+ section songs: insert CORO before the identified chorus section
+# value = index of the section that becomes the CORO
 
-# Analyze patterns for CORO detection
-patterns = {
-    'parentheses': 0,      # Sections in (parentheses)
-    'repeated_stanza': 0,  # Last stanza same as first
-    'short_last': 0,       # Last stanza shorter than others
-    'all_caps_last': 0,    # Last section all caps with exclamation
-}
+updates = {}
 
-for c in coros:
-    lyrics = c.get('lyrics', '') or ''
-    stanzas = [s.strip() for s in lyrics.split('\n\n') if s.strip()]
-    
-    if len(stanzas) < 2:
+for k, v in h.items():
+    if not isinstance(v, dict) or not v.get('lyrics', ''):
+        continue
+    cat = (v.get('category', '') or '').lower()
+    if 'lento' not in cat and 'rapido' not in cat:
+        continue
+    lyrics = v['lyrics']
+    if '\n\nCORO\n' in lyrics:
         continue
     
-    # Check for parentheses in any stanza
-    for s in stanzas:
-        if s.startswith('(') and s.endswith(')'):
-            patterns['parentheses'] += 1
-            break
+    nom = v.get('nomenclature', '?')
+    sections = [s.strip() for s in lyrics.split('\n\n') if s.strip()]
     
-    # Check if last stanza repeats first
-    first = stanzas[0].strip()
-    last = stanzas[-1].strip()
-    if first == last:
-        patterns['repeated_stanza'] += 1
+    if len(sections) < 2:
+        continue  # single section, no CORO needed
     
-    # Check if last stanza is significantly shorter
-    first_lines = len([l for l in first.split('\n') if l.strip()])
-    last_lines = len([l for l in last.split('\n') if l.strip()])
-    if last_lines < first_lines * 0.5 and last_lines <= 4:
-        patterns['short_last'] += 1
+    # For songs with 2 sections where the second is clearly a chorus
+    # (different theme, repetitive, or starts differently)
+    updates[nom] = {
+        'key': k,
+        'num_sections': len(sections),
+        'sections': sections
+    }
 
-print("Pattern analysis:")
-for k, v in patterns.items():
-    print(f"  {k}: {v}")
+print(f'Coros with 2+ sections (candidates for CORO): {len(updates)}')
+for nom, info in sorted(updates.items()):
+    print(f'  {nom}: {info["num_sections"]} sections')
 
-# Show examples with parentheses
-print("\n=== EXAMPLES WITH PARENTHESES ===")
-count = 0
-for c in coros:
-    lyrics = c.get('lyrics', '') or ''
-    if '(' in lyrics:
-        print(f"\n{c['code']} - {c['title']}")
-        print(lyrics[:400])
-        count += 1
-        if count >= 5:
-            break
+# Now determine which section index to insert CORO before
+# For most 2-section songs: CORO goes before section index 1
+# For 3+ section songs: depends on the song structure
 
-# Show examples with repeated first/last stanza
-print("\n=== EXAMPLES WITH REPEATED STANZAS ===")
-count = 0
-for c in coros:
-    lyrics = c.get('lyrics', '') or ''
-    stanzas = [s.strip() for s in lyrics.split('\n\n') if s.strip()]
-    if len(stanzas) >= 2 and stanzas[0] == stanzas[-1]:
-        print(f"\n{c['code']} - {c['title']}")
-        print(lyrics[:400])
-        count += 1
-        if count >= 3:
-            break
+# Songs where the chorus is clearly the LAST section
+chorus_at_end = []
+# Songs where we need manual analysis
+needs_analysis = []
+
+for nom, info in updates.items():
+    if info['num_sections'] == 2:
+        chorus_at_end.append(nom)
+    else:
+        needs_analysis.append(nom)
+
+print(f'\n2-section songs (CORO before last section): {len(chorus_at_end)}')
+print(f'Multi-section songs (need analysis): {len(needs_analysis)}')
+for nom in needs_analysis:
+    info = updates[nom]
+    print(f'  {nom}: {info["num_sections"]} sections')
+    for i, s in enumerate(info['sections']):
+        first_line = s.split('\n')[0][:50]
+        print(f'    [{i}] {first_line}')

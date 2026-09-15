@@ -40,14 +40,6 @@ export function DataProvider({ children }) {
     try {
       const raw = localStorage.getItem(OVERRIDES_KEY) || 'null'
       const data = JSON.parse(raw)
-      if (data?.hymns?.length) {
-        const seen = new Set()
-        data.hymns = data.hymns.filter((h) => {
-          if (seen.has(h.number)) return false
-          seen.add(h.number)
-          return true
-        })
-      }
       return data
     } catch {
       return null
@@ -119,11 +111,7 @@ export function DataProvider({ children }) {
   if (ov.hymns) hymns = [...hymns, ...ov.hymns]
   const seenKeys = new Set()
   hymns = hymns.filter((h) => {
-    const cat = (h.category || '')
-    const isChorus = CHORUS_CATS.includes(strip(cat))
-    const key = isChorus
-      ? (h.nomenclature || cat + '#' + h.number + '#' + (h.musicKey || '') + '#' + (h.scale || ''))
-      : (h.nomenclature || cat + '#' + h.number)
+    const key = h.nomenclature || h.id || (h.category + '#' + h.number + '#' + (h.musicKey || '') + '#' + (h.scale || ''))
     if (seenKeys.has(key)) return false
     seenKeys.add(key)
     return true
@@ -141,11 +129,7 @@ export function DataProvider({ children }) {
     {
       const seen = new Set()
       hymnsList = hymnsList.filter((h) => {
-        const cat = (h.category || '')
-        const isChorus = CHORUS_CATS.includes(strip(cat))
-        const key = isChorus
-          ? cat + '#' + h.number + '#' + (h.musicKey || '') + '#' + (h.scale || '')
-          : cat + '#' + h.number
+        const key = h.nomenclature || h.id || (h.category + '#' + h.number + '#' + (h.musicKey || '') + '#' + (h.scale || ''))
         if (seen.has(key)) return false
         seen.add(key)
         return true
@@ -177,12 +161,17 @@ export function DataProvider({ children }) {
   async function addHymn(h) {
     const cat = strip(h.category)
     if (CHORUS_CATS.includes(cat)) {
-      const dup = hymns.find(
-        (x) => x.number === h.number && x.category === h.category &&
-          (x.musicKey || '').trim() === (h.musicKey || '').trim() &&
-          (x.scale || '').trim() === (h.scale || '').trim()
-      )
-      if (dup) return false
+      if (h.nomenclature) {
+        const dup = hymns.find((x) => x.nomenclature === h.nomenclature)
+        if (dup) return false
+      } else {
+        const dup = hymns.find(
+          (x) => x.number === h.number && x.category === h.category &&
+            (x.musicKey || '').trim() === (h.musicKey || '').trim() &&
+            (x.scale || '').trim() === (h.scale || '').trim()
+        )
+        if (dup) return false
+      }
     } else {
       const catNums = hymns.filter((x) => x.category === h.category).map((x) => x.number)
       if (catNums.includes(h.number)) return false
@@ -194,12 +183,17 @@ export function DataProvider({ children }) {
   async function updateHymn(h) {
     const cat = strip(h.category)
     if (CHORUS_CATS.includes(cat)) {
-      const conflict = hymns.find(
-        (x) => x.number === h.number && x.id !== h.id && x.category === h.category &&
-          (x.musicKey || '').trim() === (h.musicKey || '').trim() &&
-          (x.scale || '').trim() === (h.scale || '').trim()
-      )
-      if (conflict) return false
+      if (h.nomenclature) {
+        const conflict = hymns.find((x) => x.nomenclature === h.nomenclature && x.id !== h.id)
+        if (conflict) return false
+      } else {
+        const conflict = hymns.find(
+          (x) => x.number === h.number && x.id !== h.id && x.category === h.category &&
+            (x.musicKey || '').trim() === (h.musicKey || '').trim() &&
+            (x.scale || '').trim() === (h.scale || '').trim()
+        )
+        if (conflict) return false
+      }
     } else {
       const conflict = hymns.find(
         (x) => x.number === h.number && x.id !== h.id && x.category === h.category

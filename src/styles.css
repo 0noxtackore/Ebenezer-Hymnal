@@ -1217,7 +1217,7 @@ a { color: inherit; }
 .verse-label {
   font-weight: 700;
   letter-spacing: 0.1em;
-  color: var(--text);
+  color: var(--gold);
   margin-bottom: 8px;
 }
 

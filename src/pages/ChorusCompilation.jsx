@@ -5,6 +5,7 @@ import { jsPDF } from 'jspdf'
 import { useData } from '../context/DataContext.jsx'
 import { useFavorites } from '../context/FavoritesContext.jsx'
 import logoBase64 from '../../assets/logo_base64.txt?raw'
+import { boldBis } from '../utils/boldBis.js'
 
 const strip = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
@@ -45,14 +46,14 @@ function parseLyrics(lyrics, category) {
   if (!lyrics) return []
   const isChorus = CHORUS_CATS.includes(stripCat(category))
 
-  const toLines = (t) => t.split('\n').map((l) => l.trim()).filter(Boolean)
+  const toLines = (t) => t.split('\n').map((l) => l.trim())
 
   if (isChorus) {
     const hasCoro = /\n\nCORO\n/.test(lyrics)
     if (!hasCoro) {
       const blocks = lyrics.split(/\n\s*\n/).map((b) => b.split('\n').map((l) => l.trim()).filter(Boolean)).filter((b) => b.length > 0)
       const result = []
-      blocks.forEach((b) => result.push({ label: null, lines: b }))
+      blocks.forEach((b, i) => result.push({ label: ROMANS[i] || String(i + 1), lines: b }))
       return result
     }
     const coroParts = lyrics.split(/\n\nCORO\n/)
@@ -342,7 +343,7 @@ export default function ChorusCompilation() {
               <div className="verse" key={i}>
                 {v.label && <div className="verse-label">{v.label}</div>}
                 {v.lines.map((line, j) => (
-                  <div className="verse-line" key={j}>{line}</div>
+                  <div className="verse-line" key={j} dangerouslySetInnerHTML={{ __html: boldBis(line) }} />
                 ))}
               </div>
             ))}

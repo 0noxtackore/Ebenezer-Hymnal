@@ -5,6 +5,7 @@ import { jsPDF } from 'jspdf'
 import { useData } from '../context/DataContext.jsx'
 import { useFavorites } from '../context/FavoritesContext.jsx'
 import logoBase64 from '../../assets/logo_base64.txt?raw'
+import { boldBis } from '../utils/boldBis.js'
 
 const strip = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
@@ -18,12 +19,12 @@ const ROMANS = [
 
 function parseLyrics(lyrics) {
   if (!lyrics) return []
-  const toLines = (t) => t.split('\n').map((l) => l.trim()).filter(Boolean)
+  const toLines = (t) => t.split('\n').map((l) => l.trim())
 
   const hasCoro = /\n\nCORO\n/.test(lyrics)
   if (!hasCoro) {
     const blocks = lyrics.split(/\n\s*\n/).map((b) => b.split('\n').map((l) => l.trim()).filter(Boolean)).filter((b) => b.length > 0)
-    return blocks.map((b) => ({ label: null, lines: b }))
+    return blocks.map((b, i) => ({ label: ROMANS[i] || String(i + 1), lines: b }))
   }
 
   const coroParts = lyrics.split(/\n\nCORO\n/)
@@ -291,7 +292,7 @@ export default function ChorusRapidos() {
               <div className="verse" key={i}>
                 {v.label && <div className="verse-label">{v.label}</div>}
                 {v.lines.map((line, j) => (
-                  <div className="verse-line" key={j}>{line}</div>
+                  <div className="verse-line" key={j} dangerouslySetInnerHTML={{ __html: boldBis(line) }} />
                 ))}
               </div>
             ))}
