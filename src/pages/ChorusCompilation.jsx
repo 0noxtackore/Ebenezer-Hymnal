@@ -49,13 +49,9 @@ function parseLyrics(lyrics, category) {
   const toLines = (t) => t.split('\n').map((l) => l.trim())
 
   if (isChorus) {
-    const hasCoro = /\n\nCORO\n/.test(lyrics)
-    if (!hasCoro) {
-      const lines = lyrics.trim().split('\n').map((l) => l.trim())
-      if (lines.length > 0 && lines[0] === 'CORO') {
-        return [{ label: 'CORO', lines: lines.slice(1) }]
-      }
-      const blocks = lyrics.split(/\n\s*\n/).map((b) => b.split('\n').map((l) => l.trim()).filter(Boolean)).filter((b) => b.length > 0)
+    const hasCoroMarker = /\n\nCORO\n/.test(lyrics)
+    if (!hasCoroMarker) {
+      const blocks = lyrics.split(/\n\s*\n/).map((b) => b.split('\n').map((l) => l.trim()).filter((l) => l)).filter((b) => b.length > 0)
       if (blocks.length === 0) return []
       return blocks.map((b, i) => ({ label: ROMANS[i] || String(i + 1), lines: b }))
     }

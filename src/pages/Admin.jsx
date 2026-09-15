@@ -61,6 +61,7 @@ export default function Admin() {
   const [verseKey, setVerseKey] = useState(0)
   const [hasVerses, setHasVerses] = useState(true)
   const [hasCoro, setHasCoro] = useState(true)
+  const [coroBlocks, setCoroBlocks] = useState([''])
 
   function toggleVerses(val) {
     if (!val && !hasCoro) return
@@ -88,32 +89,41 @@ export default function Admin() {
   }, [msg, showModal])
 
   function parseLyricsToBlocks(lyrics) {
-    if (!lyrics || !lyrics.trim()) return { verses: [''], coro: '', puente: '' }
+    if (!lyrics || !lyrics.trim()) return { verses: [''], coro: '', puente: '', blocks: [''] }
+    const isChorus = isChorusCategory(form.category)
+    if (isChorus) {
+      const blocks = lyrics.split(/\n\n/).filter((b) => b.trim())
+      return { verses: [''], coro: '', puente: '', blocks: blocks.length ? blocks : [''] }
+    }
     const hasCoro = /\n\nCORO\n/.test(lyrics)
     if (!hasCoro) {
-      return { verses: lyrics.split('\n\n').filter((v) => v.trim()), coro: '', puente: '' }
+      return { verses: lyrics.split('\n\n').filter((v) => v.trim()), coro: '', puente: '', blocks: [''] }
     }
     const coroParts = lyrics.split(/\n\nCORO\n/)
     const firstVerse = coroParts[0].trim()
     const afterCoro = coroParts[1]
     const hasPuente = /\n\nPUENTE\n/.test(afterCoro)
     if (!hasPuente) {
-      return { verses: firstVerse ? [firstVerse] : [''], coro: afterCoro.trim(), puente: '' }
+      return { verses: firstVerse ? [firstVerse] : [''], coro: afterCoro.trim(), puente: '', blocks: [''] }
     }
     const puenteParts = afterCoro.split(/\n\nPUENTE\n/)
     const coroText = puenteParts[0].trim()
     if (puenteParts.length < 2) {
-      return { verses: firstVerse ? [firstVerse] : [''], coro: coroText, puente: '' }
+      return { verses: firstVerse ? [firstVerse] : [''], coro: coroText, puente: '', blocks: [''] }
     }
     const afterPuenteRaw = puenteParts[1]
     const puenteSplit = afterPuenteRaw.split(/\n\n/)
     const puenteText = puenteSplit[0].trim()
     const extraVerses = puenteSplit.slice(1).filter((v) => v.trim())
     const allVerses = [firstVerse, ...extraVerses].filter((v) => v.trim())
-    return { verses: allVerses.length ? allVerses : [''], coro: coroText, puente: puenteText }
+    return { verses: allVerses.length ? allVerses : [''], coro: coroText, puente: puenteText, blocks: [''] }
   }
 
   function buildLyrics(versesList, coroText, puenteText) {
+    const isChorus = isChorusCategory(form.category)
+    if (isChorus) {
+      return coroBlocks.filter((b) => b.trim()).join('\n\n').toUpperCase()
+    }
     const hasContent = versesList.some((v) => v.trim())
     let lyrics = hasContent ? (versesList[0] || '').trim() : ''
     if (coroText.trim()) {
@@ -131,6 +141,19 @@ export default function Admin() {
   function autoFormatVerse(text) {
     if (!text) return text
     return text.replace(/\n{3,}/g, '\n\n')
+  }
+
+  function addCoroBlock() {
+    setCoroBlocks((prev) => [...prev, ''])
+  }
+
+  function removeCoroBlock(i) {
+    if (coroBlocks.length <= 1) return
+    setCoroBlocks((prev) => prev.filter((_, idx) => idx !== i))
+  }
+
+  function updateCoroBlock(i, val) {
+    setCoroBlocks((prev) => prev.map((b, idx) => (idx === i ? val : b)))
   }
 
   function addVerse() {
@@ -218,15 +241,16 @@ export default function Admin() {
     setVerses([''])
     setCoro('')
     setPuente('')
+    setCoroBlocks([''])
     setMsg('')
     setHasVerses(true)
     setHasCoro(true)
     setShowModal(true)
-    setInitialSnapshot(JSON.stringify({ form: blank(), verses: [''], coro: '', puente: '', hasVerses: true, hasCoro: true }))
+    setInitialSnapshot(JSON.stringify({ form: blank(), verses: [''], coro: '', puente: '', coroBlocks: [''], hasVerses: true, hasCoro: true }))
   }
 
   function getSnapshot() {
-    return JSON.stringify({ form, verses, coro, puente, hasVerses, hasCoro })
+    return JSON.stringify({ form, verses, coro, puente, coroBlocks, hasVerses, hasCoro })
   }
 
   function hasUnsavedContent() {
@@ -245,16 +269,17 @@ export default function Admin() {
 
   function startEdit(h) {
     setForm({ ...h })
-    const { verses: v, coro: c, puente: p } = parseLyricsToBlocks(h.lyrics || '')
+    const { verses: v, coro: c, puente: p, blocks: bl } = parseLyricsToBlocks(h.lyrics || '')
     setVerses(v.length ? v : [''])
     setCoro(c)
     setPuente(p)
+    setCoroBlocks(bl.length ? bl : [''])
     const vHasVerses = v.some((v) => v.trim())
     const vHasCoro = !!c.trim()
     setHasVerses(vHasVerses || !vHasCoro)
     setHasCoro(vHasCoro || !vHasVerses)
     setShowModal(true)
-    const snap = { form: { ...h }, verses: v.length ? v : [''], coro: c, puente: p, hasVerses: vHasVerses || !vHasCoro, hasCoro: vHasCoro || !vHasVerses }
+    const snap = { form: { ...h }, verses: v.length ? v : [''], coro: c, puente: p, coroBlocks: bl.length ? bl : [''], hasVerses: vHasVerses || !vHasCoro, hasCoro: vHasCoro || !vHasVerses }
     setInitialSnapshot(JSON.stringify(snap))
   }
 
@@ -276,15 +301,22 @@ export default function Admin() {
     const currentVerses = hasVerses ? readVerses() : []
     const currentCoro = hasCoro ? readCoro() : ''
     const currentPuente = readPuente()
-    if (hasVerses) {
-      for (let i = 0; i < currentVerses.length; i++) {
-        if (!currentVerses[i].trim()) {
-          errors.push(`Estrofa ${i + 1}`)
+    if (isChorus) {
+      const hasAnyBlock = coroBlocks.some((b) => b.trim())
+      if (!hasAnyBlock) {
+        errors.push('Al menos un bloque de letra')
+      }
+    } else {
+      if (hasVerses) {
+        for (let i = 0; i < currentVerses.length; i++) {
+          if (!currentVerses[i].trim()) {
+            errors.push(`Estrofa ${i + 1}`)
+          }
         }
       }
-    }
-    if (hasCoro && !currentCoro.trim()) {
-      errors.push('Coro')
+      if (hasCoro && !currentCoro.trim()) {
+        errors.push('Coro')
+      }
     }
     if (errors.length > 0) {
       setMsg(`Completa: ${errors.join(', ')}`)
@@ -706,6 +738,32 @@ export default function Admin() {
                 </div>
                 </>
               )}
+              {isChorusMode ? (
+                <div className="field">
+                  <label>Versos de coro</label>
+                  {coroBlocks.map((block, i) => (
+                    <div key={i} className="verse-field">
+                      <div className="verse-field-header">
+                        <span>Bloque {i + 1}</span>
+                        {coroBlocks.length > 1 && (
+                          <button type="button" className="btn ghost" onClick={() => removeCoroBlock(i)}>
+                            Quitar
+                          </button>
+                        )}
+                      </div>
+                      <textarea
+                        placeholder={`Bloque ${i + 1}...`}
+                        value={block}
+                        onChange={(e) => updateCoroBlock(i, e.target.value)}
+                      />
+                    </div>
+                  ))}
+                  <button type="button" className="btn ghost" onClick={addCoroBlock}>
+                    + Agregar bloque
+                  </button>
+                </div>
+              ) : (
+                <>
               <div className="field">
                 <div className="field-header">
                   <label>Estrofas</label>
@@ -764,6 +822,8 @@ export default function Admin() {
                   onChange={(e) => setPuente(e.target.value)}
                 />
                 </div>
+              )}
+                </>
               )}
             </div>
             {msg && <div className="modal-msg">{msg}</div>}
