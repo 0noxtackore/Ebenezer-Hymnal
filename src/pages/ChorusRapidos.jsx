@@ -23,7 +23,12 @@ function parseLyrics(lyrics) {
 
   const hasCoro = /\n\nCORO\n/.test(lyrics)
   if (!hasCoro) {
-    const blocks = lyrics.split(/\n\s*\n/).map((b) => b.split('\n').map((l) => l.trim()).filter(Boolean)).filter((b) => b.length > 0)
+    const normalized = lyrics.replace(/\n\s*\n/g, '\n\n')
+    const rawBlocks = normalized.split(/\n\n/).filter((b) => b.trim())
+    const isSingleVerse = rawBlocks.length <= 1
+    const blocks = isSingleVerse
+      ? [normalized.trim().split('\n').map((l) => l.trim()).filter(Boolean)]
+      : rawBlocks.map((b) => b.split('\n').map((l) => l.trim()).filter(Boolean)).filter((b) => b.length > 0)
     if (blocks.length === 0) return []
     if (blocks.length === 1) return [{ label: 'CORO', lines: blocks[0] }]
     const result = []

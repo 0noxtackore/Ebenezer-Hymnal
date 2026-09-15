@@ -24,9 +24,14 @@ function parseLyrics(lyrics, category) {
   const toLines = (t) => t.split('\n').map((l) => l.trim())
 
   if (isChorus) {
-    const hasCoro = /\n\nCORO\n/.test(lyrics)
+    const normalized = lyrics.replace(/\n\s*\n/g, '\n\n')
+    const hasCoro = /\n\nCORO\n/.test(normalized)
     if (!hasCoro) {
-      const blocks = lyrics.split(/\n\s*\n/).map((b) => b.split('\n').map((l) => l.trim()).filter(Boolean)).filter((b) => b.length > 0)
+      const rawBlocks = normalized.split(/\n\n/).filter((b) => b.trim())
+      const isSingleVerse = rawBlocks.length <= 1
+      const blocks = isSingleVerse
+        ? [normalized.trim().split('\n').map((l) => l.trim()).filter(Boolean)]
+        : rawBlocks.map((b) => b.split('\n').map((l) => l.trim()).filter(Boolean)).filter((b) => b.length > 0)
       if (blocks.length === 0) return []
       if (blocks.length === 1) return [{ label: 'CORO', lines: blocks[0] }]
       const result = []
@@ -36,7 +41,7 @@ function parseLyrics(lyrics, category) {
       })
       return result
     }
-    const coroParts = lyrics.split(/\n\nCORO\n/)
+    const coroParts = normalized.split(/\n\nCORO\n/)
     const firstVerse = coroParts[0].trim()
     const afterCoro = coroParts[1]
     const hasPuente = /\n\nPUENTE\n/.test(afterCoro)
