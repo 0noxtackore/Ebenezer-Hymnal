@@ -790,7 +790,7 @@ a { color: inherit; }
 }
 
 .num-display {
-  font-size: 66px;
+  font-size: 100px;
   font-weight: 800;
   line-height: 1;
   color: var(--gold);
