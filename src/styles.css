@@ -1123,13 +1123,10 @@ a { color: inherit; }
 
 .hymn-header h2 {
   flex: 1;
-  font-size: 22px;
+  font-size: 17px;
   line-height: 1.15;
   text-align: center;
   color: var(--text);
-}
-.hymn-header h2.long-title {
-  font-size: 17px;
 }
 
 .chorus-header {

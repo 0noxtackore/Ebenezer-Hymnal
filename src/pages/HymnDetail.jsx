@@ -232,7 +232,7 @@ export default function HymnDetail() {
                 return nom
               })()}
             </div>
-            <h2 className={h.title && h.title.length > 19 ? 'long-title' : ''}>{h.title}</h2>
+            <h2>{h.title}</h2>
             <div className="actions">
               <button className={fav ? 'on' : ''} onClick={() => toggle(h.id)} title="Favorito">
                 <Star size={20} fill={fav ? 'currentColor' : 'none' } />
