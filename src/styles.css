@@ -790,7 +790,7 @@ a { color: inherit; }
 }
 
 .num-display {
-  font-size: 100px;
+  font-size: 66px;
   font-weight: 800;
   line-height: 1;
   color: var(--gold);
@@ -1072,14 +1072,14 @@ a { color: inherit; }
 
 .hnum {
   position: relative;
-  min-width: 44px;
-  height: 44px;
+  min-width: 64px;
+  height: 64px;
   border-radius: 50%;
   background: var(--accent-grad);
   color: #16130c;
   font-family: var(--font-serif);
   font-weight: 700;
-  font-size: 14px;
+  font-size: 20px;
   line-height: 1;
   display: flex;
   align-items: center;
