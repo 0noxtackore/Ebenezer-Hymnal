@@ -1072,14 +1072,14 @@ a { color: inherit; }
 
 .hnum {
   position: relative;
-  min-width: 64px;
-  height: 64px;
+  min-width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: var(--accent-grad);
   color: #16130c;
   font-family: var(--font-serif);
   font-weight: 700;
-  font-size: 20px;
+  font-size: 22px;
   line-height: 1;
   display: flex;
   align-items: center;
