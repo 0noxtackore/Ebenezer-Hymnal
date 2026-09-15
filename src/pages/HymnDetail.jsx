@@ -179,6 +179,9 @@ export default function HymnDetail() {
           <>
             <div className="hnum-chorus">{h.nomenclature || String(h.number)}</div>
             <h2>{h.title}</h2>
+            {(h.musicKey || h.scale) && (
+              <div className="chorus-tone">{h.musicKey}{h.scale ? ' ' + h.scale : ''}</div>
+            )}
             <div className="actions">
               <button className={fav ? 'on' : ''} onClick={() => toggle(h.id)} title="Favorito">
                 <Star size={20} fill={fav ? 'currentColor' : 'none' } />
@@ -245,7 +248,7 @@ export default function HymnDetail() {
         <div className="share-card-logo">
           <img src="/images/logo.webp" alt="logo" crossOrigin="anonymous" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
         </div>
-        <div className="share-card-app">{h.category || 'Himno'} {h.nomenclature || h.number} · Himnario Ebenezer</div>
+        <div className="share-card-app">{h.category || 'Himno'} {h.nomenclature || h.number}{h.musicKey ? ' · ' + h.musicKey + (h.scale ? ' ' + h.scale : '') : ''} · Himnario Ebenezer</div>
         <h3 className="share-card-title">{h.title}</h3>
         <div className="share-card-lyrics">
           {parseLyrics(h.lyrics, h.category).map((v, i) => (
