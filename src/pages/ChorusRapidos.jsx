@@ -9,7 +9,7 @@ import { boldBis } from '../utils/boldBis.js'
 
 const strip = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
-const CATEGORY = 'coros rapidos'
+const CATEGORY = 'coros rápidos'
 
 const ROMANS = [
   'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
