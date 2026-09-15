@@ -1123,7 +1123,7 @@ a { color: inherit; }
 
 .hymn-header h2 {
   flex: 1;
-  font-size: 17px;
+  font-size: 20px;
   line-height: 1.15;
   text-align: center;
   color: var(--text);
