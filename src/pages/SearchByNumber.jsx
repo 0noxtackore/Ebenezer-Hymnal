@@ -18,7 +18,7 @@ export default function SearchByNumber() {
   const search = () => {
     const n = parseInt(num, 10)
     if (!n) return
-    const matches = hymns.filter((x) => Number(x.number) === n && !CHORUS_CATS.includes(strip(x.category)))
+    const matches = hymns.filter((x) => Number(x.number) === n && strip(x.category) === 'himnos clasicos')
     if (matches.length === 0) {
       alert('No se encontró el himno número ' + num)
     } else if (matches.length === 1) {
@@ -32,7 +32,7 @@ export default function SearchByNumber() {
 
   return (
     <div className="center-screen">
-      <div className="num-label">Número del Himno</div>
+      <div className="num-label">Número del Himno Clásico</div>
       <div className="num-display">{num || '0'}</div>
 
       <div className="keypad">
