@@ -27,8 +27,13 @@ function parseLyrics(lyrics, category) {
     const hasCoro = /\n\nCORO\n/.test(lyrics)
     if (!hasCoro) {
       const blocks = lyrics.split(/\n\s*\n/).map((b) => b.split('\n').map((l) => l.trim()).filter(Boolean)).filter((b) => b.length > 0)
+      if (blocks.length === 0) return []
+      if (blocks.length === 1) return [{ label: 'CORO', lines: blocks[0] }]
       const result = []
-      blocks.forEach((b, i) => result.push({ label: ROMANS[i] || String(i + 1), lines: b }))
+      blocks.forEach((b, i) => {
+        const isLast = i === blocks.length - 1
+        result.push({ label: isLast ? 'CORO' : (ROMANS[i] || String(i + 1)), lines: b })
+      })
       return result
     }
     const coroParts = lyrics.split(/\n\nCORO\n/)
