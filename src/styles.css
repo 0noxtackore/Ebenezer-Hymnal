@@ -1092,7 +1092,7 @@ a { color: inherit; }
 }
 
 .hnum sup {
-  font-size: 9px;
+  font-size: 14px;
   margin-left: 1px;
   position: relative;
   top: -4px;
@@ -1123,10 +1123,13 @@ a { color: inherit; }
 
 .hymn-header h2 {
   flex: 1;
-  font-size: 28px;
+  font-size: 22px;
   line-height: 1.15;
   text-align: center;
   color: var(--text);
+}
+.hymn-header h2.long-title {
+  font-size: 17px;
 }
 
 .chorus-header {
