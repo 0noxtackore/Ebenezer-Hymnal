@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Music, Star, Share2 } from 'lucide-react'
-import { jsPDF } from 'jspdf'
+import { createPdf } from '../utils/pdfHelper.js'
 import { useData } from '../context/DataContext.jsx'
 import { useFavorites } from '../context/FavoritesContext.jsx'
 import logoBase64 from '../../assets/logo_base64.txt?raw'
@@ -52,7 +52,7 @@ export default function ChorusLentos() {
   const share = async () => {
     setSharing(true)
     try {
-      const doc = new jsPDF({ unit: 'mm', format: 'letter' })
+      const doc = createPdf({ unit: 'mm', format: 'letter' })
       const pw = doc.internal.pageSize.getWidth()
       const ph = doc.internal.pageSize.getHeight()
       const ml = 18

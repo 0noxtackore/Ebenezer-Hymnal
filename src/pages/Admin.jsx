@@ -479,7 +479,7 @@ export default function Admin() {
   const filtered = hymns
     .filter((h) => {
       const q = searchQuery.trim().toLowerCase()
-      const matchesText = !q || h.title.toLowerCase().includes(q) || String(h.number).includes(q)
+      const matchesText = !q || strip(h.title + ' ' + h.number + ' ' + (h.nomenclature || '') + ' ' + (h.category || '')).includes(strip(q))
       const matchesCat = !catFilterNorm || strip(h.category || '') === catFilterNorm
       return matchesText && matchesCat
     })
