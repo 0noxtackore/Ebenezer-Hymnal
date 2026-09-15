@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Music, Star, Share2 } from 'lucide-react'
-import { createPdf } from '../utils/pdfHelper.js'
+import { createPdf, renderLine } from '../utils/pdfHelper.js'
 import { useData } from '../context/DataContext.jsx'
 import { useFavorites } from '../context/FavoritesContext.jsx'
 import logoBase64 from '../../assets/logo_base64.txt?raw'
@@ -146,7 +146,7 @@ export default function ChorusLentos() {
             const split = doc.splitTextToSize(line, cw - 4)
             split.forEach((sl) => {
               checkPage(5)
-              doc.text(sl, pw / 2, y, { align: 'center' })
+              renderLine(doc, sl, pw / 2, y, { color: brown, pageWidth: pw, marginLeft: ml, marginRight: mr })
               y += 4.5
             })
           })
