@@ -14,6 +14,13 @@ function isChorusCategory(cat) {
 
 const strip = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
+const TONE_ORDER = ['do', 're', 'mi', 'fa', 'sol', 'la', 'si']
+function toneOrder(label) {
+  const key = strip(label.split(' ')[0])
+  const idx = TONE_ORDER.indexOf(key)
+  return idx === -1 ? 99 : idx
+}
+
 function getDeleteLabel(category) {
   const c = strip(category)
   if (c === 'himnos clasicos') return 'himno'
@@ -498,7 +505,7 @@ export default function Admin() {
     return Object.entries(groups).sort(([a], [b]) => {
       if (a === 'Sin tono') return 1
       if (b === 'Sin tono') return -1
-      return a.localeCompare(b, 'es')
+      return toneOrder(a) - toneOrder(b)
     })
   })()
 

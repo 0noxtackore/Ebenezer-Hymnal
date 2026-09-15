@@ -7,6 +7,13 @@ const KEY_CATEGORIES = ['coros lentos', 'coros rapidos', 'gospel']
 
 const strip = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
+const TONE_ORDER = ['do', 're', 'mi', 'fa', 'sol', 'la', 'si']
+function toneOrder(label) {
+  const key = strip(label.split(' ')[0])
+  const idx = TONE_ORDER.indexOf(key)
+  return idx === -1 ? 99 : idx
+}
+
 const CATEGORY_COLORS = {
   'himnos clasicos': { bg: '#C9A227', color: '#fff' },
   'coros rapidos': { bg: '#8B5E3C', color: '#fff' },
@@ -56,7 +63,7 @@ export default function SearchByName() {
       .sort((a, b) => {
         if (a.label === 'Sin tono') return 1
         if (b.label === 'Sin tono') return -1
-        return a.label.localeCompare(b.label, 'es')
+        return toneOrder(a.label) - toneOrder(b.label)
       })
   }, [isChorusMode, cat, hymns])
 
