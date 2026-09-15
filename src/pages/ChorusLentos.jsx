@@ -19,56 +19,9 @@ const ROMANS = [
 
 function parseLyrics(lyrics) {
   if (!lyrics) return []
-  const toLines = (t) => t.split('\n').map((l) => l.trim())
-  const hasCoroMarker = /\n\nCORO\n/.test(lyrics)
-  if (!hasCoroMarker) {
-    const blocks = lyrics.split(/\n\s*\n/).map((b) => b.split('\n').map((l) => l.trim()).filter((l) => l)).filter((b) => b.length > 0)
-    if (blocks.length === 0) return []
-    return blocks.map((b, i) => ({ label: ROMANS[i] || String(i + 1), lines: b }))
-  }
-  const coroParts = lyrics.split(/\n\nCORO\n/)
-  const firstVerse = coroParts[0].trim()
-  const afterCoro = coroParts[1]
-  const hasPuente = /\n\nPUENTE\n/.test(afterCoro)
-  if (!hasPuente) {
-    let verseNum = 1
-    const result = []
-    if (firstVerse) {
-      result.push({ label: ROMANS[verseNum - 1], lines: toLines(firstVerse) })
-      verseNum++
-    }
-    result.push({ label: 'CORO', lines: toLines(afterCoro.trim()) })
-    return result
-  }
-  const puenteParts = afterCoro.split(/\n\nPUENTE\n/)
-  const coroText = puenteParts[0].trim()
-  if (puenteParts.length < 2) {
-    let verseNum = 1
-    const result = []
-    if (firstVerse) {
-      result.push({ label: ROMANS[verseNum - 1], lines: toLines(firstVerse) })
-      verseNum++
-    }
-    result.push({ label: 'CORO', lines: toLines(coroText) })
-    return result
-  }
-  const afterPuenteRaw = puenteParts[1]
-  const puenteSplit = afterPuenteRaw.split(/\n\n/)
-  const puenteText = puenteSplit[0].trim()
-  const extraVerses = puenteSplit.slice(1).filter((v) => v.trim())
-  let verseNum = 1
-  const result = []
-  if (firstVerse) {
-    result.push({ label: ROMANS[verseNum - 1], lines: toLines(firstVerse) })
-    verseNum++
-  }
-  result.push({ label: 'CORO', lines: toLines(coroText) })
-  result.push({ label: 'PUENTE', lines: toLines(puenteText) })
-  extraVerses.forEach((v) => {
-    result.push({ label: ROMANS[verseNum - 1] || String(verseNum), lines: toLines(v.trim()) })
-    verseNum++
-  })
-  return result
+  const blocks = lyrics.split(/\n\s*\n/).map((b) => b.split('\n').map((l) => l.trim()).filter((l) => l)).filter((b) => b.length > 0)
+  if (blocks.length === 0) return []
+  return blocks.map((b, i) => ({ label: ROMANS[i] || String(i + 1), lines: b }))
 }
 
 export default function ChorusLentos() {
