@@ -1062,18 +1062,31 @@ a { color: inherit; }
 .hymn-header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  background: var(--surface);
+  gap: 14px;
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 16px;
-  box-shadow: var(--shadow-sm);
+  padding: 20px 18px;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.hymn-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--accent-grad);
+  opacity: 0.7;
 }
 
 .hnum {
   position: relative;
-  min-width: 44px;
-  height: 44px;
+  min-width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: var(--accent-grad);
   color: #16130c;
@@ -1086,9 +1099,10 @@ a { color: inherit; }
   justify-content: center;
   flex-shrink: 0;
   box-shadow:
-    0 4px 10px rgba(201, 162, 39, 0.35),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.18),
-    inset 0 1px 1px rgba(255, 255, 255, 0.4);
+    0 4px 12px rgba(201, 162, 39, 0.4),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.15),
+    inset 0 2px 2px rgba(255, 255, 255, 0.45);
+  transition: transform 0.2s ease;
 }
 
 .hnum sup {
@@ -1101,38 +1115,41 @@ a { color: inherit; }
 .hnum-chorus {
   font-family: var(--font-serif);
   font-weight: 700;
-  font-size: 13px;
-  letter-spacing: 1px;
+  font-size: 14px;
+  letter-spacing: 1.5px;
   color: var(--gold);
-  background: linear-gradient(135deg, rgba(201,162,39,0.12), rgba(201,162,39,0.04));
-  border: 1.5px solid rgba(201,162,39,0.35);
-  border-radius: 6px;
-  padding: 4px 10px;
+  background: linear-gradient(135deg, rgba(201,162,39,0.15), rgba(201,162,39,0.04));
+  border: 1.5px solid rgba(201,162,39,0.4);
+  border-radius: 8px;
+  padding: 6px 14px;
   line-height: 1;
   flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(201, 162, 39, 0.12);
 }
 
 .hnum::after {
   content: "";
   position: absolute;
-  inset: 5px;
+  inset: 4px;
   border-radius: 50%;
-  border: 1.5px dashed rgba(22, 19, 12, 0.35);
+  border: 1.5px dashed rgba(201, 162, 39, 0.45);
   pointer-events: none;
 }
 
 .hymn-header h2 {
   flex: 1;
-  font-size: 20px;
-  line-height: 1.15;
+  font-size: 21px;
+  line-height: 1.2;
   text-align: center;
   color: var(--text);
+  letter-spacing: 0.3px;
 }
 
 .chorus-header {
   flex-direction: column;
   align-items: center;
   text-align: center;
+  gap: 10px;
 }
 
 .chorus-header .actions {
@@ -1141,24 +1158,35 @@ a { color: inherit; }
 
 .actions {
   display: flex;
-  gap: 8px;
+  gap: 10px;
 }
 
 .actions button {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  border: 1px solid var(--border);
-  background: var(--surface-2);
+  border: 1.5px solid var(--border);
+  background: var(--surface);
   color: var(--gold);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.actions button:hover {
+  border-color: var(--gold);
+  background: var(--gold-soft);
+  transform: scale(1.08);
 }
 
 .actions button.on {
-  background: var(--gold-soft);
+  background: var(--gold);
+  color: #fff;
+  border-color: var(--gold);
+  box-shadow: 0 2px 8px rgba(201, 162, 39, 0.35);
 }
 
 .audio-bar {
