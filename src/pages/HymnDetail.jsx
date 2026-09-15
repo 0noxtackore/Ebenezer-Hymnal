@@ -27,7 +27,7 @@ function parseLyrics(lyrics, category) {
     const normalized = lyrics.replace(/\n\s*\n/g, '\n\n')
     const blocks = normalized.split(/\n\n/).map((b) => b.split('\n').map((l) => l.trim()).filter((l) => l)).filter((b) => b.length > 0)
     if (blocks.length === 0) return []
-    return blocks.map((b, i) => ({ label: ROMANS[i] || String(i + 1), lines: b }))
+    return blocks.map((b) => ({ label: null, lines: b }))
   }
 
   const blocks = lyrics
