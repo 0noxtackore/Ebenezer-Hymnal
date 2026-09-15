@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth'
-import { Eye, EyeOff, Plus, Pencil, Trash2, Text, Search } from 'lucide-react'
+import { Eye, EyeOff, Plus, Pencil, Trash2, Text, Search, ChevronUp, ChevronDown } from 'lucide-react'
 import { auth } from '../firebase.js'
 import { useData } from '../context/DataContext.jsx'
 import { getIcon } from '../utils/icons.js'
@@ -154,6 +154,16 @@ export default function Admin() {
 
   function updateCoroBlock(i, val) {
     setCoroBlocks((prev) => prev.map((b, idx) => (idx === i ? val : b)))
+  }
+
+  function moveCoroBlock(i, dir) {
+    setCoroBlocks((prev) => {
+      const j = i + dir
+      if (j < 0 || j >= prev.length) return prev
+      const next = [...prev]
+      ;[next[i], next[j]] = [next[j], next[i]]
+      return next
+    })
   }
 
   function addVerse() {
@@ -745,11 +755,23 @@ export default function Admin() {
                     <div key={i} className="verse-field">
                       <div className="verse-field-header">
                         <span>Bloque {i + 1}</span>
-                        {coroBlocks.length > 1 && (
-                          <button type="button" className="btn ghost" onClick={() => removeCoroBlock(i)}>
-                            Quitar
-                          </button>
-                        )}
+                        <div style={{ display: 'flex', gap: 4, marginLeft: 'auto' }}>
+                          {i > 0 && (
+                            <button type="button" className="btn ghost" onClick={() => moveCoroBlock(i, -1)}>
+                              <ChevronUp size={16} />
+                            </button>
+                          )}
+                          {i < coroBlocks.length - 1 && (
+                            <button type="button" className="btn ghost" onClick={() => moveCoroBlock(i, 1)}>
+                              <ChevronDown size={16} />
+                            </button>
+                          )}
+                          {coroBlocks.length > 1 && (
+                            <button type="button" className="btn ghost" onClick={() => removeCoroBlock(i)}>
+                              Quitar
+                            </button>
+                          )}
+                        </div>
                       </div>
                       <textarea
                         placeholder={`Bloque ${i + 1}...`}
