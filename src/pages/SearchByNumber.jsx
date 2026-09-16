@@ -8,6 +8,7 @@ const strip = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').
 export default function SearchByNumber() {
   const [num, setNum] = useState('')
   const [results, setResults] = useState([])
+  const [notFound, setNotFound] = useState(false)
   const { hymns } = useData()
   const nav = useNavigate()
 
@@ -20,7 +21,7 @@ export default function SearchByNumber() {
     if (!n) return
     const matches = hymns.filter((x) => Number(x.number) === n && strip(x.category) === 'himnos clasicos')
     if (matches.length === 0) {
-      alert('No se encontró el himno número ' + num)
+      setNotFound(true)
     } else if (matches.length === 1) {
       nav('/himno/' + matches[0].id)
     } else {
@@ -57,6 +58,22 @@ export default function SearchByNumber() {
           BUSCAR
         </button>
       </div>
+
+      {notFound && (
+        <div className="modal-overlay" onClick={() => { setNotFound(false); setNum('') }}>
+          <div className="modal delete-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 360, textAlign: 'center' }}>
+            <button className="modal-close" onClick={() => { setNotFound(false); setNum('') }}>&times;</button>
+            <div className="delete-modal-logo">
+              <img src="/images/logo.webp" alt="logo" />
+            </div>
+            <h3>No encontrado</h3>
+            <p className="delete-modal-text">No se encontró el himno número <strong>{num}</strong></p>
+            <div className="delete-modal-actions">
+              <button className="btn" onClick={() => { setNotFound(false); setNum('') }}>Aceptar</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {results.length > 1 && (
         <div className="modal-overlay" onClick={() => setResults([])}>
