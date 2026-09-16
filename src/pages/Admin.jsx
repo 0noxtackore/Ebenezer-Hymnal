@@ -475,11 +475,14 @@ export default function Admin() {
     )
   }
 
-  const catHymns = hymns.filter((h) => h.category === form.category)
+  const catHymns = hymns.filter((h) => strip(h.category) === strip(form.category))
   const isChorusMode = isChorusCategory(form.category)
   const isGospel = strip(form.category) === 'gospel'
   const keyScaleHymns = isChorusMode
-    ? catHymns.filter((h) => (h.musicKey || '').trim() === (form.musicKey || '').trim() && (h.scale || '').trim() === (form.scale || '').trim())
+    ? catHymns.filter((h) => {
+        if (!form.musicKey && !form.scale) return true
+        return (h.musicKey || '').trim() === (form.musicKey || '').trim() && (h.scale || '').trim() === (form.scale || '').trim()
+      })
     : catHymns
   const lastNum = keyScaleHymns.reduce((max, h) => Math.max(max, h.number || 0), 0)
   const nextNum = lastNum + 1
