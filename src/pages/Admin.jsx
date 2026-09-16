@@ -691,7 +691,7 @@ export default function Admin() {
                   )}
                 </div>
               )}
-              {isChorusMode && !isGospel && (
+              {isChorusMode && (
                 <div className="field">
                   <label>Número</label>
                   <input
@@ -700,7 +700,7 @@ export default function Admin() {
                     value={form.number}
                     onChange={(e) => setForm({ ...form, number: e.target.value.replace(/\D/g, '') })}
                   />
-                  <small className="muted">Se asigna automáticamente por tono</small>
+                  <small className="muted">{isGospel ? 'Se asigna automáticamente por tono' : 'Se asigna automáticamente por tono'}</small>
                 </div>
               )}
               <div className="field">
