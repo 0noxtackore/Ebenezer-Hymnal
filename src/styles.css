@@ -987,30 +987,33 @@ a { color: inherit; }
   cursor: pointer;
   transition: all 0.2s;
   box-shadow: 0 4px 12px rgba(201, 162, 39, 0.3);
+  color: #1a1408 !important;
 }
 
 .tone-card:hover {
   box-shadow: 0 6px 20px rgba(201, 162, 39, 0.45);
   transform: translateY(-2px);
+  filter: brightness(1.05);
 }
 
 .tone-card:active {
   transform: translateY(0);
+  filter: brightness(0.95);
 }
 
 .tone-card-name {
   font-family: var(--font-serif);
   font-weight: 700;
   font-size: 16px;
-  color: #1a1408;
+  color: #1a1408 !important;
   letter-spacing: 0.5px;
 }
 
 .tone-card-count {
   font-size: 12px;
   font-weight: 600;
-  color: #1a1408;
-  background: rgba(255, 255, 255, 0.3);
+  color: #1a1408 !important;
+  background: rgba(255, 255, 255, 0.35);
   padding: 3px 10px;
   border-radius: 10px;
 }
