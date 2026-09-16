@@ -631,10 +631,10 @@ export default function Admin() {
                               </div>
                               {isAutoNumberCategory(h.category) && (
                                 <div className="hymn-reorder">
-                                  <button type="button" className="btn ghost" style={{ width: 'auto', padding: '4px 6px' }} onClick={(e) => { e.preventDefault(); e.stopPropagation(); reorderHymn(h.id, -1) }} disabled={i === 0}>
+                                  <button type="button" className="btn ghost" style={{ width: 'auto', padding: '4px 6px' }} onClick={(e) => { e.preventDefault(); e.stopPropagation(); const y = window.scrollY; reorderHymn(h.id, -1).then(() => requestAnimationFrame(() => window.scrollTo(0, y))) }} disabled={i === 0}>
                                     <ChevronUp size={16} />
                                   </button>
-                                  <button type="button" className="btn ghost" style={{ width: 'auto', padding: '4px 6px' }} onClick={(e) => { e.preventDefault(); e.stopPropagation(); reorderHymn(h.id, 1) }} disabled={i === items.length - 1}>
+                                  <button type="button" className="btn ghost" style={{ width: 'auto', padding: '4px 6px' }} onClick={(e) => { e.preventDefault(); e.stopPropagation(); const y = window.scrollY; reorderHymn(h.id, 1).then(() => requestAnimationFrame(() => window.scrollTo(0, y))) }} disabled={i === items.length - 1}>
                                     <ChevronDown size={16} />
                                   </button>
                                 </div>
@@ -678,10 +678,10 @@ export default function Admin() {
                 </div>
                 {isAutoNumberCategory(h.category) && catFilter && (
                   <div className="hymn-reorder">
-                    <button type="button" className="btn ghost" style={{ width: 'auto', padding: '4px 6px' }} onClick={(e) => { e.preventDefault(); e.stopPropagation(); reorderHymn(h.id, -1) }} disabled={posInGroup === 0}>
+                    <button type="button" className="btn ghost" style={{ width: 'auto', padding: '4px 6px' }} onClick={(e) => { e.preventDefault(); e.stopPropagation(); const y = window.scrollY; reorderHymn(h.id, -1).then(() => requestAnimationFrame(() => window.scrollTo(0, y))) }} disabled={posInGroup === 0}>
                       <ChevronUp size={16} />
                     </button>
-                    <button type="button" className="btn ghost" style={{ width: 'auto', padding: '4px 6px' }} onClick={(e) => { e.preventDefault(); e.stopPropagation(); reorderHymn(h.id, 1) }} disabled={posInGroup === sameGroup.length - 1}>
+                    <button type="button" className="btn ghost" style={{ width: 'auto', padding: '4px 6px' }} onClick={(e) => { e.preventDefault(); e.stopPropagation(); const y = window.scrollY; reorderHymn(h.id, 1).then(() => requestAnimationFrame(() => window.scrollTo(0, y))) }} disabled={posInGroup === sameGroup.length - 1}>
                       <ChevronDown size={16} />
                     </button>
                   </div>
