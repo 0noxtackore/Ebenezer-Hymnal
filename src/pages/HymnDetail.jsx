@@ -164,7 +164,7 @@ export default function HymnDetail() {
   }
 
   return (
-    <div className={isChorus ? 'chorus-detail' : ''}>
+    <div className="hymn-detail-page">
       <button className="btn ghost sm" style={{ marginBottom: 14 }} onClick={() => nav(-1)}>
         <ArrowLeft size={16} /> Volver
       </button>
