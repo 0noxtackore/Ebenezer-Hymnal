@@ -1148,13 +1148,13 @@ a { color: inherit; }
 .hnum-chorus {
   font-family: var(--font-serif);
   font-weight: 700;
-  font-size: 14px;
-  letter-spacing: 1.5px;
+  font-size: 22px;
+  letter-spacing: 2px;
   color: var(--gold);
   background: linear-gradient(135deg, rgba(201,162,39,0.15), rgba(201,162,39,0.04));
   border: 1.5px solid rgba(201,162,39,0.4);
-  border-radius: 8px;
-  padding: 6px 14px;
+  border-radius: 10px;
+  padding: 8px 18px;
   line-height: 1;
   flex-shrink: 0;
   box-shadow: 0 2px 8px rgba(201, 162, 39, 0.12);
@@ -1203,7 +1203,7 @@ a { color: inherit; }
 
 .chorus-tone {
   font-family: var(--font-serif);
-  font-size: 13px;
+  font-size: 18px;
   font-weight: 600;
   color: var(--gold-600);
   letter-spacing: 0.5px;
