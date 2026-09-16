@@ -217,10 +217,9 @@ export function DataProvider({ children }) {
   }
 
   async function reorderHymn(id, direction) {
-    const allHymns = [...(ov.hymns || [])]
-    const idx = allHymns.findIndex((h) => h.id === id)
-    if (idx === -1) return
-    const h = allHymns[idx]
+    let allHymns = [...hymns]
+    const h = allHymns.find((x) => x.id === id)
+    if (!h) return
     const cat = strip(h.category)
     if (!AUTO_NUMBER_CATS.includes(cat)) return
     const sameGroup = allHymns.filter(
@@ -233,11 +232,23 @@ export function DataProvider({ children }) {
     const targetIdx = posInGroup + direction
     if (targetIdx < 0 || targetIdx >= sameGroup.length) return
     const target = sameGroup[targetIdx]
-    const tGlobal = allHymns.findIndex((x) => x.id === target.id)
     const tempNum = h.number
-    allHymns[idx] = { ...h, number: target.number }
-    allHymns[tGlobal] = { ...target, number: tempNum }
-    await persist({ hymns: allHymns })
+    allHymns = allHymns.map((x) => {
+      if (x.id === h.id) return { ...x, number: target.number }
+      if (x.id === target.id) return { ...x, number: tempNum }
+      return x
+    })
+    const merged = {
+      hymns: allHymns,
+      removed: ov.removed || [],
+      categories: ov.categories || []
+    }
+    setOverrides(merged)
+    localStorage.setItem(OVERRIDES_KEY, JSON.stringify(merged))
+    renumberChorus(allHymns)
+    try { localStorage.setItem(DATA_CACHE_KEY, JSON.stringify({ hymns: allHymns, categories })) } catch {}
+    await updateFirebase(allHymns, categories)
+    setBase({ hymns: allHymns, categories })
   }
 
   async function deleteHymn(id) {
