@@ -7,7 +7,7 @@ import { getIcon } from '../utils/icons.js'
 import LazyImage from '../components/LazyImage.jsx'
 
 const CHORUS_CATS = ['coros lentos', 'coros rapidos', 'gospel']
-const AUTO_NUMBER_CATS = ['gospel', 'especiales']
+const AUTO_NUMBER_CATS = ['coros lentos', 'coros rapidos', 'gospel', 'especiales']
 
 function isChorusCategory(cat) {
   return CHORUS_CATS.includes(strip(cat))
