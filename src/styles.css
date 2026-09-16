@@ -1169,6 +1169,18 @@ a { color: inherit; }
   justify-content: center;
 }
 
+.chorus-detail .lyrics .verse {
+  border: 1.5px solid rgba(201, 162, 39, 0.3);
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+  background: linear-gradient(135deg, rgba(201, 162, 39, 0.03), rgba(201, 162, 39, 0.01));
+}
+
+.chorus-detail .lyrics .verse:last-child {
+  border-bottom: 1.5px solid rgba(201, 162, 39, 0.3);
+}
+
 .chorus-tone {
   font-family: var(--font-serif);
   font-size: 13px;
