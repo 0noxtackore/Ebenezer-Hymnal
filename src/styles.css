@@ -1002,15 +1002,15 @@ a { color: inherit; }
   font-family: var(--font-serif);
   font-weight: 700;
   font-size: 16px;
-  color: #16130c;
+  color: #1a1408;
   letter-spacing: 0.5px;
 }
 
 .tone-card-count {
   font-size: 12px;
   font-weight: 600;
-  color: #16130c;
-  background: rgba(255, 255, 255, 0.25);
+  color: #1a1408;
+  background: rgba(255, 255, 255, 0.3);
   padding: 3px 10px;
   border-radius: 10px;
 }
