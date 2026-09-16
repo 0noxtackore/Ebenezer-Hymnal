@@ -303,6 +303,7 @@ export default function Admin() {
   async function submit() {
     const errors = []
     const isChorus = isChorusCategory(form.category)
+    const isGospelCat = strip(form.category) === 'gospel'
     if (!isChorus && !form.number) {
       errors.push('Número')
     }
@@ -314,6 +315,12 @@ export default function Admin() {
     }
     if (isChorus && !form.scale) {
       errors.push('Escala')
+    }
+    if (isGospelCat && !form.id && !form.nomenclature.trim()) {
+      setForm((prev) => ({ ...prev, nomenclature: nextGS }))
+    }
+    if (isGospelCat && form.nomenclature.trim() && !/^GS\d+$/i.test(form.nomenclature.trim())) {
+      errors.push('Nomenclatura debe empezar con GS (ej: GS001)')
     }
     const currentVerses = hasVerses ? readVerses() : []
     const currentCoro = hasCoro ? readCoro() : ''
@@ -465,11 +472,19 @@ export default function Admin() {
 
   const catHymns = hymns.filter((h) => h.category === form.category)
   const isChorusMode = isChorusCategory(form.category)
+  const isGospel = strip(form.category) === 'gospel'
   const keyScaleHymns = isChorusMode
     ? catHymns.filter((h) => (h.musicKey || '').trim() === (form.musicKey || '').trim() && (h.scale || '').trim() === (form.scale || '').trim())
     : catHymns
   const lastNum = keyScaleHymns.reduce((max, h) => Math.max(max, h.number || 0), 0)
   const nextNum = lastNum + 1
+  const nextGS = (() => {
+    const gsNums = hymns
+      .filter((h) => h.nomenclature && /^GS\d+$/i.test(h.nomenclature))
+      .map((h) => parseInt(h.nomenclature.match(/\d+/)[0]))
+    const maxGS = gsNums.length ? Math.max(...gsNums) : 0
+    return 'GS' + String(maxGS + 1).padStart(3, '0')
+  })()
   const numTaken =
     !isChorusMode &&
     Number(form.number) > 0 &&
@@ -676,7 +691,7 @@ export default function Admin() {
                   )}
                 </div>
               )}
-              {isChorusMode && (
+              {isChorusMode && !isGospel && (
                 <div className="field">
                   <label>Número</label>
                   <input
@@ -706,7 +721,14 @@ export default function Admin() {
                         key={c.name}
                         type="button"
                         className={'cat-option' + (form.category === c.name ? ' active' : '')}
-                        onClick={() => setForm({ ...form, category: c.name })}
+                        onClick={() => {
+                          const isGos = strip(c.name) === 'gospel'
+                          setForm({
+                            ...form,
+                            category: c.name,
+                            nomenclature: (!form.id && isGos) ? nextGS : (isGos ? form.nomenclature : '')
+                          })
+                        }}
                       >
                         <Icon size={16} /> {c.name}
                       </button>
@@ -745,13 +767,13 @@ export default function Admin() {
                   </div>
                 </div>
                 <div className="field">
-                  <label>Nomenclatura</label>
+                  <label>Nomenclatura{isGospel ? ' *' : ''}</label>
                   <input
-                    placeholder="Ej: C001, GR005, FR012"
+                    placeholder={isGospel ? nextGS : 'Ej: C001, GR005, ER012'}
                     value={form.nomenclature}
                     onChange={(e) => setForm({ ...form, nomenclature: e.target.value.toUpperCase() })}
                   />
-                  <small className="muted">Código del coro (ej: C001 = Do Lento #1)</small>
+                  <small className="muted">{isGospel ? 'Código del gospel (ej: GS001)' : 'Código del coro (ej: C001 = Do Lento #1)'}</small>
                 </div>
                 </>
               )}
