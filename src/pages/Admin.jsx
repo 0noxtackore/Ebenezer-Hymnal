@@ -620,6 +620,9 @@ export default function Admin() {
                             <li key={h.id} className="hymn-row">
                               <div className="hymn-num">{h.number}</div>
                               <div className="hymn-meta">
+                                {isChorusCategory(h.category) && h.nomenclature && (
+                                  <div className="hymn-nomen">{h.nomenclature}</div>
+                                )}
                                 <div className="hymn-name">{h.title}</div>
                               </div>
                               {isAutoNumberCategory(h.category) && (
@@ -664,6 +667,9 @@ export default function Admin() {
               <li key={h.id} className="hymn-row">
                 <div className="hymn-num">{h.number}</div>
                 <div className="hymn-meta">
+                  {isChorusCategory(h.category) && h.nomenclature && (
+                    <div className="hymn-nomen">{h.nomenclature}</div>
+                  )}
                   <div className="hymn-name">{h.title}</div>
                 </div>
                 {isAutoNumberCategory(h.category) && catFilter && (
