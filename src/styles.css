@@ -981,41 +981,37 @@ a { color: inherit; }
   align-items: center;
   gap: 8px;
   padding: 18px 12px;
-  background: var(--accent-grad);
-  border: none;
+  background: var(--surface);
+  border: 1.5px solid var(--gold);
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 4px 12px rgba(201, 162, 39, 0.3);
-  color: #fff !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(201, 162, 39, 0.15);
 }
 
 .tone-card:hover {
-  box-shadow: 0 6px 20px rgba(201, 162, 39, 0.45);
+  border-color: var(--yellow);
+  box-shadow: 0 6px 20px rgba(201, 162, 39, 0.3);
   transform: translateY(-2px);
-  filter: brightness(1.05);
 }
 
 .tone-card:active {
   transform: translateY(0);
-  filter: brightness(0.95);
 }
 
 .tone-card-name {
   font-family: var(--font-serif);
   font-weight: 700;
   font-size: 16px;
-  color: #fff !important;
+  color: var(--gold);
   letter-spacing: 0.5px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .tone-card-count {
   font-size: 12px;
   font-weight: 600;
-  color: #fff !important;
-  background: rgba(255, 255, 255, 0.2);
+  color: var(--gold);
+  background: var(--gold-soft);
   padding: 3px 10px;
   border-radius: 10px;
 }
