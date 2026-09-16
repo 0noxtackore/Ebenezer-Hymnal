@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth'
-import { Eye, EyeOff, Plus, Pencil, Trash2, Text, Search, ChevronUp, ChevronDown } from 'lucide-react'
+import { Eye, EyeOff, Plus, Pencil, Trash2, Text, Search, ChevronUp, ChevronDown, ArrowLeft } from 'lucide-react'
 import { auth } from '../firebase.js'
 import { useData } from '../context/DataContext.jsx'
 import { getIcon } from '../utils/icons.js'
@@ -66,6 +66,7 @@ export default function Admin() {
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [showExitConfirm, setShowExitConfirm] = useState(false)
   const [initialSnapshot, setInitialSnapshot] = useState(null)
+  const [selectedTone, setSelectedTone] = useState(null)
   const PER_PAGE = 10
   const verseRefs = useRef({})
   const coroRef = useRef(null)
@@ -604,58 +605,68 @@ export default function Admin() {
 
       {showGrouped ? (
         <div className="admin-folders">
-          {groupedData.map(([keyLabel, cats]) => {
-            const isCollapsed = collapsed[keyLabel]
-            const totalInKey = Object.values(cats).reduce((s, arr) => s + arr.length, 0)
-            return (
-              <div key={keyLabel} className="folder-group">
-                <div className="folder-header" onClick={() => toggleFolder(keyLabel)}>
-                  <span className="folder-arrow">{isCollapsed ? '\u25B6' : '\u25BC'}</span>
-                  <span className="folder-name">{keyLabel}</span>
-                  <span className="folder-count">{totalInKey}</span>
+          {selectedTone ? (
+            <>
+              <button className="btn ghost" style={{ marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6 }} onClick={() => setSelectedTone(null)}>
+                <ArrowLeft size={16} /> Volver a tonos
+              </button>
+              <div className="folder-group" style={{ border: 'none' }}>
+                <div className="folder-header" style={{ cursor: 'default', background: 'var(--surface-2)' }}>
+                  <span className="folder-name">{selectedTone}</span>
+                  <span className="folder-count">{groupedData.find(([k]) => k === selectedTone) ? Object.values(groupedData.find(([k]) => k === selectedTone)[1]).reduce((s, arr) => s + arr.length, 0) : 0}</span>
                 </div>
-                {!isCollapsed && (
-                  <div className="folder-body">
-                    {Object.entries(cats).sort(([a], [b]) => a.localeCompare(b, 'es')).map(([cat, items]) => (
-                      <div key={cat} className="folder-sub">
-                        <div className="folder-sub-label">{cat}</div>
-                        <ul className="hymn-list">
-                          {items.map((h, i) => (
-                            <li key={h.id} className="hymn-row">
-                              <div className="hymn-num">{h.number}</div>
-                              <div className="hymn-meta">
-                                {isChorusCategory(h.category) && h.nomenclature && (
-                                  <div className="hymn-nomen">{h.nomenclature}</div>
-                                )}
-                                <div className="hymn-name">{h.title}</div>
-                              </div>
-                              {isAutoNumberCategory(h.category) && (
-                                <div className="hymn-reorder">
-                                  <button type="button" className="btn ghost" style={{ width: 'auto', padding: '4px 6px' }} onClick={(e) => { e.preventDefault(); e.stopPropagation(); const y = window.scrollY; reorderHymn(h.id, -1).then(() => requestAnimationFrame(() => window.scrollTo(0, y))) }} disabled={i === 0}>
-                                    <ChevronUp size={16} />
-                                  </button>
-                                  <button type="button" className="btn ghost" style={{ width: 'auto', padding: '4px 6px' }} onClick={(e) => { e.preventDefault(); e.stopPropagation(); const y = window.scrollY; reorderHymn(h.id, 1).then(() => requestAnimationFrame(() => window.scrollTo(0, y))) }} disabled={i === items.length - 1}>
-                                    <ChevronDown size={16} />
-                                  </button>
-                                </div>
+                <div className="folder-body">
+                  {groupedData.find(([k]) => k === selectedTone) && Object.entries(groupedData.find(([k]) => k === selectedTone)[1]).sort(([a], [b]) => a.localeCompare(b, 'es')).map(([cat, items]) => (
+                    <div key={cat} className="folder-sub">
+                      <div className="folder-sub-label">{cat}</div>
+                      <ul className="hymn-list">
+                        {items.map((h, i) => (
+                          <li key={h.id} className="hymn-row">
+                            <div className="hymn-num">{h.number}</div>
+                            <div className="hymn-meta">
+                              {isChorusCategory(h.category) && h.nomenclature && (
+                                <div className="hymn-nomen">{h.nomenclature}</div>
                               )}
-                              <button className="btn ghost" style={{ width: 'auto', padding: '8px 12px' }} onClick={() => startEdit(h)}>
-                                <Pencil size={18} />
-                              </button>
-                              <button className="btn ghost" style={{ width: 'auto', padding: '8px 12px' }} onClick={() => remove(h)}>
-                                <Trash2 size={18} />
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                              <div className="hymn-name">{h.title}</div>
+                            </div>
+                            {isAutoNumberCategory(h.category) && (
+                              <div className="hymn-reorder">
+                                <button type="button" className="btn ghost" style={{ width: 'auto', padding: '4px 6px' }} onClick={(e) => { e.preventDefault(); e.stopPropagation(); const y = window.scrollY; reorderHymn(h.id, -1).then(() => requestAnimationFrame(() => window.scrollTo(0, y))) }} disabled={i === 0}>
+                                  <ChevronUp size={16} />
+                                </button>
+                                <button type="button" className="btn ghost" style={{ width: 'auto', padding: '4px 6px' }} onClick={(e) => { e.preventDefault(); e.stopPropagation(); const y = window.scrollY; reorderHymn(h.id, 1).then(() => requestAnimationFrame(() => window.scrollTo(0, y))) }} disabled={i === items.length - 1}>
+                                  <ChevronDown size={16} />
+                                </button>
+                              </div>
+                            )}
+                            <button className="btn ghost" style={{ width: 'auto', padding: '8px 12px' }} onClick={() => startEdit(h)}>
+                              <Pencil size={18} />
+                            </button>
+                            <button className="btn ghost" style={{ width: 'auto', padding: '8px 12px' }} onClick={() => remove(h)}>
+                              <Trash2 size={18} />
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
               </div>
-            )
-          })}
-          {groupedData.length === 0 && <div className="empty">Sin resultados.</div>}
+            </>
+          ) : (
+            <div className="tone-grid">
+              {groupedData.map(([keyLabel, cats]) => {
+                const totalInKey = Object.values(cats).reduce((s, arr) => s + arr.length, 0)
+                return (
+                  <button key={keyLabel} className="tone-card" onClick={() => setSelectedTone(keyLabel)}>
+                    <span className="tone-card-name">{keyLabel}</span>
+                    <span className="tone-card-count">{totalInKey}</span>
+                  </button>
+                )
+              })}
+              {groupedData.length === 0 && <div className="empty">Sin resultados.</div>}
+            </div>
+          )}
         </div>
       ) : (
         <>
