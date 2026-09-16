@@ -659,8 +659,8 @@ export default function Admin() {
                 const totalInKey = Object.values(cats).reduce((s, arr) => s + arr.length, 0)
                 return (
                   <button key={keyLabel} className="tone-card" onClick={() => setSelectedTone(keyLabel)}>
-                    <span className="tone-card-name" style={{ color: '#1a1408' }}>{keyLabel}</span>
-                    <span className="tone-card-count" style={{ color: '#1a1408' }}>{totalInKey}</span>
+                    <span className="tone-card-name">{keyLabel}</span>
+                    <span className="tone-card-count">{totalInKey}</span>
                   </button>
                 )
               })}
