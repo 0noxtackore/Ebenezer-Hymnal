@@ -116,7 +116,11 @@ export default function Admin() {
     const afterCoro = coroParts[1]
     const hasPuente = /\n\nPUENTE\n/.test(afterCoro)
     if (!hasPuente) {
-      return { verses: firstVerse ? [firstVerse] : [''], coro: afterCoro.trim(), puente: '', blocks: [''] }
+      const afterCoroParts = afterCoro.split(/\n\n/)
+      const coroText = afterCoroParts[0].trim()
+      const extraVerses = afterCoroParts.slice(1).filter((v) => v.trim())
+      const allVerses = [firstVerse, ...extraVerses].filter((v) => v.trim())
+      return { verses: allVerses.length ? allVerses : [''], coro: coroText, puente: '', blocks: [''] }
     }
     const puenteParts = afterCoro.split(/\n\nPUENTE\n/)
     const coroText = puenteParts[0].trim()
