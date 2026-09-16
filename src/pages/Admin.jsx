@@ -7,9 +7,14 @@ import { getIcon } from '../utils/icons.js'
 import LazyImage from '../components/LazyImage.jsx'
 
 const CHORUS_CATS = ['coros lentos', 'coros rapidos', 'gospel']
+const AUTO_NUMBER_CATS = ['coros lentos', 'coros rapidos', 'gospel', 'especiales']
 
 function isChorusCategory(cat) {
   return CHORUS_CATS.includes(strip(cat))
+}
+
+function isAutoNumberCategory(cat) {
+  return AUTO_NUMBER_CATS.includes(strip(cat))
 }
 
 const strip = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
@@ -36,7 +41,7 @@ function blank() {
 }
 
 export default function Admin() {
-  const { hymns, categories, addHymn, updateHymn, deleteHymn } = useData()
+  const { hymns, categories, addHymn, updateHymn, deleteHymn, reorderHymn } = useData()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -608,12 +613,22 @@ export default function Admin() {
                       <div key={cat} className="folder-sub">
                         <div className="folder-sub-label">{cat}</div>
                         <ul className="hymn-list">
-                          {items.map((h) => (
+                          {items.map((h, i) => (
                             <li key={h.id} className="hymn-row">
                               <div className="hymn-num">{h.number}</div>
                               <div className="hymn-meta">
                                 <div className="hymn-name">{h.title}</div>
                               </div>
+                              {isAutoNumberCategory(h.category) && (
+                                <div className="hymn-reorder">
+                                  <button className="btn ghost" style={{ width: 'auto', padding: '4px 6px' }} onClick={() => reorderHymn(h.id, -1)} disabled={i === 0}>
+                                    <ChevronUp size={16} />
+                                  </button>
+                                  <button className="btn ghost" style={{ width: 'auto', padding: '4px 6px' }} onClick={() => reorderHymn(h.id, 1)} disabled={i === items.length - 1}>
+                                    <ChevronDown size={16} />
+                                  </button>
+                                </div>
+                              )}
                               <button className="btn ghost" style={{ width: 'auto', padding: '8px 12px' }} onClick={() => startEdit(h)}>
                                 <Pencil size={18} />
                               </button>
@@ -635,12 +650,29 @@ export default function Admin() {
       ) : (
         <>
           <ul className="hymn-list" style={{ marginTop: 0 }}>
-            {paginated.map((h) => (
+            {paginated.map((h) => {
+              const sameGroup = filtered.filter(
+                (x) => strip(x.category) === strip(h.category) &&
+                  (x.musicKey || '').trim() === (h.musicKey || '').trim() &&
+                  (x.scale || '').trim() === (h.scale || '').trim()
+              )
+              const posInGroup = sameGroup.findIndex((x) => x.id === h.id)
+              return (
               <li key={h.id} className="hymn-row">
                 <div className="hymn-num">{h.number}</div>
                 <div className="hymn-meta">
                   <div className="hymn-name">{h.title}</div>
                 </div>
+                {isAutoNumberCategory(h.category) && (
+                  <div className="hymn-reorder">
+                    <button className="btn ghost" style={{ width: 'auto', padding: '4px 6px' }} onClick={() => reorderHymn(h.id, -1)} disabled={posInGroup === 0}>
+                      <ChevronUp size={16} />
+                    </button>
+                    <button className="btn ghost" style={{ width: 'auto', padding: '4px 6px' }} onClick={() => reorderHymn(h.id, 1)} disabled={posInGroup === sameGroup.length - 1}>
+                      <ChevronDown size={16} />
+                    </button>
+                  </div>
+                )}
                 <button className="btn ghost" style={{ width: 'auto', padding: '8px 12px' }} onClick={() => startEdit(h)}>
                   <Pencil size={18} />
                 </button>
@@ -648,7 +680,8 @@ export default function Admin() {
                   <Trash2 size={18} />
                 </button>
               </li>
-            ))}
+              )
+            })}
           </ul>
 
           {totalPages > 1 && (
@@ -675,7 +708,7 @@ export default function Admin() {
             </button>
             <h2>{form.id ? 'Editar alabanza' : 'Nueva alabanza'}</h2>
             <div className="form-grid">
-              {!isChorusMode && (
+              {!isAutoNumberCategory(form.category) && (
                 <div className="field">
                   <label>Número</label>
                   <input
@@ -691,16 +724,16 @@ export default function Admin() {
                   )}
                 </div>
               )}
-              {isChorusMode && (
+              {isAutoNumberCategory(form.category) && (
                 <div className="field">
                   <label>Número</label>
                   <input
                     placeholder={form.id ? String(form.number) : String(nextNum)}
                     inputMode="numeric"
                     value={form.number}
-                    onChange={(e) => setForm({ ...form, number: e.target.value.replace(/\D/g, '') })}
+                    readOnly
                   />
-                  <small className="muted">{isGospel ? 'Se asigna automáticamente por tono' : 'Se asigna automáticamente por tono'}</small>
+                  <small className="muted">Se asigna automáticamente por posición</small>
                 </div>
               )}
               <div className="field">

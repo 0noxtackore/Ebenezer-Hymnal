@@ -10,6 +10,7 @@ const CACHE_VERSION = 5
 const FB_NODE = 'hymnario'
 
 const CHORUS_CATS = ['coros lentos', 'coros rapidos', 'gospel']
+const AUTO_NUMBER_CATS = ['coros lentos', 'coros rapidos', 'gospel', 'especiales']
 
 const strip = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
@@ -17,7 +18,7 @@ function renumberChorus(hymns) {
   const groups = {}
   hymns.forEach((h) => {
     const cat = strip(h.category)
-    if (!CHORUS_CATS.includes(cat)) return
+    if (!AUTO_NUMBER_CATS.includes(cat)) return
     const key = cat + '#' + ((h.musicKey || '').trim()) + '#' + ((h.scale || '').trim())
     if (!groups[key]) groups[key] = []
     groups[key].push(h)
@@ -215,6 +216,30 @@ export function DataProvider({ children }) {
     return true
   }
 
+  async function reorderHymn(id, direction) {
+    const allHymns = [...(ov.hymns || [])]
+    const idx = allHymns.findIndex((h) => h.id === id)
+    if (idx === -1) return
+    const h = allHymns[idx]
+    const cat = strip(h.category)
+    if (!AUTO_NUMBER_CATS.includes(cat)) return
+    const sameGroup = allHymns.filter(
+      (x) => strip(x.category) === cat &&
+        (x.musicKey || '').trim() === (h.musicKey || '').trim() &&
+        (x.scale || '').trim() === (h.scale || '').trim()
+    )
+    sameGroup.sort((a, b) => (a.number || 0) - (b.number || 0))
+    const posInGroup = sameGroup.findIndex((x) => x.id === id)
+    const targetIdx = posInGroup + direction
+    if (targetIdx < 0 || targetIdx >= sameGroup.length) return
+    const target = sameGroup[targetIdx]
+    const tGlobal = allHymns.findIndex((x) => x.id === target.id)
+    const tempNum = h.number
+    allHymns[idx] = { ...h, number: target.number }
+    allHymns[tGlobal] = { ...target, number: tempNum }
+    await persist({ hymns: allHymns })
+  }
+
   async function deleteHymn(id) {
     await persist({
       hymns: (ov.hymns || []).filter((x) => x.id !== id),
@@ -235,7 +260,7 @@ export function DataProvider({ children }) {
     try { set(ref(db, FB_NODE), { hymns: hymnsDict, categories: baseCategories }) } catch {}
   }
 
-  const value = { hymns, categories, loading, addHymn, updateHymn, deleteHymn, addCategory, resetData }
+  const value = { hymns, categories, loading, addHymn, updateHymn, deleteHymn, reorderHymn, addCategory, resetData }
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>
 }
 

@@ -1039,6 +1039,17 @@ a { color: inherit; }
   pointer-events: none;
 }
 
+.hymn-reorder {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.hymn-reorder button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
 .hymn-meta {
   flex: 1;
   min-width: 0;
