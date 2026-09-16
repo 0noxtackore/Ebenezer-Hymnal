@@ -7,7 +7,7 @@ import { getIcon } from '../utils/icons.js'
 import LazyImage from '../components/LazyImage.jsx'
 
 const CHORUS_CATS = ['coros lentos', 'coros rapidos', 'gospel']
-const AUTO_NUMBER_CATS = ['coros lentos', 'coros rapidos', 'gospel', 'especiales']
+const AUTO_NUMBER_CATS = ['gospel', 'especiales']
 
 function isChorusCategory(cat) {
   return CHORUS_CATS.includes(strip(cat))
@@ -663,7 +663,7 @@ export default function Admin() {
                 <div className="hymn-meta">
                   <div className="hymn-name">{h.title}</div>
                 </div>
-                {isAutoNumberCategory(h.category) && (
+                {isAutoNumberCategory(h.category) && catFilter && (
                   <div className="hymn-reorder">
                     <button className="btn ghost" style={{ width: 'auto', padding: '4px 6px' }} onClick={() => reorderHymn(h.id, -1)} disabled={posInGroup === 0}>
                       <ChevronUp size={16} />
