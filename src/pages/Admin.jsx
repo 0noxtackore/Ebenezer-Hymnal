@@ -100,9 +100,9 @@ export default function Admin() {
     }
   }, [msg, showModal])
 
-  function parseLyricsToBlocks(lyrics) {
+  function parseLyricsToBlocks(lyrics, category) {
     if (!lyrics || !lyrics.trim()) return { verses: [''], coro: '', puente: '', blocks: [''] }
-    const isChorus = isChorusCategory(form.category)
+    const isChorus = isChorusCategory(category || form.category)
     if (isChorus) {
       const blocks = lyrics.split(/\n\n/).filter((b) => b.trim())
       return { verses: [''], coro: '', puente: '', blocks: blocks.length ? blocks : [''] }
@@ -291,7 +291,7 @@ export default function Admin() {
 
   function startEdit(h) {
     setForm({ ...h })
-    const { verses: v, coro: c, puente: p, blocks: bl } = parseLyricsToBlocks(h.lyrics || '')
+    const { verses: v, coro: c, puente: p, blocks: bl } = parseLyricsToBlocks(h.lyrics || '', h.category)
     setVerses(v.length ? v : [''])
     setCoro(c)
     setPuente(p)
