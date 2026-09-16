@@ -611,7 +611,7 @@ export default function Admin() {
                 <ArrowLeft size={16} /> Volver a tonos
               </button>
               <div className="folder-group" style={{ border: 'none' }}>
-                <div className="folder-header" style={{ cursor: 'default', background: 'var(--surface-2)' }}>
+                <div className="folder-header">
                   <span className="folder-name">{selectedTone}</span>
                   <span className="folder-count">{groupedData.find(([k]) => k === selectedTone) ? Object.values(groupedData.find(([k]) => k === selectedTone)[1]).reduce((s, arr) => s + arr.length, 0) : 0}</span>
                 </div>
