@@ -1151,14 +1151,25 @@ a { color: inherit; }
 }
 
 .hymn-actions.chorus .hymn-action-btn {
-  border-color: rgba(22, 19, 12, 0.15);
-  background: transparent;
-  color: #16130c;
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
 }
 
 .hymn-actions.chorus .hymn-action-btn:hover {
-  background: rgba(255, 255, 255, 0.35);
-  border-color: rgba(22, 19, 12, 0.25);
+  background: rgba(255, 255, 255, 0.4);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+body.night .hymn-actions.chorus .hymn-action-btn {
+  border-color: rgba(22, 19, 12, 0.15);
+  background: rgba(22, 19, 12, 0.15);
+  color: #16130c;
+}
+
+body.night .hymn-actions.chorus .hymn-action-btn:hover {
+  background: rgba(22, 19, 12, 0.3);
+  border-color: rgba(22, 19, 12, 0.3);
 }
 
 .hymn-action-btn:disabled {
