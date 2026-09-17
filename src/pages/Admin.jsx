@@ -629,7 +629,7 @@ export default function Admin() {
                               )}
                               <div className="hymn-name">{h.title}</div>
                             </div>
-                <div className="hymn-actions">
+                            <div className={`hymn-actions${isChorusCategory(h.category) ? ' chorus' : ''}`}>
                               {isAutoNumberCategory(h.category) && (
                                 <div className="hymn-reorder">
                                   <button type="button" className="hymn-action-btn" onClick={(e) => { e.preventDefault(); e.stopPropagation(); const y = window.scrollY; reorderHymn(h.id, -1).then(() => requestAnimationFrame(() => window.scrollTo(0, y))) }} disabled={i === 0}>
@@ -689,7 +689,7 @@ export default function Admin() {
                   )}
                   <div className="hymn-name">{h.title}</div>
                 </div>
-                <div className={`hymn-actions${isChorusCategory(h.category) ? ' chorus' : ''}`}>
+                <div className="hymn-actions">
                   {isAutoNumberCategory(h.category) && catFilter && (
                     <div className="hymn-reorder">
                       <button type="button" className="hymn-action-btn" onClick={(e) => { e.preventDefault(); e.stopPropagation(); const y = window.scrollY; reorderHymn(h.id, -1).then(() => requestAnimationFrame(() => window.scrollTo(0, y))) }} disabled={posInGroup === 0}>
