@@ -1040,7 +1040,8 @@ a { color: inherit; }
 .hymn-row {
   display: flex;
   align-items: center;
-  gap: 14px;
+  flex-wrap: wrap;
+  gap: 8px 14px;
   padding: 14px;
   background: var(--surface);
   border: 1px solid var(--border);
@@ -1098,7 +1099,7 @@ a { color: inherit; }
 }
 
 .hymn-meta {
-  flex: 1;
+  flex: 1 1 0;
   min-width: 0;
 }
 
@@ -1114,15 +1115,20 @@ a { color: inherit; }
 .hymn-name {
   font-weight: 600;
   font-size: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .hymn-cat {
   color: var(--muted);
   font-size: 13px;
   margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-/* ---------- Detalle de himno ---------- */
 .empty {
   display: flex;
   flex-direction: column;
