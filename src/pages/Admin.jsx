@@ -629,22 +629,24 @@ export default function Admin() {
                               )}
                               <div className="hymn-name">{h.title}</div>
                             </div>
-                            {isAutoNumberCategory(h.category) && (
-                              <div className="hymn-reorder">
-                                <button type="button" className="btn ghost" style={{ width: 'auto', padding: '4px 6px' }} onClick={(e) => { e.preventDefault(); e.stopPropagation(); const y = window.scrollY; reorderHymn(h.id, -1).then(() => requestAnimationFrame(() => window.scrollTo(0, y))) }} disabled={i === 0}>
-                                  <ChevronUp size={16} />
-                                </button>
-                                <button type="button" className="btn ghost" style={{ width: 'auto', padding: '4px 6px' }} onClick={(e) => { e.preventDefault(); e.stopPropagation(); const y = window.scrollY; reorderHymn(h.id, 1).then(() => requestAnimationFrame(() => window.scrollTo(0, y))) }} disabled={i === items.length - 1}>
-                                  <ChevronDown size={16} />
-                                </button>
-                              </div>
-                            )}
-                            <button className="btn ghost" style={{ width: 'auto', padding: '8px 12px' }} onClick={() => startEdit(h)}>
-                              <Pencil size={18} />
-                            </button>
-                            <button className="btn ghost" style={{ width: 'auto', padding: '8px 12px' }} onClick={() => remove(h)}>
-                              <Trash2 size={18} />
-                            </button>
+                            <div className="hymn-actions">
+                              {isAutoNumberCategory(h.category) && (
+                                <div className="hymn-reorder">
+                                  <button type="button" className="hymn-action-btn" onClick={(e) => { e.preventDefault(); e.stopPropagation(); const y = window.scrollY; reorderHymn(h.id, -1).then(() => requestAnimationFrame(() => window.scrollTo(0, y))) }} disabled={i === 0}>
+                                    <ChevronUp size={16} />
+                                  </button>
+                                  <button type="button" className="hymn-action-btn" onClick={(e) => { e.preventDefault(); e.stopPropagation(); const y = window.scrollY; reorderHymn(h.id, 1).then(() => requestAnimationFrame(() => window.scrollTo(0, y))) }} disabled={i === items.length - 1}>
+                                    <ChevronDown size={16} />
+                                  </button>
+                                </div>
+                              )}
+                              <button className="hymn-action-btn" onClick={() => startEdit(h)}>
+                                <Pencil size={16} />
+                              </button>
+                              <button className="hymn-action-btn" onClick={() => remove(h)}>
+                                <Trash2 size={16} />
+                              </button>
+                            </div>
                           </li>
                         ))}
                       </ul>
