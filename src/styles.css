@@ -1092,6 +1092,13 @@ a { color: inherit; }
   gap: 0;
 }
 
+.hymn-reorder button {
+  width: 32px;
+  height: 28px;
+  padding: 0;
+  min-width: 0;
+}
+
 .hymn-reorder button:disabled {
   opacity: 0.3;
   cursor: not-allowed;
@@ -1121,6 +1128,13 @@ a { color: inherit; }
   align-items: center;
   gap: 4px;
   flex-shrink: 0;
+}
+
+.hymn-actions .btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  min-width: 0;
 }
 
 .hymn-cat {
