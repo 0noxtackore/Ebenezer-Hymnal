@@ -581,7 +581,7 @@ export default function Admin() {
 
       {categories.length > 0 && (
         <div className="chips" style={{ marginBottom: 12 }}>
-          <button className={'chip' + (!catFilter ? ' active' : '')} onClick={() => { setCatFilter(''); setPage(1) }}>
+          <button className={'chip' + (!catFilter ? ' active' : '')} onClick={() => { setCatFilter(''); setSelectedTone(null); setPage(1) }}>
             Todos
           </button>
           {categories.map((c) => {
@@ -590,7 +590,7 @@ export default function Admin() {
               <button
                 key={c.name}
                 className={'chip' + (catFilter === c.name ? ' active' : '')}
-                onClick={() => { setCatFilter(c.name); setPage(1) }}
+                onClick={() => { setCatFilter(c.name); setSelectedTone(null); setPage(1) }}
               >
                 <Icon size={14} /> {c.name}
               </button>
