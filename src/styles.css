@@ -1121,6 +1121,9 @@ a { color: inherit; }
   align-items: center;
   gap: 4px;
   flex-shrink: 0;
+}
+
+.hymn-actions.chorus {
   background: var(--accent-grad);
   border-radius: 10px;
   padding: 4px;
@@ -1133,18 +1136,29 @@ a { color: inherit; }
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1.5px solid rgba(0, 0, 0, 0.15);
+  border: 1.5px solid var(--border-strong);
   border-radius: 7px;
-  background: transparent;
-  color: #16130c;
+  background: var(--surface);
+  color: var(--gold);
   cursor: pointer;
   flex-shrink: 0;
   transition: all 0.15s ease;
 }
 
 .hymn-action-btn:hover {
+  border-color: var(--gold);
+  background: var(--gold-soft);
+}
+
+.hymn-actions.chorus .hymn-action-btn {
+  border-color: rgba(22, 19, 12, 0.15);
+  background: transparent;
+  color: #16130c;
+}
+
+.hymn-actions.chorus .hymn-action-btn:hover {
   background: rgba(255, 255, 255, 0.35);
-  border-color: rgba(0, 0, 0, 0.25);
+  border-color: rgba(22, 19, 12, 0.25);
 }
 
 .hymn-action-btn:disabled {
