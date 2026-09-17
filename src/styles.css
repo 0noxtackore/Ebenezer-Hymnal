@@ -1120,6 +1120,14 @@ a { color: inherit; }
   white-space: nowrap;
 }
 
+.hymn-row .btn.ghost.sm {
+  flex-shrink: 0;
+}
+
+.hymn-row .hymn-reorder {
+  flex-shrink: 0;
+}
+
 .hymn-cat {
   color: var(--muted);
   font-size: 13px;
@@ -2212,6 +2220,26 @@ body.night .modal-msg {
   background: #b44 !important;
   color: #fff !important;
   border: none !important;
+}
+
+@media (max-width: 420px) {
+  .hymn-row {
+    flex-wrap: wrap;
+    gap: 8px 10px;
+    padding: 12px;
+  }
+  .hymn-row .hymn-num {
+    flex-shrink: 0;
+  }
+  .hymn-row .hymn-meta {
+    flex: 1 1 calc(100% - 58px);
+    min-width: 0;
+  }
+  .hymn-row .hymn-name {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
 }
 
 .delete-btn:hover {
