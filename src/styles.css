@@ -1040,8 +1040,7 @@ a { color: inherit; }
 .hymn-row {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 8px 14px;
+  gap: 10px;
   padding: 14px;
   background: var(--surface);
   border: 1px solid var(--border);
@@ -1115,16 +1114,12 @@ a { color: inherit; }
 .hymn-name {
   font-weight: 600;
   font-size: 15px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-.hymn-row .btn.ghost.sm {
-  flex-shrink: 0;
-}
-
-.hymn-row .hymn-reorder {
+.hymn-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   flex-shrink: 0;
 }
 
@@ -2224,21 +2219,14 @@ body.night .modal-msg {
 
 @media (max-width: 420px) {
   .hymn-row {
-    flex-wrap: wrap;
-    gap: 8px 10px;
+    display: grid;
+    grid-template-columns: 44px 1fr auto;
+    gap: 8px;
     padding: 12px;
   }
-  .hymn-row .hymn-num {
-    flex-shrink: 0;
-  }
-  .hymn-row .hymn-meta {
-    flex: 1 1 calc(100% - 58px);
-    min-width: 0;
-  }
-  .hymn-row .hymn-name {
-    white-space: normal;
-    overflow: visible;
-    text-overflow: unset;
+  .hymn-row .hymn-actions {
+    grid-column: 2 / -1;
+    justify-self: start;
   }
 }
 
