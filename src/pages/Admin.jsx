@@ -689,19 +689,19 @@ export default function Admin() {
                 </div>
                 {isAutoNumberCategory(h.category) && catFilter && (
                   <div className="hymn-reorder">
-                    <button type="button" className="btn ghost" style={{ width: 'auto', padding: '4px 6px' }} onClick={(e) => { e.preventDefault(); e.stopPropagation(); const y = window.scrollY; reorderHymn(h.id, -1).then(() => requestAnimationFrame(() => window.scrollTo(0, y))) }} disabled={posInGroup === 0}>
+                    <button type="button" className="btn ghost sm" onClick={(e) => { e.preventDefault(); e.stopPropagation(); const y = window.scrollY; reorderHymn(h.id, -1).then(() => requestAnimationFrame(() => window.scrollTo(0, y))) }} disabled={posInGroup === 0}>
                       <ChevronUp size={16} />
                     </button>
-                    <button type="button" className="btn ghost" style={{ width: 'auto', padding: '4px 6px' }} onClick={(e) => { e.preventDefault(); e.stopPropagation(); const y = window.scrollY; reorderHymn(h.id, 1).then(() => requestAnimationFrame(() => window.scrollTo(0, y))) }} disabled={posInGroup === sameGroup.length - 1}>
+                    <button type="button" className="btn ghost sm" onClick={(e) => { e.preventDefault(); e.stopPropagation(); const y = window.scrollY; reorderHymn(h.id, 1).then(() => requestAnimationFrame(() => window.scrollTo(0, y))) }} disabled={posInGroup === sameGroup.length - 1}>
                       <ChevronDown size={16} />
                     </button>
                   </div>
                 )}
-                <button className="btn ghost" style={{ width: 'auto', padding: '8px 12px' }} onClick={() => startEdit(h)}>
-                  <Pencil size={18} />
+                <button className="btn ghost sm" onClick={() => startEdit(h)}>
+                  <Pencil size={16} />
                 </button>
-                <button className="btn ghost" style={{ width: 'auto', padding: '8px 12px' }} onClick={() => remove(h)}>
-                  <Trash2 size={18} />
+                <button className="btn ghost sm" onClick={() => remove(h)}>
+                  <Trash2 size={16} />
                 </button>
               </li>
               )
