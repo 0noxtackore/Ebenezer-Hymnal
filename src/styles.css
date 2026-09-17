@@ -1130,13 +1130,6 @@ a { color: inherit; }
   flex-shrink: 0;
 }
 
-.hymn-actions .btn {
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  min-width: 0;
-}
-
 .hymn-cat {
   color: var(--muted);
   font-size: 13px;
@@ -1502,6 +1495,28 @@ a { color: inherit; }
 .btn.sm {
   padding: 6px 8px;
   font-size: 13px;
+}
+
+.hymn-actions .btn,
+.hymn-actions .btn.sm {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hymn-reorder .btn,
+.hymn-reorder .btn.sm {
+  width: 32px;
+  height: 28px;
+  padding: 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .star {
@@ -2231,7 +2246,7 @@ body.night .modal-msg {
   border: none !important;
 }
 
-@media (max-width: 420px) {
+@media (max-width: 600px) {
   .hymn-row {
     display: grid;
     grid-template-columns: 44px 1fr;
