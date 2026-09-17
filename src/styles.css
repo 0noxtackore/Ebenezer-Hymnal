@@ -2219,20 +2219,29 @@ body.night .modal-msg {
 
 @media (max-width: 420px) {
   .hymn-row {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    grid-template-rows: auto auto;
+    gap: 6px 10px;
     padding: 12px;
   }
   .hymn-num {
-    align-self: flex-start;
+    grid-row: 1;
+    grid-column: 1;
+    align-self: center;
   }
   .hymn-meta {
-    text-align: center;
-    width: 100%;
+    grid-row: 1;
+    grid-column: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
   }
   .hymn-actions {
+    grid-row: 2;
+    grid-column: 1 / -1;
     display: flex;
     flex-direction: row;
     gap: 6px;
