@@ -13,6 +13,10 @@ function isChorusCategory(cat) {
   return CHORUS_CATS.includes(strip(cat)) || strip(cat) === 'especiales'
 }
 
+function isToneRequiredCategory(cat) {
+  return CHORUS_CATS.includes(strip(cat))
+}
+
 function isAutoNumberCategory(cat) {
   return AUTO_NUMBER_CATS.includes(strip(cat))
 }
@@ -313,6 +317,7 @@ export default function Admin() {
   async function submit() {
     const errors = []
     const isChorus = isChorusCategory(form.category)
+    const needsTone = isToneRequiredCategory(form.category)
     const isGospelCat = strip(form.category) === 'gospel'
     if (!isChorus && !form.number) {
       errors.push('Número')
@@ -320,10 +325,10 @@ export default function Admin() {
     if (!form.title.trim()) {
       errors.push('Título')
     }
-    if (isChorus && !form.musicKey) {
+    if (needsTone && !form.musicKey) {
       errors.push('Tonalidad')
     }
-    if (isChorus && !form.scale) {
+    if (needsTone && !form.scale) {
       errors.push('Escala')
     }
     if (isGospelCat && !form.id && !form.nomenclature.trim()) {
